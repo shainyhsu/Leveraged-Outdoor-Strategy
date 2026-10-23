@@ -1,10 +1,14 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>上山籌碼評估</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}
 :root {
   /* Layout：領隊紀錄簿。手機單欄，判定在前、步驟在後；寬螢幕左欄五個步驟、右欄判定黏著。底色取地形圖紙，結構線用等高線褐，互動用高山藍，紅黃綠只表示狀態。 */
   --bg: #EDF1EE;
@@ -268,6 +272,8 @@ input[type="range"]::-moz-range-track { background: transparent; }
 .method b { color: var(--contour); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
+</head>
+<body>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -319,7 +325,7 @@ input[type="range"]::-moz-range-track { background: transparent; }
         <p class="lead">這兩軸看整隊有沒有準備好，勾選比例換算成 1 到 5 分。標「成雙」的項目本身就是備援。</p>
         <div class="subhead"><h3>計畫與備案</h3><span class="subscore" id="plan-score"></span></div>
         <div class="checks" id="plan-list"></div>
-        <p class="note">各段時間可用 <a id="calc-link" href="#" target="_blank" rel="noopener">班級步程試算</a> 估算。</p>
+        <p class="note">各段時間可用 <a id="calc-link" href="#" target="_blank" rel="noopener">步程試算</a> 估算。</p>
         <div class="subhead"><h3>團隊裝備</h3><span class="subscore" id="kit-score"></span></div>
         <div class="checks" id="kit-list"></div>
       </section>
@@ -1315,5 +1321,5 @@ if (typeof module !== 'undefined' && module.exports) {
 })();
 
 </script>
-
-</body></html>
+</body>
+</html>
