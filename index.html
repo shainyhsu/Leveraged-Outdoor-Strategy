@@ -406,10 +406,10 @@ details.radar-card > summary { align-items: flex-start; }
 
       <details class="step fold" id="s-members" open>
         <summary><h2><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「加入隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
+        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「新增隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
         <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
-        <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">加入隊員（手動輸入）</button></div>
+        <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">新增隊員（手動輸入）</button></div>
       </details>
 
       <details class="step fold" id="s-lists" open>
@@ -824,7 +824,7 @@ function compute(st) {
   const issues = [];
   const push = (level, text, fix, to) => issues.push({ level, text, fix, to: to || '' });
   const q = t => L('「' + t + '」', ' "' + t + '" ');
-  if (!members.length) push('red', L('尚未加入隊員', 'No members yet'), L('到「② 隊員評分」加入隊員；缺資料以紅線計', 'Add members in ② Ratings; missing data counts as the hard minimum'), 's-members');
+  if (!members.length) push('red', L('尚未加入隊員', 'No members yet'), L('到「② 隊員評分」新增隊員；缺資料以紅線計', 'Add members in ② Ratings; missing data counts as the hard minimum'), 's-members');
   memberRes.forEach(r => {
     const nm = r.m.name, to = 'card-' + r.m.id;
     IND.forEach(a => {
@@ -849,14 +849,14 @@ function compute(st) {
     else if (t.status === 'marg') push('amber', nm + L('邊際：', 'marginal: ') + fmt(t.main) + L('／需求 ', ' / need ') + fmt(t.D), t.list ? L('補齊清單項目', 'Complete the checklist') : L('找人補位或用槓桿', 'Find cover or use a mitigation'), to);
     if (t.single) push('amber', nm + L('只有一人達紅線（備援 ', 'has only one person above the hard minimum (backup ') + fmt(t.backup) + L('，紅線 ', ', hard minimum ') + fmt(t.R) + L('）', ')'), L('指定第二人並行前演練', 'Name a second person and rehearse'), to);
   });
-  if (teamMargs >= 2) push('red', L('團隊兩項以上邊際', 'Team has 2+ marginal axes'), L('兩項以上邊際就不出發；補人、用槓桿或換路線', 'Two or more marginal means no go; add people, use mitigations or change route'), 's-mitigations');
+  if (teamMargs >= 2) push('red', L('團隊兩項以上邊際', 'Team has 2+ marginal axes'), L('兩項以上邊際就不出發；補人、用槓桿或換路線', 'Two or more marginal means no go; add people, use mitigations or change route'), 's-levers');
   levers.forEach(x => {
-    if (x.on && !x.ok) push('info', L('槓桿「' + lvName(x.L) + '」前提未達，未計入', 'Mitigation "' + lvName(x.L) + '" not met, not counted'), lvPre(x.L), 's-mitigations');
-    else if (x.applied && !x.paired) push('amber', L('槓桿「' + lvName(x.L) + '」未成雙', 'Mitigation "' + lvName(x.L) + '" has no backup'), lvPair(x.L), 's-mitigations');
+    if (x.on && !x.ok) push('info', L('槓桿「' + lvName(x.L) + '」前提未達，未計入', 'Mitigation "' + lvName(x.L) + '" not met, not counted'), lvPre(x.L), 's-levers');
+    else if (x.applied && !x.paired) push('amber', L('槓桿「' + lvName(x.L) + '」未成雙', 'Mitigation "' + lvName(x.L) + '" has no backup'), lvPair(x.L), 's-levers');
   });
   ALL.forEach(a => {
-    if (leverInfo[a].capped) push('info', L('「' + axS(a) + '」槓桿合計超過 ' + fmt(LEVER_CAP) + '，以 ' + fmt(LEVER_CAP) + ' 計', '"' + axS(a) + '" mitigations exceed ' + fmt(LEVER_CAP) + '; counted as ' + fmt(LEVER_CAP)), L('同一軸最多降 ', 'Max reduction per axis is ') + fmt(LEVER_CAP), 's-mitigations');
-    else if (leverInfo[a].floored && leverInfo[a].want > 0) push('info', L('「' + axS(a) + '」需求已降到紅線', '"' + axS(a) + '" need is down to the hard minimum'), L('紅線不隨槓桿移動', 'Mitigations never move the hard minimum'), 's-mitigations');
+    if (leverInfo[a].capped) push('info', L('「' + axS(a) + '」槓桿合計超過 ' + fmt(LEVER_CAP) + '，以 ' + fmt(LEVER_CAP) + ' 計', '"' + axS(a) + '" mitigations exceed ' + fmt(LEVER_CAP) + '; counted as ' + fmt(LEVER_CAP)), L('同一軸最多降 ', 'Max reduction per axis is ') + fmt(LEVER_CAP), 's-levers');
+    else if (leverInfo[a].floored && leverInfo[a].want > 0) push('info', L('「' + axS(a) + '」需求已降到紅線', '"' + axS(a) + '" need is down to the hard minimum'), L('紅線不隨槓桿移動', 'Mitigations never move the hard minimum'), 's-levers');
   });
   const order = { red: 0, amber: 1, info: 2 };
   issues.sort((x, y) => order[x.level] - order[y.level]);
@@ -1270,7 +1270,7 @@ if (typeof module !== 'undefined' && module.exports) {
   }
   function renderMembers() {
     const box = $('#members');
-    box.innerHTML = st.members.map(memberCard).join('') + (others().length ? '' : '<p class="empty">' + L('還沒有隊員。把表單連結傳給隊員，或按「加入隊員」手動輸入。', 'No members yet. Send the form link, or add members by hand.') + '</p>');
+    box.innerHTML = st.members.map(memberCard).join('') + (others().length ? '' : '<p class="empty">' + L('還沒有隊員。把表單連結傳給隊員，或按「新增隊員」手動輸入。', 'No members yet. Send the form link, or add members by hand.') + '</p>');
     updateMembersDynamic();
   }
   function memberNotes(r) {
@@ -1329,7 +1329,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
   /* ---------- ④ 槓桿 ---------- */
   function renderLevers() {
-    $('#mitigations').innerHTML = res.levers.map(x => {
+    $('#levers').innerHTML = res.levers.map(x => {
       const lv = x.L;
       let chip;
       if (!x.on) chip = '<span class="chip off">' + L('未採用', 'Off') + '</span>';
@@ -1337,7 +1337,7 @@ if (typeof module !== 'undefined' && module.exports) {
       else if (!x.paired) chip = '<span class="chip single">' + L('成立，未成雙', 'Working, no backup') + '</span>';
       else chip = '<span class="chip ok">' + L('成立，已成雙', 'Working, backed up') + '</span>';
       const eff = lv.targets.map(axS).join(SEP());
-      return '<div class="lever' + (x.on ? ' on' : '') + '"><div class="lever-head"><label class="ck-inline" for="lv-' + lv.id + '"><input type="checkbox" id="lv-' + lv.id + '" data-mitigation="' + lv.id + '"' + (x.on ? ' checked' : '') + '><span class="lever-name">' + esc(lvName(lv)) + '</span></label>' + chip + '</div>' +
+      return '<div class="lever' + (x.on ? ' on' : '') + '"><div class="lever-head"><label class="ck-inline" for="lv-' + lv.id + '"><input type="checkbox" id="lv-' + lv.id + '" data-lever="' + lv.id + '"' + (x.on ? ' checked' : '') + '><span class="lever-name">' + esc(lvName(lv)) + '</span></label>' + chip + '</div>' +
         '<div class="lever-desc">' + esc(lvDesc(lv)) + '<span class="lever-eff">' + L('需求 −0.5：', 'Need −0.5: ') + esc(eff) + '</span></div>' +
         '<div class="cond"><span class="' + (x.ok ? 'yes' : 'no') + '">' + (x.ok ? '✓' : '✗') + L(' 前提', ' Precondition') + '</span>' + esc(lvPre(lv)) + '</div>' +
         '<div class="cond"><span class="' + (x.paired ? 'yes' : 'no') + '">' + (x.paired ? '✓' : '✗') + L(' 成雙', ' Backup') + '</span>' + esc(lvPair(lv)) + '</div></div>';
