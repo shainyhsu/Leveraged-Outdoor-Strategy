@@ -522,7 +522,7 @@ function blankMember(name, role) {
 }
 
 function blankState() {
-  const st = { v: 1, example: false, trip: { name: '', date: '' }, template: 'T3', conds: {}, gap: 1,
+  const st = { v: 1, example: false, trip: { name: '', date: '', code: '' }, template: 'T3', conds: {}, gap: 1,
     dAdj: {}, plan: {}, kit: {}, levers: {}, members: [], override: { color: '', reason: '' }, premortem: '' };
   Object.keys(CONDS).forEach(k => { st.conds[k] = false; });
   ALL.forEach(a => { st.dAdj[a] = 0; });
@@ -566,7 +566,7 @@ function sanitizeState(raw) {
   const st = blankState();
   if (!raw || typeof raw !== 'object') return st;
   st.example = !!raw.example;
-  if (raw.trip) { st.trip.name = String(raw.trip.name || '').slice(0, 80); st.trip.date = String(raw.trip.date || '').slice(0, 20); }
+  if (raw.trip) { st.trip.name = String(raw.trip.name || '').slice(0, 80); st.trip.date = String(raw.trip.date || '').slice(0, 20); st.trip.code = /^[A-Z0-9]{4,10}$/.test(raw.trip.code || '') ? raw.trip.code : ''; }
   if (TEMPLATES[raw.template]) st.template = raw.template;
   if ([0.5, 1, 1.5].includes(raw.gap)) st.gap = raw.gap;
   Object.keys(CONDS).forEach(k => { st.conds[k] = !!(raw.conds && raw.conds[k]); });
@@ -850,6 +850,57 @@ function mergeMemberCode(st, obj) {
   return { m, added, n };
 }
 
+
+/* ===== Google 表單彙整 ===== */
+const FORM = {
+  view: 'https://docs.google.com/forms/d/e/1FAIpQLSfmhwnlAEK_BEw280NqN4rx0qN4WSSRlAH3VRQ9fBlRBbJq2g/viewform',
+  codeEntry: 'entry.' + parseInt('5fe8a856', 16),
+  sheetId: ''   // 表單回覆試算表（知道連結者可檢視）
+};
+function newTripCode() {
+  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = '';
+  for (let i = 0; i < 6; i++) c += A[Math.floor(Math.random() * A.length)];
+  return c;
+}
+function formLink(code) { return FORM.view + '?usp=pp_url&' + FORM.codeEntry + '=' + encodeURIComponent(code); }
+function parseCSV(text) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { row.push(f); f = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+    else f += ch;
+  }
+  if (f !== '' || row.length) { row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim() !== ''));
+}
+/* 依行程代碼彙整表單回覆：同名以最後一筆為準，只寫入本人評分與今日狀態 */
+function mergeFormRows(st, rows, code) {
+  if (!rows.length) return { added: 0, updated: 0, n: 0 };
+  const head = rows[0].map(h => h.trim());
+  const col = t => head.findIndex(h => h === t || h.indexOf(t) === 0);
+  const iCode = col('行程代碼'), iName = col('姓名'), iRole = col('角色'), iFlag = col('今日狀態');
+  const iAx = {}; SCORED.forEach(a => { iAx[a] = col(AXES[a].full); });
+  const latest = new Map();
+  rows.slice(1).forEach(r => {
+    if (iCode < 0 || String(r[iCode] || '').trim().toUpperCase() !== code) return;
+    const name = String(r[iName] || '').trim().slice(0, 30);
+    if (name) latest.set(name, r);
+  });
+  let added = 0, updated = 0;
+  latest.forEach((r, name) => {
+    let m = st.members.find(x => x.name.trim() === name);
+    if (!m) { m = blankMember(name, String((iRole >= 0 && r[iRole]) || '隊員').trim().slice(0, 30) || '隊員'); st.members.push(m); added++; } else updated++;
+    SCORED.forEach(a => { const v = parseFloat(r[iAx[a]]); if (isScore(v)) m.self[a] = v; });
+    const fl = iFlag >= 0 ? String(r[iFlag] || '') : '';
+    m.flags = {};
+    Object.keys(FLAGS).forEach(k => { if (fl.indexOf(FLAGS[k]) >= 0) m.flags[k] = true; });
+  });
+  return { added, updated, n: latest.size };
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { AXES, IND, TEAM, TEAM_SKILL, SCORED, ALL, TEMPLATES, CONDS, FLAGS, PLAN_ITEMS, KIT_ITEMS, LEVERS,
     compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, encodeMember, encodeTeam, decodeCode,
@@ -876,7 +927,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
   let st = loadState() || exampleState();
   let res = compute(st);
-  const ui = { rater: {}, open: {}, code: {}, delAsk: null, overlay: '', importMsg: '', pendingTeam: null, teamCode: '', resetAsk: false };
+  const ui = { rater: {}, open: {}, code: {}, delAsk: null, overlay: '', importMsg: '', pendingTeam: null, teamCode: '', resetAsk: false, formMsg: '' };
   if (st.example) ui.open.ex4 = true;
 
   /* ---------- 判定區 ---------- */
@@ -1127,6 +1178,30 @@ if (typeof module !== 'undefined' && module.exports) {
     }).join('');
   }
 
+
+  /* ---------- ② 表單彙整 ---------- */
+  function renderIntake() {
+    if (!st.trip.code) { st.trip.code = newTripCode(); saveState(); }
+    const link = formLink(st.trip.code);
+    $('#intake').innerHTML = '<div class="subhead"><h3>隊員表單</h3><span class="subscore">行程代碼 <b>' + esc(st.trip.code) + '</b> <button type="button" class="linkbtn" data-act="newcode">換一組</button></span></div>' +
+      '<p class="note">把連結傳給隊員（LINE、訊息都可以），代碼已自動帶入。隊員送出後按「抓取表單回覆」，依姓名彙整成隊員卡，只寫入本人評分與今日狀態，不動領隊評分。</p>' +
+      '<div class="ilink" id="form-link">' + esc(link) + '</div>' +
+      '<div class="row-btns"><button type="button" class="btn" data-act="form-share">分享表單連結</button><button type="button" class="btn ghost" data-act="form-copy">複製連結</button>' +
+      '<button type="button" class="btn ghost" data-act="form-pull">抓取表單回覆</button><span class="msg" id="form-msg" role="status">' + esc(ui.formMsg || '') + '</span></div>';
+  }
+  function pullForm(silent) {
+    const msg = () => { const el = $('#form-msg'); if (el) el.textContent = ui.formMsg; };
+    if (!FORM.sheetId) { if (!silent) { ui.formMsg = '回覆試算表尚未設定'; msg(); } return; }
+    if (!silent) { ui.formMsg = '抓取中…'; msg(); }
+    const url = 'https://docs.google.com/spreadsheets/d/' + FORM.sheetId + '/gviz/tq?tqx=out:csv&_=' + Date.now();
+    fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
+      const r = mergeFormRows(st, parseCSV(t), st.trip.code);
+      if (r.n) { st.example = false; ui.formMsg = '已彙整 ' + r.n + ' 位（新增 ' + r.added + '、更新 ' + r.updated + '）'; refresh({ members: true }); }
+      else ui.formMsg = '代碼 ' + st.trip.code + ' 還沒有回覆';
+      msg();
+    }).catch(() => { ui.formMsg = '抓取失敗，請稍後再試'; msg(); });
+  }
+
   /* ---------- ⑤ 評估脆弱點、⑥ 分享 ---------- */
   function renderReviewStatic() {
     $('#premortem').value = st.premortem;
@@ -1279,6 +1354,7 @@ if (typeof module !== 'undefined' && module.exports) {
     }
   }
   function renderAll() {
+    renderIntake();
     renderDemandStatic();
     renderLists();
     renderReviewStatic();
@@ -1388,6 +1464,16 @@ if (typeof module !== 'undefined' && module.exports) {
       st.members = st.members.filter(m => m.id !== id);
       if (ui.overlay === id) ui.overlay = '';
       ui.delAsk = null; refresh({ members: true });
+    } else if (act === 'newcode') {
+      st.trip.code = newTripCode(); ui.formMsg = ''; saveState(); renderIntake();
+    } else if (act === 'form-copy' || act === 'form-share') {
+      const link = formLink(st.trip.code), el = $('#form-msg');
+      const done = t => { ui.formMsg = t; if (el) el.textContent = t; };
+      const copy = () => { if (navigator.clipboard) navigator.clipboard.writeText(link).then(() => done('已複製連結'), () => done('請長按連結手動複製')); else done('請長按連結手動複製'); };
+      if (act === 'form-share' && navigator.share) navigator.share({ title: '上山籌碼評估｜隊員自評' + (st.trip.name ? '｜' + st.trip.name : ''), text: '請填寫行前自評（行程代碼 ' + st.trip.code + '）', url: link }).catch(() => {});
+      else copy();
+    } else if (act === 'form-pull') {
+      pullForm(false);
     } else if (act === 'a4') {
       shareA4();
     } else if (act === 'copy') {
@@ -1407,6 +1493,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
   $('#calc-link').href = CALC_URL;
   renderAll();
+  pullForm(true);
 })();
 
 </script>
