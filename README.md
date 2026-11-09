@@ -19,6 +19,11 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 3. Leader imports codes, adds their ratings, checks plan/team gear and leverage items
 4. Review (optional override with a written reason), pre-mortem, then copy summary or export the full team data code
 
+## Layout and display
+
+- **Two columns on wide screens** (1000 px and up): the five steps on the left, the verdict pinned on the right as you scroll. Phones get a single column with the verdict first.
+- **Light/dark toggle** in the top-right corner. Dark is the default; your choice is remembered in the browser.
+
 Time estimates pair well with the [Hiking Time Estimator](https://shainyhsu.github.io/class-hiking-calculator/).
 
 ## Method notes (summary)
@@ -27,4 +32,15 @@ Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profilin
 
 ## Tech
 
-Single HTML page on GitHub Pages. Ratings and share codes stay in the browser.
+Single HTML page on GitHub Pages (interface in Traditional Chinese). Ratings and share codes stay in the browser. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+
+## Version history
+
+- V4 | 2026-11-09 09:23 | Added a light/dark toggle in the top-right corner, with dark as the default and your choice remembered.
+- V3 | 2026-11-08 20:28 | Added a fuller page title, search description, canonical link, social-share preview tags and structured data so the tool shows up better in search and link previews.
+- V2 | 2026-10-23 14:46 | Tidied the page's underlying HTML structure and language setting, and shortened the time-estimator link label.
+- V1 | 2026-10-23 13:40 | First public release: pre-trip assessment that weighs each member's capability against route demand, with route templates, red lines, leverage items, member share codes, leader review and a pre-mortem.
+
+## License
+
+All rights reserved. See [LICENSE](LICENSE). You may use the published page in your browser for personal use, but copying, reproducing, scraping, or using any part of this work for AI or machine-learning training is not permitted without the author's prior written permission.
