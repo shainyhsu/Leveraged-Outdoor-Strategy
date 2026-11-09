@@ -16,7 +16,7 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 
 1. Leader sets trip demand (pick a template, then fine-tune)
 2. The leader shares a Google Form link; each member rates themselves there, and the page pulls the responses in by trip code (or the leader enters members by hand)
-3. Leader imports codes, adds their ratings, checks plan/team gear and leverage items
+3. Leader adds their own ratings, checks plan/team gear and leverage items
 4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
 ## Layout and display
