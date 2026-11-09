@@ -1376,6 +1376,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
 
   /* ---------- ⑥ A4 分享圖（2480×3508，300 dpi） ---------- */
+  let a4Shown = 0;
   function a4SVG() {
     const W = 2480, H = 3508, M = 150;
     const C = { ink: '#1f2a24', muted: '#66736b', line: '#d9dfda', go: '#2f8a4e', warn: '#c98a12', stop: '#c8412f', accent: '#2f7d6b', contour: '#8a5a2b', demand: '#7a8a9a' };
@@ -1393,7 +1394,7 @@ if (typeof module !== 'undefined' && module.exports) {
     g += '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>';
     g += '<rect x="0" y="0" width="' + W + '" height="24" fill="' + COL[c] + '"/>';
     // 標題
-    g += T(M, 250, L('上山籌碼評估', 'Trip Leverage Check'), 96, C.ink, ' font-weight="700"');
+    g += T(M, 250, L('上山籌碼評估', 'Trip Leverage Check'), 96, C.ink, ' font-weight="700"') + T(W - M, 250, L('第 1 頁／共 2 頁', 'Page 1 of 2'), 34, C.muted, ' text-anchor="end"');
     const bar = L('｜', '  |  ');
     const trip = (st.trip.name || L('未命名行程', 'Untitled trip')) + (st.trip.date ? bar + st.trip.date : '') + bar + tplName(st.template);
     g += T(M, 340, trip, 46, C.muted);
@@ -1437,7 +1438,8 @@ if (typeof module !== 'undefined' && module.exports) {
       l2.forEach(t => { g += T(M + 50, y, t, 34, C.muted); y += 46; });
       y += 30; shown++;
     }
-    if (shown < items.length) g += T(M + 50, y, L('…另有 ' + (items.length - shown) + ' 項，見網頁', '…' + (items.length - shown) + ' more on the page'), 34, C.muted);
+    a4Shown = shown;
+    if (shown < items.length) g += T(M + 50, y, L('…另有 ' + (items.length - shown) + ' 項，見第 2 頁', '…' + (items.length - shown) + ' more on page 2'), 34, C.muted);
     g += T(RX, PY, L('餘裕', 'Margins'), 58, C.ink, ' font-weight="700"') + T(RX + L(150, 240), PY, L('團隊值減需求', 'team value minus need'), 34, C.muted);
     let by = PY + 90;
     const NW = 230, BW = RWd - NW - 170, zx = RX + NW + BW / 2;
@@ -1469,35 +1471,188 @@ if (typeof module !== 'undefined' && module.exports) {
       '.p-backup{fill:none;stroke:' + C.accent + ';stroke-width:1.5;stroke-dasharray:2 3}.p-member{fill:none;stroke:' + C.contour + ';stroke-width:2}.p-member-dot{fill:' + C.contour + '}.dot-nodata{fill:' + C.stop + '}</style>';
     return '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' + style + g + '</svg>';
   }
+  /* ---------- A4 第 2 頁：詳細資料 ---------- */
+  function a4SVG2(skipIssues) {
+    const W = 2480, H = 3508, M = 150;
+    const C = { ink: '#1f2a24', muted: '#66736b', line: '#d9dfda', go: '#2f8a4e', warn: '#c98a12', stop: '#c8412f', accent: '#2f7d6b', soft: '#f6f8f6' };
+    const COL = { green: C.go, amber: C.warn, red: C.stop };
+    const SC = { ok: C.go, marg: C.warn, red: C.stop, nodata: C.stop };
+    const SBG = { ok: '#e3f1e8', marg: '#f8edd3', red: '#f6dcd8', nodata: '#f6dcd8' };
+    const FONT = "'Noto Sans TC','PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif";
+    const tw = (t, fs) => Array.from(String(t)).reduce((w, ch) => w + (/[\u0000-\u00ff]/.test(ch) ? fs * 0.56 : fs), 0);
+    const wrap = (t, fs, maxW) => { const out = []; let line = ''; Array.from(String(t)).forEach(ch => { if (ch === '\n') { out.push(line); line = ''; return; } if (tw(line + ch, fs) > maxW && line) { out.push(line); line = ch; } else line += ch; }); if (line) out.push(line); return out; };
+    const clip = (t, fs, maxW) => { let s = String(t); if (tw(s, fs) <= maxW) return s; while (s && tw(s + '…', fs) > maxW) s = s.slice(0, -1); return s + '…'; };
+    const T = (x, y, t, fs, fill, extra) => '<text x="' + x + '" y="' + y + '" font-size="' + fs + '" fill="' + (fill || C.ink) + '"' + (extra || '') + '>' + esc(t) + '</text>';
+    const H2 = (y, t, sub) => T(M, y, t, 54, C.ink, ' font-weight="700"') + (sub ? T(M + tw(t, 54) + 30, y, sub, 32, C.muted) : '');
+    const bar = L('｜', '  |  ');
+    let g = '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/><rect x="0" y="0" width="' + W + '" height="24" fill="' + COL[res.final] + '"/>';
+    g += T(M, 210, L('上山籌碼評估・詳細資料', 'Trip Leverage Check: details'), 76, C.ink, ' font-weight="700"');
+    g += T(W - M, 210, L('第 2 頁／共 2 頁', 'Page 2 of 2'), 34, C.muted, ' text-anchor="end"');
+    g += T(M, 290, (st.trip.name || L('未命名行程', 'Untitled trip')) + (st.trip.date ? bar + st.trip.date : ''), 42, C.muted);
+    // 1 路線與條件
+    let y = 410;
+    g += H2(y, L('路線與條件', 'Route and conditions'));
+    y += 70;
+    const conds = Object.keys(CONDS).filter(k => st.conds[k]).map(k => L(CONDS[k].name, CONDS[k].en));
+    const routeLines = [L('範本：', 'Template: ') + tplName(st.template) + bar + L('紅線距離 ', 'Minimum gap ') + fmt(st.gap),
+      L('條件：', 'Conditions: ') + (conds.length ? conds.join(L('、', ', ')) : L('無', 'none'))];
+    routeLines.forEach(t => wrap(t, 38, W - 2 * M).forEach(l => { g += T(M, y, l, 38, C.ink); y += 54; }));
+    // 2 能力矩陣
+    y += 50;
+    g += H2(y, L('隊員能力', 'Member scores'), L('個人軸依狀態上色；團隊軸標出主槓桿 P 與第二人 B', 'Individual axes coloured by status; team axes mark primary P and backup B'));
+    y += 50;
+    const NAMEW = 420, FLW = 130, cols = SCORED.length, CW = Math.floor((W - 2 * M - NAMEW - FLW) / cols), RH = 66;
+    const x0 = M + NAMEW;
+    SCORED.forEach((a, i) => {
+      const cx = x0 + i * CW + CW / 2;
+      g += '<rect x="' + (x0 + i * CW) + '" y="' + y + '" width="' + CW + '" height="' + 84 + '" fill="' + (IND.includes(a) ? '#eef3ef' : '#eaf0f4') + '"/>';
+      const nm = axS(a);
+      const parts = tw(nm, 30) > CW - 12 ? wrap(nm, 30, CW - 12) : [nm];
+      parts.slice(0, 2).forEach((p, k) => { g += T(cx, y + (parts.length > 1 ? 36 + k * 34 : 54), p, 30, C.ink, ' text-anchor="middle" font-weight="700"'); });
+    });
+    g += T(x0 + cols * CW + FLW / 2, y + 54, L('狀態', 'Today'), 30, C.ink, ' text-anchor="middle" font-weight="700"');
+    y += 84;
+    const row = (label, vals, opts) => {
+      g += '<rect x="' + M + '" y="' + y + '" width="' + (W - 2 * M) + '" height="' + RH + '" fill="' + (opts.bg || '#ffffff') + '"/>';
+      if (opts.lamp) g += '<circle cx="' + (M + 22) + '" cy="' + (y + RH / 2) + '" r="14" fill="' + COL[opts.lamp] + '"/>';
+      g += T(M + (opts.lamp ? 50 : 10), y + 44, clip(label, 34, NAMEW - (opts.lamp ? 60 : 20)), 34, opts.lc || C.ink, opts.bold ? ' font-weight="700"' : '');
+      vals.forEach((v, i) => {
+        const cx = x0 + i * CW;
+        if (v.bg) g += '<rect x="' + (cx + 4) + '" y="' + (y + 6) + '" width="' + (CW - 8) + '" height="' + (RH - 12) + '" rx="10" fill="' + v.bg + '"/>';
+        g += T(cx + CW / 2, y + 45, v.t, 34, v.c || C.ink, ' text-anchor="middle" font-weight="' + (v.b ? 700 : 500) + '"');
+      });
+      if (opts.flag != null) g += T(x0 + cols * CW + FLW / 2, y + 45, opts.flag, 32, opts.flag === '—' ? C.muted : C.warn, ' text-anchor="middle" font-weight="700"');
+      g += '<line x1="' + M + '" y1="' + (y + RH) + '" x2="' + (W - M) + '" y2="' + (y + RH) + '" stroke="' + C.line + '" stroke-width="2"/>';
+      y += RH;
+    };
+    row(L('需求', 'Need'), SCORED.map(a => ({ t: fmt(res.Dp[a]), c: C.muted, b: true })), { bg: C.soft, lc: C.muted, bold: true });
+    row(L('紅線', 'Hard minimum'), SCORED.map(a => ({ t: fmt(res.R[a]), c: C.stop, b: true })), { bg: C.soft, lc: C.stop, bold: true });
+    const maxRows = Math.max(1, Math.floor((H - 1650 - y) / RH));
+    res.memberRes.slice(0, maxRows).forEach(r => {
+      const m = r.m;
+      const nm0 = m.name || L('未命名', 'Unnamed'), rl = m.leader ? L('領隊', 'leader') : (m.role || '');
+      const label = nm0 + (rl && nm0.indexOf(rl) < 0 ? L('（' + rl + '）', ' (' + rl + ')') : '');
+      const vals = SCORED.map(a => {
+        if (IND.includes(a)) { const x = r.axes[a]; return x.e == null ? { t: L('未評', '—'), c: C.stop, bg: SBG.nodata } : { t: fmt(x.e), c: SC[x.status], bg: SBG[x.status], b: x.status !== 'ok' }; }
+        const e = effScore(m, a), t = res.teamRes[a], tm = res.team[a];
+        const tag = tm.mainWho === m.name && e != null && e === tm.main ? ' P' : (tm.backupWho === m.name && e != null && e === tm.backup ? ' B' : '');
+        return { t: e == null ? L('未評', '—') : fmt(e) + tag, c: e == null ? C.muted : tag ? C.accent : C.ink, b: !!tag, bg: tag ? '#e3eff0' : null };
+      });
+      row(label, vals, { lamp: r.color, flag: r.nFlags ? '+' + r.nFlags : '—' });
+    });
+    if (res.memberRes.length > maxRows) { g += T(M + 10, y + 44, L('…另有 ' + (res.memberRes.length - maxRows) + ' 人，見網頁', '…' + (res.memberRes.length - maxRows) + ' more on the page'), 32, C.muted); y += RH; }
+    // 3 團隊分工（左）與槓桿（右）
+    y += 90;
+    const LX = M, LW = 1040, RX = M + LW + 80, RW = W - M - RX;
+    g += T(LX, y, L('團隊分工', 'Team roles'), 54, C.ink, ' font-weight="700"') + T(RX, y, L('槓桿', 'Mitigations'), 54, C.ink, ' font-weight="700"');
+    let ly = y + 75, ry = y + 75;
+    TEAM_SKILL.forEach(a => {
+      const tm = res.team[a], t = res.teamRes[a];
+      const stt = t.status || (tm.main == null ? 'nodata' : 'ok');
+      g += '<circle cx="' + (LX + 14) + '" cy="' + (ly - 13) + '" r="11" fill="' + (SC[stt] || C.muted) + '"/>';
+      g += T(LX + 40, ly, axS(a), 36, C.ink, ' font-weight="700"');
+      const who = (tm.main == null ? L('無人', 'nobody') : clip(tm.mainWho, 34, 300) + ' ' + fmt(tm.main)) + L('／第二人 ', ' / backup ') + (tm.backup == null ? L('無', 'none') : clip(tm.backupWho, 34, 300) + ' ' + fmt(tm.backup));
+      g += T(LX + 250, ly, clip(who, 34, LW - 250), 34, C.ink);
+      ly += 62;
+    });
+    const lvState = x => x.applied ? (x.paired ? [C.go, L('成立', 'working')] : [C.warn, L('成立・未成雙', 'working, no backup')]) : x.on ? [C.stop, L('前提未達', 'precondition not met')] : [C.muted, L('未勾選', 'not ticked')];
+    res.levers.forEach(x => {
+      const s = lvState(x);
+      g += '<circle cx="' + (RX + 14) + '" cy="' + (ry - 13) + '" r="11" fill="' + s[0] + '"/>';
+      g += T(RX + 40, ry, clip(lvName(x.L), 34, RW - 420), 34, x.on ? C.ink : C.muted, x.on ? ' font-weight="700"' : '');
+      g += T(W - M, ry, s[1], 30, s[0], ' text-anchor="end"');
+      ry += 54;
+      const why = x.on && !x.ok ? lvPre(x.L) : x.applied && !x.paired ? lvPair(x.L) : '';
+      if (why) { wrap(L('需要：', 'Needs: ') + why, 28, RW - 40).forEach(l => { g += T(RX + 40, ry - 8, l, 28, C.muted); ry += 40; }); }
+    });
+    // 4 清單（左）與評估脆弱點（右）
+    y = Math.max(ly, ry) + 60;
+    g += T(LX, y, L('行前清單', 'Checklists'), 54, C.ink, ' font-weight="700"') + T(RX, y, L('評估脆弱點', 'Weak points'), 54, C.ink, ' font-weight="700"');
+    ly = y + 75; ry = y + 75;
+    const maxY = H - 200;
+    [[L('計畫與備案', 'Plan & backups'), PLAN_ITEMS, st.plan], [L('團隊裝備', 'Team kit'), KIT_ITEMS, st.kit]].forEach(([nm, items, chk]) => {
+      const n = items.filter(i => chk[i.id]).length;
+      g += T(LX, ly, nm + '  ' + n + ' / ' + items.length, 36, n === items.length ? C.go : C.warn, ' font-weight="700"'); ly += 54;
+      items.filter(i => !chk[i.id]).forEach(i => { if (ly > maxY - 40) return; wrap('□ ' + itemText(i), 30, LW - 20).forEach(l => { if (ly <= maxY - 40) { g += T(LX + 10, ly, l, 30, C.muted); ly += 42; } }); });
+      ly += 24;
+    });
+    const pm = (st.premortem || '').trim();
+    if (pm) wrap(pm, 34, RW).forEach(l => { if (ry <= maxY - 40) { g += T(RX, ry, l, 34, C.ink); ry += 50; } });
+    else { g += T(RX, ry, L('尚未填寫。想一想：如果這趟出事，最可能斷在哪裡？', 'Not filled in. If this trip goes wrong, where is it most likely to break?'), 30, C.muted); ry += 50; }
+    ly = Math.max(ly, ry) + 50;
+    g += T(LX, ly, L('隊員重點', 'Member notes'), 54, C.ink, ' font-weight="700"'); ly += 75;
+    res.memberRes.forEach(r => {
+      if (ly > maxY - 300) return;
+      const m = r.m, fl = Object.keys(FLAGS).filter(k => m.flags && m.flags[k]).map(flagName);
+      const disc = r.disc.map(d => axS(d.a) + L(' 本人 ', ' self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l));
+      const txt = memberNotes(r) + (fl.length ? L('｜今日：', ' | today: ') + fl.join(L('、', ', ')) : '') + (disc.length ? L('｜落差：', ' | gaps: ') + disc.join(L('、', ', ')) : '');
+      g += '<circle cx="' + (LX + 14) + '" cy="' + (ly - 13) + '" r="11" fill="' + COL[r.color] + '"/>';
+      g += T(LX + 40, ly, clip(m.name || L('未命名', 'Unnamed'), 34, 380), 34, C.ink, ' font-weight="700"');
+      wrap(txt, 32, W - 2 * M - 460).forEach(l => { g += T(LX + 440, ly, l, 32, r.color === 'green' ? C.muted : C.ink); ly += 46; });
+      ly += 14;
+    });
+    ry = ly;
+    // 5 第 1 頁放不下的項目
+    const rest = res.issues.slice(skipIssues || 0);
+    if (rest.length) {
+      y = Math.max(ly, ry) + 40;
+      if (y < maxY - 120) {
+        g += T(M, y, L('其他需要處理與提醒', 'More to fix and notes'), 54, C.ink, ' font-weight="700"'); y += 70;
+        let shown = 0;
+        for (const it of rest) {
+          const lines = wrap(it.text + bar + it.fix, 32, W - 2 * M - 50);
+          if (y + lines.length * 44 > maxY) break;
+          g += '<circle cx="' + (M + 14) + '" cy="' + (y - 12) + '" r="11" fill="' + (it.level === 'red' ? C.stop : it.level === 'amber' ? C.warn : C.muted) + '"/>';
+          lines.forEach(l => { g += T(M + 44, y, l, 32, C.ink); y += 44; }); y += 14; shown++;
+        }
+        if (shown < rest.length) g += T(M + 44, y, L('…另有 ' + (rest.length - shown) + ' 項，見網頁', '…' + (rest.length - shown) + ' more on the page'), 30, C.muted);
+      }
+    }
+    let ey = Math.max(ly, ry, y || 0) + 70;
+    const how = [L('分數 1–5，每 0.5 一級；本人與領隊都有評分時取較低者。', 'Scores run 1–5 in steps of 0.5; when self and leader both rate, the lower counts.'),
+      L('需求＝路線範本＋條件－成立的槓桿；紅線＝需求－紅線距離，今日狀態每項讓體能、技術、自我照護上移 0.5。', 'Need = template + conditions − working mitigations; hard minimum = need − gap. Each today item raises fitness, technical and self-care by 0.5.'),
+      L('綠＝達需求，黃＝在需求與紅線之間（邊際），紅＝低於紅線或未評。兩項以上邊際也算紅。', 'Green = meets need, amber = between need and hard minimum, red = below it or not rated. Two or more marginal counts as red.'),
+      L('團隊軸只要有人夠強即可（P），但第二人（B）也要過紅線，才不會一人倒下就失守。', 'Team axes need one strong person (P), and a backup (B) above the hard minimum so one person going down is not fatal.')];
+    if (ey < maxY - 360) {
+      g += T(M, ey, L('怎麼讀', 'How to read'), 54, C.ink, ' font-weight="700"'); ey += 70;
+      how.forEach(t => wrap(t, 30, W - 2 * M - 40).forEach((l, k) => { if (ey <= maxY) { if (!k) g += '<circle cx="' + (M + 10) + '" cy="' + (ey - 10) + '" r="7" fill="' + C.muted + '"/>'; g += T(M + 34, ey, l, 30, C.muted); ey += 44; } }));
+    }
+    g += '<line x1="' + M + '" y1="' + (H - 150) + '" x2="' + (W - M) + '" y2="' + (H - 150) + '" stroke="' + C.line + '" stroke-width="3"/>';
+    g += T(M, H - 90, L('上山籌碼評估', 'Trip Leverage Check') + bar + 'shainyhsu.github.io/Leveraged-Outdoor-Strategy', 32, C.muted);
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '"><style>text{font-family:' + FONT + '}</style>' + g + '</svg>';
+  }
+  function svgToJpg(svg) {
+    return new Promise((ok, bad) => {
+      const img = new Image();
+      img.onload = () => {
+        const cv = document.createElement('canvas'); cv.width = 2480; cv.height = 3508;
+        const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0);
+        cv.toBlob(b => b ? ok(b) : bad(), 'image/jpeg', 0.92);
+      };
+      img.onerror = bad;
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    });
+  }
   function shareA4() {
     const msg = $('#a4-msg');
     msg.textContent = L('產生中…', 'Making…');
-    const img = new Image();
-    img.onload = () => {
-      const cv = document.createElement('canvas');
-      cv.width = 2480; cv.height = 3508;
-      const cx = cv.getContext('2d');
-      cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
-      cx.drawImage(img, 0, 0);
-      cv.toBlob(blob => {
-        if (!blob) { msg.textContent = L('產生失敗', 'Failed'); return; }
-        const name = L('上山籌碼評估_', 'leverage_') + ((st.trip.name || L('行程', 'trip')).replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : '') + '.jpg';
-        const file = new File([blob], name, { type: 'image/jpeg' });
-        const download = () => {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob); a.download = name;
-          document.body.appendChild(a); a.click();
-          setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-          msg.textContent = L('已下載 ', 'Downloaded ') + name;
-        };
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], title: L('上山籌碼評估', 'Trip Leverage Check') }).then(() => { msg.textContent = L('已分享', 'Shared'); }, err => { if (err && err.name === 'AbortError') msg.textContent = ''; else download(); });
-        } else download();
-      }, 'image/jpeg', 0.92);
-    };
-    img.onerror = () => { msg.textContent = L('產生失敗', 'Failed'); };
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(a4SVG());
+    const p1 = a4SVG(), p2 = a4SVG2(a4Shown);
+    Promise.all([svgToJpg(p1), svgToJpg(p2)]).then(blobs => {
+      const base = L('上山籌碼評估_', 'leverage_') + ((st.trip.name || L('行程', 'trip')).replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : '');
+      const files = blobs.map((b, i) => new File([b], base + '_' + (i + 1) + '.jpg', { type: 'image/jpeg' }));
+      const download = () => {
+        files.forEach((f, i) => setTimeout(() => {
+          const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name;
+          document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+        }, i * 600));
+        msg.textContent = L('已下載 2 張', 'Downloaded 2 images');
+      };
+      if (navigator.canShare && navigator.canShare({ files })) {
+        navigator.share({ files, title: L('上山籌碼評估', 'Trip Leverage Check') }).then(() => { msg.textContent = L('已分享', 'Shared'); }, err => { if (err && err.name === 'AbortError') msg.textContent = ''; else download(); });
+      } else download();
+    }, () => { msg.textContent = L('產生失敗', 'Failed'); });
   }
+
 
   /* ---------- 重新計算與繪製 ---------- */
   function refresh(opts) {
