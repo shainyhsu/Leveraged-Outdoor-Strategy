@@ -15,9 +15,9 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 ## Workflow
 
 1. Leader sets trip demand (pick a template, then fine-tune)
-2. Each member rates themselves and generates a share code for the leader
+2. The leader shares a Google Form link; each member rates themselves there, and the page pulls the responses in by trip code (or the leader enters members by hand)
 3. Leader imports codes, adds their ratings, checks plan/team gear and leverage items
-4. Review (optional override with a written reason), pre-mortem, then copy summary or export the full team data code
+4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
 ## Layout and display
 
@@ -28,14 +28,15 @@ Time estimates pair well with the [Hiking Time Estimator](https://shainyhsu.gith
 
 ## Method notes (summary)
 
-Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profiling, Munter’s risk reduction, FAA personal minimums, GAR, SORTS-style commander review, and pre-mortem thinking. Details are on the page under “methods and sources.”
+Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profiling, Munter’s risk reduction, FAA personal minimums, GAR, and pre-mortem thinking. Details are on the page under “methods and sources.”
 
 ## Tech
 
-Single HTML page on GitHub Pages (interface in Traditional Chinese). Ratings and share codes stay in the browser. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+Single HTML page on GitHub Pages (interface in Traditional Chinese). Ratings stay in the browser; member self-assessments go to the leader's Google Form responses sheet. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
 
 ## Version history
 
+- V5 | 2026-11-09 11:40 | Redesigned layout: verdict, both radar charts side by side, then items to handle and margins at the top; option to overlay all members; members self-assess through a Google Form whose responses are pulled in by trip code (share codes removed); verdict is computed only by the program (leader override removed); “Weak points” review folded by default; new A4 high-resolution JPG share image.
 - V4 | 2026-11-09 09:23 | Added a light/dark toggle in the top-right corner, with dark as the default and your choice remembered.
 - V3 | 2026-11-08 20:28 | Added a fuller page title, search description, canonical link, social-share preview tags and structured data so the tool shows up better in search and link previews.
 - V2 | 2026-10-23 14:46 | Tidied the page's underlying HTML structure and language setting, and shortened the time-estimator link label.
