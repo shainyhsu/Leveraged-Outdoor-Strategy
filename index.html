@@ -379,11 +379,11 @@ details.radar-card > summary { align-items: flex-start; }
   <section class="hero">
     <p class="eyebrow" data-en="LEVERAGE CHECK FOR TRIP LEADERS">籌碼（LEVERAGE）評估表</p>
     <h1 data-en="How much leverage do we have on this trip?">這次上山，我們有多少籌碼？</h1>
-    <p class="slogan" data-en="Strengths cover weaknesses, &lt;span&gt;red lines are not negotiable&lt;/span&gt;, levers come in pairs.">強項撐弱項，<span>紅線不商量</span>，槓桿要成雙。</p>
-    <p class="flow" data-en="The leader sets the route's needs and sends members the form link. Their self-ratings flow in by name (or the leader enters them). The leader rates, ticks the checklists and levers, and the page decides green, amber or red. Scores run 1 to 5 in steps of 0.5.">領隊設定路線需求，把表單連結傳給隊員自評，回覆依姓名自動彙整（也可由領隊手動輸入）；領隊評分、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
+    <p class="slogan" data-en="Strengths cover weaknesses, &lt;span&gt;hard minimums are not negotiable&lt;/span&gt;, every mitigation needs a backup.">強項撐弱項，<span>紅線不商量</span>，槓桿要成雙。</p>
+    <p class="flow" data-en="The leader sets the route's needs and sends members the form link. Their self-ratings flow in by name (or the leader enters them). The leader rates, ticks the checklists and mitigations, and the page decides green, amber or red. Scores run 1 to 5 in steps of 0.5.">領隊設定路線需求，把表單連結傳給隊員自評，回覆依姓名自動彙整（也可由領隊手動輸入）；領隊評分、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
     <div class="banner" id="loadbanner" hidden><span data-en="This link carries a saved assessment.">這個連結帶有一份儲存的評估。</span><button type="button" class="btn" data-act="load-yes" data-en="Load it (replaces current data)">載入（取代目前資料）</button><button type="button" class="btn ghost" data-act="load-no" data-en="Ignore">忽略</button></div>
     <div class="banner" id="banner" hidden><span data-en="This is example data: five sample members on a winter high-mountain summit day.">目前是範例資料：五位範例隊員、冬季高山長日攻頂。</span><button type="button" class="btn" data-act="clear-example" data-en="Clear example and start">清空範例，開始新評估</button></div>
-    <nav class="jump" aria-label="快速移動"><a href="#summary" data-en="Verdict">判定</a><a href="#s-demand" data-en="① Needs">① 需求</a><a href="#s-members" data-en="② Ratings">② 評分</a><a href="#s-lists" data-en="③ Checklists">③ 清單</a><a href="#s-levers" data-en="④ Levers">④ 槓桿</a><a href="#s-weak" data-en="⑤ Weak points">⑤ 脆弱點</a><a href="#s-share" data-en="⑥ Share">⑥ 分享</a></nav>
+    <nav class="jump" aria-label="快速移動"><a href="#summary" data-en="Verdict">判定</a><a href="#s-demand" data-en="① Needs">① 需求</a><a href="#s-members" data-en="② Ratings">② 評分</a><a href="#s-lists" data-en="③ Checklists">③ 清單</a><a href="#s-levers" data-en="④ Mitigations">④ 槓桿</a><a href="#s-weak" data-en="⑤ Weak points">⑤ 脆弱點</a><a href="#s-share" data-en="⑥ Share">⑥ 分享</a></nav>
   </section>
 
   <div class="layout">
@@ -392,12 +392,12 @@ details.radar-card > summary { align-items: flex-start; }
     <main class="steps">
       <details class="step fold" id="s-demand" open>
         <summary><h2><span class="num">①</span><span data-en="Trip needs">行程需求</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Pick the closest template, then tick conditions. Red line = need minus the red-line gap; levers only lower the need, never the red line. Use − / + to fine-tune an axis.">先選最接近的範本，再勾條件。紅線＝需求減紅線距離；槓桿只會降需求，紅線不動。個別軸可以用 −／＋ 微調。</p>
+        <p class="lead" data-en="Pick the closest template, then tick conditions. Hard minimum = need minus the minimum gap; mitigations only lower the need, never the hard minimum. Use − / + to fine-tune an axis.">先選最接近的範本，再勾條件。紅線＝需求減紅線距離；槓桿只會降需求，紅線不動。個別軸可以用 −／＋ 微調。</p>
         <div class="fields">
           <label class="f" for="trip-name"><span data-en="Trip name">行程名稱</span><input type="text" id="trip-name" maxlength="80" placeholder="例：嘉明湖攻頂日" data-en-ph="e.g. Jiaming Lake summit day"></label>
           <label class="f" for="trip-date"><span data-en="Date">日期</span><input type="date" id="trip-date"></label>
           <label class="f" for="tpl"><span data-en="Template">需求範本</span><select id="tpl"></select></label>
-          <label class="f" for="gap"><span data-en="Red-line gap (need minus)">紅線距離（需求減幾分）</span><select id="gap"><option value="0.5" data-en="0.5 (strict)">0.5（嚴）</option><option value="1" data-en="1.0 (standard)">1.0（標準）</option><option value="1.5" data-en="1.5 (loose)">1.5（寬）</option></select></label>
+          <label class="f" for="gap"><span data-en="Minimum gap (need minus)">紅線距離（需求減幾分）</span><select id="gap"><option value="0.5" data-en="0.5 (strict)">0.5（嚴）</option><option value="1" data-en="1.0 (standard)">1.0（標準）</option><option value="1.5" data-en="1.5 (loose)">1.5（寬）</option></select></label>
         </div>
         <p class="gtitle" data-en="Conditions | each tick raises related needs by 0.5">條件｜勾選後相關軸需求 +0.5</p>
         <div class="checks" id="conds"></div>
@@ -406,7 +406,7 @@ details.radar-card > summary { align-items: flex-start; }
 
       <details class="step fold" id="s-members" open>
         <summary><h2><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below red line, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「加入隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
+        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「加入隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
         <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
         <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">加入隊員（手動輸入）</button></div>
@@ -414,7 +414,7 @@ details.radar-card > summary { align-items: flex-start; }
 
       <details class="step fold" id="s-lists" open>
         <summary><h2><span class="num">③</span><span data-en="Plan & team kit">計畫與團隊裝備</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="These two axes check whether the whole team is ready; the share of ticks converts to 1–5. Items tagged “pair” are backups in themselves.">這兩軸看整隊有沒有準備好，勾選比例換算成 1 到 5 分。標「成雙」的項目本身就是備援。</p>
+        <p class="lead" data-en="These two axes check whether the whole team is ready; the share of ticks converts to 1–5. Items tagged “backup” are backups in themselves.">這兩軸看整隊有沒有準備好，勾選比例換算成 1 到 5 分。標「成雙」的項目本身就是備援。</p>
         <div class="subhead"><h3 data-en="Plan & backups">計畫與備案</h3><span class="subscore" id="plan-score"></span></div>
         <div class="checks" id="plan-list"></div>
         <p class="note"><span data-en="Estimate leg times with">各段時間可用</span> <a id="calc-link" href="#" target="_blank" rel="noopener" data-en="Hiking Time Calculator">步程試算</a> <span data-en="."> 估算。</span></p>
@@ -423,20 +423,20 @@ details.radar-card > summary { align-items: flex-start; }
       </details>
 
       <details class="step fold" id="s-levers" open>
-        <summary><h2><span class="num">④</span><span data-en="Levers">槓桿</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Each lever lowers its axes' need by 0.5, at most 1.0 per axis, and never below the red line. A lever whose precondition isn't met doesn't count; one that works without a second person or spare is flagged “no pair”.">每項槓桿讓指定軸的需求降 0.5，同一軸最多降 1.0，而且不低於紅線。前提沒達到就不計入；成立但沒有第二人或備品，會列為「未成雙」。</p>
+        <summary><h2><span class="num">④</span><span data-en="Mitigations">槓桿</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="Each mitigation lowers its axes' need by 0.5, at most 1.0 per axis, and never below the hard minimum. A mitigation whose precondition isn't met doesn't count; one that works without a second person or spare is flagged “no backup”.">每項槓桿讓指定軸的需求降 0.5，同一軸最多降 1.0，而且不低於紅線。前提沒達到就不計入；成立但沒有第二人或備品，會列為「未成雙」。</p>
         <div class="levers" id="levers"></div>
       </details>
 
       <details class="step fold" id="s-weak" open>
         <summary><h2><span class="num">⑤</span><span data-en="Weak points">評估脆弱點</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="The verdict comes from needs, red lines and levers, with no manual override. Write down this trip's weakest link here: if the trip goes wrong, where is it most likely to break, and how will you shore it up before leaving?">判定由程式依需求、紅線與槓桿自動產生，不由領隊覆核。這裡寫下這趟最脆弱的環節：假設行程出問題，最可能卡在哪裡，出發前怎麼補強。</p>
+        <p class="lead" data-en="The verdict comes from needs, hard minimums and mitigations, with no manual override. Write down this trip's weakest link here: if the trip goes wrong, where is it most likely to break, and how will you shore it up before leaving?">判定由程式依需求、紅線與槓桿自動產生，不由領隊覆核。這裡寫下這趟最脆弱的環節：假設行程出問題，最可能卡在哪裡，出發前怎麼補強。</p>
         <label class="f" for="premortem"><span data-en="Weak points and fixes">脆弱點與補強</span><textarea id="premortem" rows="3" maxlength="600" placeholder="例：凌晨出發睡眠不足，回程天黑前到不了檢核點；天氣判讀只有一人可靠。" data-en-ph="e.g. Short sleep before a pre-dawn start; may miss the checkpoint before dark; only one person reads weather reliably."></textarea></label>
       </details>
 
       <details class="step fold" id="s-share" open>
         <summary><h2><span class="num">⑥</span><span data-en="Share">分享</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Make a high-resolution A4 image (JPG) with the verdict, personal base, team skills, items to fix and margins, ready for a group chat or printing.">產生一張 A4 高解析圖（JPG），內容是判定、個人底盤、團隊能力、需要處理與提醒、餘裕，可直接傳到群組或列印。</p>
+        <p class="lead" data-en="Make a high-resolution A4 image (JPG) with the verdict, individual readiness, team skills, items to fix and margins, ready for a group chat or printing.">產生一張 A4 高解析圖（JPG），內容是判定、個人底盤、團隊能力、需要處理與提醒、餘裕，可直接傳到群組或列印。</p>
         <div class="row-btns"><button type="button" class="btn" data-act="a4" data-en="Share A4 image (JPG)">分享 A4 圖（JPG）</button><span class="msg" id="a4-msg" role="status"></span></div>
         <details class="sumbox" id="sumbox">
           <summary><span data-en="Text summary (for a group chat or log)">文字摘要（貼到群組或紀錄）</span><span class="chev" aria-hidden="true">›</span></summary>
@@ -447,7 +447,7 @@ details.radar-card > summary { align-items: flex-start; }
 
       <details class="method" open>
         <summary><span data-en="Method and sources">方法與依據</span><span class="chev" aria-hidden="true">›</span></summary>
-        <ul data-en="&lt;li&gt;&lt;b&gt;Two overlaid charts&lt;/b&gt;: leverage (ability) against need (route and conditions). Same idea as the Adventure Experience Paradigm (competence vs risk) and FEMA THIRA/SPR (target vs current).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Anchored scores, self and leader&lt;/b&gt;: the self-profile of performance profiling (Butler &amp;amp; Hardy 1992). Self-ratings run high, so when both exist the lower one counts.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Red lines are not negotiable&lt;/b&gt;: the minimum cut-off of hybrid selection models. Red line = need minus the gap; levers only lower the need.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Strengths cover weaknesses&lt;/b&gt;: Munter's reduction method lowers need through behaviour, plus JD-R resource buffering. Each lever lowers 0.5, at most 1.0 per axis.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Two or more marginal means no go&lt;/b&gt;: the rule from the FAA personal minimums checklist.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Today's condition raises the red line&lt;/b&gt;: the FAA personal minimums worksheet raises the bar when ill or tired.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Levers come in pairs&lt;/b&gt;: bus factor and redundancy from resilience engineering. Team axes check whether a second person clears the red line; checklist axes look at paired items.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Missing data counts as the red line; everyone rates&lt;/b&gt;: the GAR model (US Coast Guard; used for trips by The Mountaineers Tacoma branch).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Program verdict, no leader override&lt;/b&gt;: the verdict only looks at needs, red lines and levers, to avoid talking yourself into it under pressure and the normalization of deviance.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Weak points&lt;/b&gt;: assume the trip went wrong, then work back to the weakest link and shore it up (pre-mortem, Klein 2007).&lt;/li&gt;">
+        <ul data-en="&lt;li&gt;&lt;b&gt;Two overlaid charts&lt;/b&gt;: leverage (ability) against need (route and conditions). Same idea as the Adventure Experience Paradigm (competence vs risk) and FEMA THIRA/SPR (target vs current).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Anchored scores, self and leader&lt;/b&gt;: the self-profile of performance profiling (Butler &amp;amp; Hardy 1992). Self-ratings run high, so when both exist the lower one counts.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hard minimums are not negotiable&lt;/b&gt;: the minimum cut-off of hybrid selection models. Hard minimum = need minus the gap; mitigations only lower the need.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Strengths cover weaknesses&lt;/b&gt;: Munter's reduction method lowers need through behaviour, plus JD-R resource buffering. Each mitigation lowers 0.5, at most 1.0 per axis.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Two or more marginal means no go&lt;/b&gt;: the rule from the FAA personal minimums checklist.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Today's status raises the hard minimum&lt;/b&gt;: the FAA personal minimums worksheet raises the bar when ill or tired.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Every mitigation needs a backup&lt;/b&gt;: bus factor and redundancy from resilience engineering. Team axes check whether a second person clears the hard minimum; checklist axes look at backed-up items.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Missing data counts as the hard minimum; everyone rates&lt;/b&gt;: the GAR model (US Coast Guard; used for trips by The Mountaineers Tacoma branch).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Program verdict, no leader override&lt;/b&gt;: the verdict only looks at needs, hard minimums and mitigations, to avoid talking yourself into it under pressure and the normalization of deviance.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Weak points&lt;/b&gt;: assume the trip went wrong, then work back to the weakest link and shore it up (pre-mortem, Klein 2007).&lt;/li&gt;">
           <li><b>兩張圖疊圖</b>：籌碼（能力）對需求（路線與條件）。同 Adventure Experience Paradigm 的能力對風險，也同 FEMA THIRA／SPR 的目標對現況。</li>
           <li><b>錨點評分、本人與領隊各評</b>：Performance profiling（Butler &amp; Hardy 1992）的自評剖面；自評容易偏高，所以兩者都評時取低分。</li>
           <li><b>紅線不商量</b>：人員甄選 hybrid 模型的最低門檻。紅線＝需求減紅線距離，槓桿只降需求。</li>
@@ -495,7 +495,7 @@ const AXES = {
   aid:  { short: '急救', full: '急救與應變（處置・求援・撤離）', group: 'team', shortEn: "First aid", fullEn: "First aid & response (treat, call, evacuate)",
           anchorsEn: ["No first-aid training", "Basic first aid or CPR", "Wilderness first aid (WFA): sprains, blisters, mild hypothermia", "Advanced (WAFA/WFR): assesses patients, decides evacuation", "Real incident experience; coordinates rescue and evacuation"],
           anchors: ['沒有急救訓練', '基本急救或 CPR', '野外急救（WFA 級），能處理扭傷、水泡、輕度失溫', '野外進階（WAFA／WFR 級），能評估傷患並決定撤離', '有實際處置經驗，能協調搜救與後送'] },
-  crm:  { short: '領導CRM', full: '領導與 CRM（分工・溝通・決策）', group: 'team', shortEn: "Leadership", fullEn: "Leadership & CRM (roles, talk, decisions)",
+  crm:  { short: '領導CRM', full: '領導與 CRM（分工・溝通・決策）', group: 'team', shortEn: "Leadership", fullEn: "Leadership & team communication (roles, talk, decisions)",
           anchorsEn: ["No leading experience", "Assists the leader (roll call, sweep)", "Leads a subgroup and reports back", "Runs briefings, assigns roles, decides under stress", "Handles conflict and emergencies; explains decisions"],
           anchors: ['沒有帶隊經驗', '能協助領隊（點名、收尾）', '能帶小組執行計畫並回報', '主持行前與現場簡報、分派角色、壓力下決策', '能處理衝突與緊急狀況，並說清決策理由'] },
   pace: { short: '配速疲勞', full: '配速與疲勞管理（節奏・休息・折返）', group: 'team', shortEn: "Pacing", fullEn: "Pacing & fatigue (rhythm, rest, turnaround)",
@@ -537,7 +537,7 @@ const FLAGS = {
 const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
 const PLAN_ITEMS = [
   { id: 'p1', text: '登山計畫書完成，入山／入園申請已核准', en: 'Trip plan written; entry permits approved' },
-  { id: 'p2', text: '留守人掌握計畫、聯絡時程與報案時間', en: 'Home contact has the plan, check-in times and when to call rescue' },
+  { id: 'p2', text: '留守人掌握計畫、聯絡時程與報案時間', en: 'Emergency contact has the plan, check-in times and when to call rescue' },
   { id: 'p3', text: '每個檢核點都有最晚抵達時間，未達即折返', en: 'Every checkpoint has a latest arrival time; turn back if missed' },
   { id: 'p4', text: '撤退點與替代路線已標在地圖上', en: 'Retreat points and alternate routes marked on the map' },
   { id: 'p5', text: '分組條件與中途等待點已講清楚（等待至少兩人）', en: 'Split rules and waiting points agreed (wait in pairs at least)' },
@@ -557,22 +557,22 @@ const KIT_ITEMS = [
 const ge = (v, x) => v != null && v >= x;
 const LEVERS = [
   { id: 'L1', name: '天氣窗口', en: 'Weather window', desc: '選定穩定窗口，寫下取消條件', descEn: 'Pick a stable window; write down cancel criteria', targets: ['gear', 'care'],
-    prereqText: '天氣判讀主槓桿 ≥ 4', prereqEn: 'Weather main lever ≥ 4', pairText: '第二人天氣判讀 ≥ 3', pairEn: 'Second person weather ≥ 3',
+    prereqText: '天氣判讀主槓桿 ≥ 4', prereqEn: 'Weather primary ≥ 4', pairText: '第二人天氣判讀 ≥ 3', pairEn: 'Second person weather ≥ 3',
     prereq: c => ge(c.team.wx.main, 4), pair: c => ge(c.team.wx.backup, 3) },
   { id: 'L2', name: '輕裝攻頂', en: 'Light summit push', desc: '大背包與營具留在營地', descEn: 'Leave big packs and camp gear at camp', targets: ['fit'],
     prereqText: '計畫與備案 ≥ 3', prereqEn: 'Plan & backups ≥ 3', pairText: '攻頂組帶天幕或緊急帳（團隊裝備勾選）', pairEn: 'Summit group carries a tarp or bivy (team kit ticked)',
     prereq: c => c.planScore >= 3, pair: c => !!c.kit.k6 },
   { id: 'L3', name: '分組與中途等待點', en: 'Split & waiting points', desc: '體力不支者在中途點等待或先回營地，至少兩人一組', descEn: 'Tired members wait at a midpoint or return to camp, at least in pairs', targets: ['fit'],
-    prereqText: '領導與 CRM 主槓桿 ≥ 4，計畫寫明分組條件', prereqEn: 'Leadership main lever ≥ 4; split rules in the plan', pairText: '第二位帶隊者領導與 CRM ≥ 3', pairEn: 'Second leader\'s leadership ≥ 3',
+    prereqText: '領導與 CRM 主槓桿 ≥ 4，計畫寫明分組條件', prereqEn: 'Leadership primary ≥ 4; split rules in the plan', pairText: '第二位帶隊者領導與 CRM ≥ 3', pairEn: 'Second leader\'s leadership ≥ 3',
     prereq: c => ge(c.team.crm.main, 4) && !!c.plan.p5, pair: c => ge(c.team.crm.backup, 3) },
   { id: 'L4', name: '夥伴制', en: 'Buddy system', desc: '老手一帶一新手', descEn: 'One veteran paired with each beginner', targets: ['exp', 'foot'],
-    prereqText: '經驗 ≥ 4 的人數不少於經驗 ≤ 2 的人數', prereqEn: 'Members with experience ≥ 4 at least match those ≤ 2', pairText: '一帶一本身成雙', pairEn: 'One-on-one pairing is itself paired',
+    prereqText: '經驗 ≥ 4 的人數不少於經驗 ≤ 2 的人數', prereqEn: 'Members with experience ≥ 4 at least match those ≤ 2', pairText: '一帶一本身成雙', pairEn: 'One-on-one pairing is its own backup',
     prereq: c => c.vets > 0 && c.vets >= c.novices, pair: () => true },
   { id: 'L5', name: '時間緩衝', en: 'Time buffer', desc: '各段時間含緩衝，檢核點有最晚抵達時間', descEn: 'Leg times include buffer; checkpoints have a latest arrival', targets: ['fit'],
-    prereqText: '配速與疲勞管理主槓桿 ≥ 3.5，計畫勾選檢核點與時間估算', prereqEn: 'Pacing main lever ≥ 3.5; plan has checkpoints and time estimates', pairText: '第二人配速與疲勞管理 ≥ 3', pairEn: 'Second person pacing ≥ 3',
+    prereqText: '配速與疲勞管理主槓桿 ≥ 3.5，計畫勾選檢核點與時間估算', prereqEn: 'Pacing primary ≥ 3.5; plan has checkpoints and time estimates', pairText: '第二人配速與疲勞管理 ≥ 3', pairEn: 'Second person pacing ≥ 3',
     prereq: c => ge(c.team.pace.main, 3.5) && !!c.plan.p3 && !!c.plan.p7, pair: c => ge(c.team.pace.backup, 3) },
-  { id: 'L6', name: '雙通訊求援', en: 'Dual-comms rescue', desc: '兩種獨立通訊加留守人', descEn: 'Two independent comms plus a home contact', targets: ['aid'],
-    prereqText: '團隊裝備勾選兩種通訊，計畫勾選留守人', prereqEn: 'Team kit has two comms; plan has a home contact', pairText: '兩種通訊本身成雙', pairEn: 'Two comms are themselves paired',
+  { id: 'L6', name: '雙通訊求援', en: 'Dual-comms rescue', desc: '兩種獨立通訊加留守人', descEn: 'Two independent comms plus a emergency contact', targets: ['aid'],
+    prereqText: '團隊裝備勾選兩種通訊，計畫勾選留守人', prereqEn: 'Team kit has two comms; plan has a emergency contact', pairText: '兩種通訊本身成雙', pairEn: 'Two comms back each other up',
     prereq: c => !!c.kit.k1 && !!c.plan.p2, pair: () => true }
 ];
 const LEVER_STEP = 0.5, LEVER_CAP = 1.0;
@@ -611,7 +611,7 @@ function effScore(m, a) {
 function anchorLines(a, v) {
   const an = axAnch(a);
   if (!an) return [];
-  if (v == null) return [L('未評分：缺資料以紅線計', 'Not rated: missing data counts as the red line')];
+  if (v == null) return [L('未評分：缺資料以紅線計', 'Not rated: missing data counts as the hard minimum')];
   const n = Math.floor(v);
   const lines = [n + '｜' + an[n - 1]];
   if (v % 1 && n < 5) lines.push(L('半級：部分做到 ', 'Half step: partly ') + (n + 1) + '｜' + an[n]);
@@ -824,39 +824,39 @@ function compute(st) {
   const issues = [];
   const push = (level, text, fix, to) => issues.push({ level, text, fix, to: to || '' });
   const q = t => L('「' + t + '」', ' "' + t + '" ');
-  if (!members.length) push('red', L('尚未加入隊員', 'No members yet'), L('到「② 隊員評分」加入隊員；缺資料以紅線計', 'Add members in ② Ratings; missing data counts as the red line'), 's-members');
+  if (!members.length) push('red', L('尚未加入隊員', 'No members yet'), L('到「② 隊員評分」加入隊員；缺資料以紅線計', 'Add members in ② Ratings; missing data counts as the hard minimum'), 's-members');
   memberRes.forEach(r => {
     const nm = r.m.name, to = 'card-' + r.m.id;
     IND.forEach(a => {
       const x = r.axes[a];
-      if (x.status === 'nodata') push('red', nm + q(axS(a)) + L('無資料', 'has no data'), L('補評分；缺資料以紅線計', 'Rate it; missing data counts as the red line'), to);
-      else if (x.status === 'red') push('red', nm + q(axS(a)) + fmt(x.e) + L(' 低於紅線 ', ' is below red line ') + fmt(x.R), L('迴避或轉移：換路線、改任務分組，或補訓練後重評', 'Avoid or transfer: change route or roles, or train and reassess'), to);
+      if (x.status === 'nodata') push('red', nm + q(axS(a)) + L('無資料', 'has no data'), L('補評分；缺資料以紅線計', 'Rate it; missing data counts as the hard minimum'), to);
+      else if (x.status === 'red') push('red', nm + q(axS(a)) + fmt(x.e) + L(' 低於紅線 ', ' is below hard minimum ') + fmt(x.R), L('迴避或轉移：換路線、改任務分組，或補訓練後重評', 'Avoid or transfer: change route or roles, or train and reassess'), to);
     });
     const margAxes = IND.filter(a => r.axes[a].status === 'marg');
-    if (margAxes.length >= 2) push('red', nm + L(' 兩項以上邊際（', ': 2+ marginal axes (') + margAxes.map(axS).join(SEP()) + L('）', ')'), L('兩項以上邊際就不出發；用槓桿降低需求，或調整分組', 'Two or more marginal means no go; use levers or regroup'), to);
+    if (margAxes.length >= 2) push('red', nm + L(' 兩項以上邊際（', ': 2+ marginal axes (') + margAxes.map(axS).join(SEP()) + L('）', ')'), L('兩項以上邊際就不出發；用槓桿降低需求，或調整分組', 'Two or more marginal means no go; use mitigations or regroup'), to);
     else if (margAxes.length === 1) {
       const a = margAxes[0], x = r.axes[a];
-      push('amber', nm + q(axS(a)) + L('邊際：', 'marginal: ') + fmt(x.e) + L('／需求 ', ' / need ') + fmt(x.D), L('用槓桿補位，或接受並設檢核點', 'Cover with a lever, or accept and set checkpoints'), to);
+      push('amber', nm + q(axS(a)) + L('邊際：', 'marginal: ') + fmt(x.e) + L('／需求 ', ' / need ') + fmt(x.D), L('用槓桿補位，或接受並設檢核點', 'Cover with a mitigation, or accept and set checkpoints'), to);
     }
-    if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': condition today, ') + r.nFlags + L(' 項，體能、踩踏、自我照護紅線上移 ', ' item(s); fitness, footing, self-care lines up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
+    if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': today\'s status, ') + r.nFlags + L(' 項，體能、踩踏、自我照護紅線上移 ', ' item(s); fitness, footing, self-care minimums up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
     r.disc.forEach(d => push('amber', nm + q(axS(d.a)) + L('本人 ', 'self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l), L('行前對話校準；計分取低分', 'Talk it through before the trip; the lower score counts'), to));
   });
   TEAM.forEach(a => {
     const t = teamRes[a], nm = L('團隊「' + axS(a) + '」', 'Team "' + axS(a) + '" ');
     const to = t.list ? 's-lists' : 's-members';
-    if (t.status === 'nodata') push('red', nm + L('無資料', 'has no data'), L('補評分；缺資料以紅線計', 'Rate it; missing data counts as the red line'), to);
-    else if (t.status === 'red') push('red', nm + (t.list ? L('清單 ', 'checklist ') : L('主槓桿 ', 'main lever ')) + fmt(t.main) + L(' 低於紅線 ', ' is below red line ') + fmt(t.R), t.list ? L('補齊清單項目', 'Complete the checklist') : L('補人或換路線', 'Add someone or change route'), to);
-    else if (t.status === 'marg') push('amber', nm + L('邊際：', 'marginal: ') + fmt(t.main) + L('／需求 ', ' / need ') + fmt(t.D), t.list ? L('補齊清單項目', 'Complete the checklist') : L('找人補位或用槓桿', 'Find cover or use a lever'), to);
-    if (t.single) push('amber', nm + L('只有一人達紅線（備援 ', 'has only one person above the red line (backup ') + fmt(t.backup) + L('，紅線 ', ', red line ') + fmt(t.R) + L('）', ')'), L('指定第二人並行前演練', 'Name a second person and rehearse'), to);
+    if (t.status === 'nodata') push('red', nm + L('無資料', 'has no data'), L('補評分；缺資料以紅線計', 'Rate it; missing data counts as the hard minimum'), to);
+    else if (t.status === 'red') push('red', nm + (t.list ? L('清單 ', 'checklist ') : L('主槓桿 ', 'primary ')) + fmt(t.main) + L(' 低於紅線 ', ' is below hard minimum ') + fmt(t.R), t.list ? L('補齊清單項目', 'Complete the checklist') : L('補人或換路線', 'Add someone or change route'), to);
+    else if (t.status === 'marg') push('amber', nm + L('邊際：', 'marginal: ') + fmt(t.main) + L('／需求 ', ' / need ') + fmt(t.D), t.list ? L('補齊清單項目', 'Complete the checklist') : L('找人補位或用槓桿', 'Find cover or use a mitigation'), to);
+    if (t.single) push('amber', nm + L('只有一人達紅線（備援 ', 'has only one person above the hard minimum (backup ') + fmt(t.backup) + L('，紅線 ', ', hard minimum ') + fmt(t.R) + L('）', ')'), L('指定第二人並行前演練', 'Name a second person and rehearse'), to);
   });
-  if (teamMargs >= 2) push('red', L('團隊兩項以上邊際', 'Team has 2+ marginal axes'), L('兩項以上邊際就不出發；補人、用槓桿或換路線', 'Two or more marginal means no go; add people, use levers or change route'), 's-levers');
+  if (teamMargs >= 2) push('red', L('團隊兩項以上邊際', 'Team has 2+ marginal axes'), L('兩項以上邊際就不出發；補人、用槓桿或換路線', 'Two or more marginal means no go; add people, use mitigations or change route'), 's-mitigations');
   levers.forEach(x => {
-    if (x.on && !x.ok) push('info', L('槓桿「' + lvName(x.L) + '」前提未達，未計入', 'Lever "' + lvName(x.L) + '" not met, not counted'), lvPre(x.L), 's-levers');
-    else if (x.applied && !x.paired) push('amber', L('槓桿「' + lvName(x.L) + '」未成雙', 'Lever "' + lvName(x.L) + '" has no pair'), lvPair(x.L), 's-levers');
+    if (x.on && !x.ok) push('info', L('槓桿「' + lvName(x.L) + '」前提未達，未計入', 'Mitigation "' + lvName(x.L) + '" not met, not counted'), lvPre(x.L), 's-mitigations');
+    else if (x.applied && !x.paired) push('amber', L('槓桿「' + lvName(x.L) + '」未成雙', 'Mitigation "' + lvName(x.L) + '" has no backup'), lvPair(x.L), 's-mitigations');
   });
   ALL.forEach(a => {
-    if (leverInfo[a].capped) push('info', L('「' + axS(a) + '」槓桿合計超過 ' + fmt(LEVER_CAP) + '，以 ' + fmt(LEVER_CAP) + ' 計', '"' + axS(a) + '" levers exceed ' + fmt(LEVER_CAP) + '; counted as ' + fmt(LEVER_CAP)), L('同一軸最多降 ', 'Max reduction per axis is ') + fmt(LEVER_CAP), 's-levers');
-    else if (leverInfo[a].floored && leverInfo[a].want > 0) push('info', L('「' + axS(a) + '」需求已降到紅線', '"' + axS(a) + '" need is down to the red line'), L('紅線不隨槓桿移動', 'Levers never move the red line'), 's-levers');
+    if (leverInfo[a].capped) push('info', L('「' + axS(a) + '」槓桿合計超過 ' + fmt(LEVER_CAP) + '，以 ' + fmt(LEVER_CAP) + ' 計', '"' + axS(a) + '" mitigations exceed ' + fmt(LEVER_CAP) + '; counted as ' + fmt(LEVER_CAP)), L('同一軸最多降 ', 'Max reduction per axis is ') + fmt(LEVER_CAP), 's-mitigations');
+    else if (leverInfo[a].floored && leverInfo[a].want > 0) push('info', L('「' + axS(a) + '」需求已降到紅線', '"' + axS(a) + '" need is down to the hard minimum'), L('紅線不隨槓桿移動', 'Mitigations never move the hard minimum'), 's-mitigations');
   });
   const order = { red: 0, amber: 1, info: 2 };
   issues.sort((x, y) => order[x.level] - order[y.level]);
@@ -888,7 +888,7 @@ function buildSummary(st, res) {
   const conds = Object.keys(CONDS).filter(k => st.conds[k]).map(condName);
   const bar = L('｜', ' | ');
   out.push(L('上山籌碼評估', 'Trip Leverage Check') + bar + (st.trip.name || L('未命名行程', 'Untitled trip')) + (st.trip.date ? bar + st.trip.date : ''));
-  out.push(L('需求：', 'Need: ') + tplName(st.template) + L('；條件：', '; conditions: ') + (conds.length ? conds.join(SEP()) : L('無', 'none')) + L('；紅線距離 ', '; red-line gap ') + st.gap.toFixed(1));
+  out.push(L('需求：', 'Need: ') + tplName(st.template) + L('；條件：', '; conditions: ') + (conds.length ? conds.join(SEP()) : L('無', 'none')) + L('；紅線距離 ', '; minimum gap ') + st.gap.toFixed(1));
   out.push(L('判定：', 'Verdict: ') + COLOR_LONG(res.final) + bar + VERDICT(res.final));
   out.push(L('隊員：', 'Team: ') + st.members.length + L(' 人（綠 ', ' people (green ') + res.counts.green + L('・黃 ', ', amber ') + res.counts.amber + L('・紅 ', ', red ') + res.counts.red + L('）', ')'));
   const act = res.issues.filter(i => i.level !== 'info');
@@ -900,7 +900,7 @@ function buildSummary(st, res) {
   const single = res.levers.filter(x => x.applied && !x.paired).map(x => lvName(x.L));
   const off = res.levers.filter(x => x.on && !x.ok).map(x => lvName(x.L) + L('（', ' (') + lvPre(x.L) + L('）', ')'));
   if (ok.length || single.length || off.length) {
-    out.push('', L('槓桿', 'Levers'));
+    out.push('', L('槓桿', 'Mitigations'));
     if (ok.length) out.push(L('・成立：', '・Working: ') + ok.join(SEP()));
     if (single.length) out.push(L('・未成雙：', '・No pair: ') + single.join(SEP()));
     if (off.length) out.push(L('・未計入：', '・Not counted: ') + off.join(SEP()));
@@ -912,10 +912,10 @@ function buildSummary(st, res) {
       IND.forEach(a => {
         const x = r.axes[a];
         if (x.status === 'nodata') notes.push(axS(a) + L(' 無資料', ' no data'));
-        else if (x.status === 'red') notes.push(axS(a) + L(' 低於紅線', ' below red line'));
+        else if (x.status === 'red') notes.push(axS(a) + L(' 低於紅線', ' below hard minimum'));
         else if (x.status === 'marg') notes.push(axS(a) + L(' 邊際（差 ', ' marginal (short ') + fmt(x.D - x.e) + L('）', ')'));
       });
-      if (r.nFlags) notes.push(L('今日狀態 ', 'condition today: ') + r.nFlags + L(' 項', ''));
+      if (r.nFlags) notes.push(L('今日狀態 ', 'today\'s status: ') + r.nFlags + L(' 項', ''));
       r.disc.forEach(d => notes.push(axS(d.a) + L(' 本人 ', ' self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l)));
       const role = r.m.leader ? L('領隊', 'leader') : (r.m.role && r.m.role !== r.m.name ? r.m.role : '');
       out.push('・' + r.m.name + (role && role.toLowerCase() !== r.m.name.toLowerCase() ? '・' + role : '') + ' ' + COLOR_LONG(r.color) + (notes.length ? L('：', ': ') + notes.join(L('；', '; ')) : ''));
@@ -1120,13 +1120,13 @@ if (typeof module !== 'undefined' && module.exports) {
     const pick = mem.length ? '<details class="ovpick" id="ovpick"' + (ui.ovOpen ? ' open' : '') + '><summary><span>' + L('疊上隊員', 'Overlay members') + '（' + shown.length + '／' + mem.length + '）</span><span class="chev" aria-hidden="true">›</span></summary><div class="ovlist">' +
       mem.map((m, k) => '<label for="ov-' + m.id + '"><i class="sw" style="border-top:3px solid ' + memColor(k) + '"></i><span>' + esc(m.name) + '</span><input type="checkbox" id="ov-' + m.id + '" data-ov="' + m.id + '"' + (m.hide ? '' : ' checked') + '></label>').join('') + '</div></details>' : '';
     return '<div class="radars">' +
-      '<details class="radar-card" id="rc-ind" open><summary><span class="rc-head"><span class="rc-title">' + L('個人底盤', 'Personal base') + '</span><span class="rc-sub">' + L('每人都要過紅線，圖上是全隊每軸最低者', 'Everyone must clear the red line; the line shows the team minimum') + '</span></span><span class="chev" aria-hidden="true">›</span></summary>' +
-      radarSVG(IND, series1, L('個人底盤雷達圖：需求、紅線與全隊最低值', 'Personal base radar: need, red line and team minimum')) +
-      '<div class="legend"><span><i class="sw sw-demand"></i>' + L('需求', 'Need') + '</span><span><i class="sw sw-red"></i>' + L('紅線', 'Red line') + '</span><span><i class="sw sw-team"></i>' + L('全隊最低', 'Team minimum') + '</span>' + shown.map(x => '<span class="mem-legend"><i class="sw" style="border-top-color:' + memColor(x.k) + '"></i>' + esc(x.m.name) + '</span>').join('') + '</div>' +
+      '<details class="radar-card" id="rc-ind" open><summary><span class="rc-head"><span class="rc-title">' + L('個人底盤', 'Individual readiness') + '</span><span class="rc-sub">' + L('每人都要過紅線，圖上是全隊每軸最低者', 'Everyone must clear the hard minimum; the line shows the team minimum') + '</span></span><span class="chev" aria-hidden="true">›</span></summary>' +
+      radarSVG(IND, series1, L('個人底盤雷達圖：需求、紅線與全隊最低值', 'Individual readiness radar: need, hard minimum and team minimum')) +
+      '<div class="legend"><span><i class="sw sw-demand"></i>' + L('需求', 'Need') + '</span><span><i class="sw sw-red"></i>' + L('紅線', 'Hard minimum') + '</span><span><i class="sw sw-team"></i>' + L('全隊最低', 'Team minimum') + '</span>' + shown.map(x => '<span class="mem-legend"><i class="sw" style="border-top-color:' + memColor(x.k) + '"></i>' + esc(x.m.name) + '</span>').join('') + '</div>' +
       pick + '</details>' +
-      '<details class="radar-card" id="rc-team" open><summary><span class="rc-head"><span class="rc-title">' + L('團隊能力', 'Team skills') + '</span><span class="rc-sub">' + L('可以借，看主槓桿與第二人', 'Can be shared; main lever and backup') + '</span></span><span class="chev" aria-hidden="true">›</span></summary>' +
-      radarSVG(TEAM, series2, L('團隊能力雷達圖：需求、紅線、主槓桿與備援', 'Team skills radar: need, red line, main lever and backup')) +
-      '<div class="legend"><span><i class="sw sw-demand"></i>' + L('需求', 'Need') + '</span><span><i class="sw sw-red"></i>' + L('紅線', 'Red line') + '</span><span><i class="sw sw-team"></i>' + L('主槓桿', 'Main lever') + '</span><span><i class="sw sw-backup"></i>' + L('第二人', 'Backup') + '</span></div></details>' +
+      '<details class="radar-card" id="rc-team" open><summary><span class="rc-head"><span class="rc-title">' + L('團隊能力', 'Team skills') + '</span><span class="rc-sub">' + L('可以借，看主槓桿與第二人', 'Can be shared; primary and backup') + '</span></span><span class="chev" aria-hidden="true">›</span></summary>' +
+      radarSVG(TEAM, series2, L('團隊能力雷達圖：需求、紅線、主槓桿與備援', 'Team skills radar: need, hard minimum, primary and backup')) +
+      '<div class="legend"><span><i class="sw sw-demand"></i>' + L('需求', 'Need') + '</span><span><i class="sw sw-red"></i>' + L('紅線', 'Hard minimum') + '</span><span><i class="sw sw-team"></i>' + L('主槓桿', 'Primary') + '</span><span><i class="sw sw-backup"></i>' + L('第二人', 'Backup') + '</span></div></details>' +
       '</div>';
   }
 
@@ -1159,15 +1159,15 @@ if (typeof module !== 'undefined' && module.exports) {
     const nSingle = res.levers.filter(x => x.applied && !x.paired).length;
     const act = res.issues.filter(i => i.level !== 'info').length;
     const bar = L('｜', ' | ');
-    const sub = L('程式依需求、紅線與槓桿自動判定', 'Decided by needs, red lines and levers') + (st.trip.name ? bar + esc(st.trip.name) : '') + (st.trip.date ? bar + esc(st.trip.date) : '');
+    const sub = L('程式依需求、紅線與槓桿自動判定', 'Decided by needs, hard minimums and mitigations') + (st.trip.name ? bar + esc(st.trip.name) : '') + (st.trip.date ? bar + esc(st.trip.date) : '');
     const keep = id => { const d = document.getElementById(id); return d ? d.open : true; };
     const o = { ind: keep('rc-ind'), team: keep('rc-team'), iss: keep('p-issues'), mar: keep('p-margins') };
     let h = '<div class="verdict" data-c="' + c + '"><div class="vtop">' + lamp(c, true) +
       '<div><div class="vword">' + VERDICT(c) + '</div><div class="vsub">' + sub + '</div></div></div>' +
-      '<div class="vstats"><span>' + L('隊員 ' + st.members.length + ' 人', st.members.length + ' people') + '</span><span>' + L('綠 ', 'green ') + res.counts.green + L('・黃 ', ', amber ') + res.counts.amber + L('・紅 ', ', red ') + res.counts.red + '</span><span>' + L('槓桿成立 ', 'levers working ') + nOk + L('・未成雙 ', ', no pair ') + nSingle + '</span></div></div>';
+      '<div class="vstats"><span>' + L('隊員 ' + st.members.length + ' 人', st.members.length + ' people') + '</span><span>' + L('綠 ', 'green ') + res.counts.green + L('・黃 ', ', amber ') + res.counts.amber + L('・紅 ', ', red ') + res.counts.red + '</span><span>' + L('槓桿成立 ', 'mitigations working ') + nOk + L('・未成雙 ', ', no backup ') + nSingle + '</span></div></div>';
     h += radarCards();
     h += '<div class="sumrow"><details class="panel" id="p-issues" open><summary><h3>' + L('需要處理與提醒', 'To fix and notes') + '（' + act + '）</h3><span class="chev" aria-hidden="true">›</span></summary>' + issuesHTML() + '</details>';
-    h += '<details class="panel" id="p-margins" open><summary><h3>' + L('餘裕', 'Margins') + '</h3><span class="chev" aria-hidden="true">›</span></summary><p class="note">' + L('團隊值減需求。個人軸取全隊最低者，團隊軸取主槓桿。', 'Team value minus need. Personal axes use the team minimum; team axes use the main lever.') + '</p>' + barsHTML() + '</details></div>';
+    h += '<details class="panel" id="p-margins" open><summary><h3>' + L('餘裕', 'Margins') + '</h3><span class="chev" aria-hidden="true">›</span></summary><p class="note">' + L('團隊值減需求。個人軸取全隊最低者，團隊軸取主槓桿。', 'Team value minus need. Personal axes use the team minimum; team axes use the primary person.') + '</p>' + barsHTML() + '</details></div>';
     $('#summary').innerHTML = h;
     $('#rc-ind').open = o.ind; $('#rc-team').open = o.team; $('#p-issues').open = o.iss; $('#p-margins').open = o.mar;
     const top = $('#topVerdict');
@@ -1205,16 +1205,16 @@ if (typeof module !== 'undefined' && module.exports) {
     else req = L('清單勾選 ' + res.kitChecked + '／' + KIT_ITEMS.length + ' 項，換算 ' + fmt(res.kitScore) + ' 分', res.kitChecked + ' of ' + KIT_ITEMS.length + ' ticked = ' + fmt(res.kitScore));
     return '<div class="drow"><div class="dmain"><span class="dname">' + esc(axF(a)) + '</span>' +
       '<span class="dnums"><span class="nw">' + L('需求', 'Need') + ' <b>' + fmt(Dp) + '</b></span>' +
-      (li.used ? '<span class="nw dlev">' + L('設定 ', 'set ') + fmt(Dset) + L('，槓桿 −', ', levers −') + fmt(li.used) + '</span>' : '') +
-      '<span class="nw">' + L('紅線', 'Red line') + ' <b class="rl">' + fmt(R) + '</b></span>' +
+      (li.used ? '<span class="nw dlev">' + L('設定 ', 'set ') + fmt(Dset) + L('，槓桿 −', ', mitigations −') + fmt(li.used) + '</span>' : '') +
+      '<span class="nw">' + L('紅線', 'Hard minimum') + ' <b class="rl">' + fmt(R) + '</b></span>' +
       (adj ? '<span class="nw">' + L('手動 ', 'manual ') + (adj > 0 ? '+' : '−') + fmt(Math.abs(adj)) + '</span>' : '') + '</span></div>' +
       '<div class="stepper"><button type="button" id="adjm-' + a + '" data-act="adj" data-a="' + a + '" data-d="-0.5" aria-label="' + esc(L('降低' + axS(a) + '需求', 'Lower ' + axS(a) + ' need')) + '">−</button>' +
       '<button type="button" id="adjp-' + a + '" data-act="adj" data-a="' + a + '" data-d="0.5" aria-label="' + esc(L('提高' + axS(a) + '需求', 'Raise ' + axS(a) + ' need')) + '">＋</button></div>' +
       '<div class="dreq">' + esc(req) + '</div></div>';
   }
   function renderDemandAxes() {
-    $('#dlist').innerHTML = '<p class="gtitle">' + L('個人底盤｜每人比對', 'Personal base | checked per person') + '</p>' + IND.map(demandRow).join('') +
-      '<p class="gtitle">' + L('團隊能力｜主槓桿比對', 'Team skills | checked against the main lever') + '</p>' + TEAM.map(demandRow).join('');
+    $('#dlist').innerHTML = '<p class="gtitle">' + L('個人底盤｜每人比對', 'Individual readiness | checked per person') + '</p>' + IND.map(demandRow).join('') +
+      '<p class="gtitle">' + L('團隊能力｜主槓桿比對', 'Team skills | checked against the primary person') + '</p>' + TEAM.map(demandRow).join('');
   }
 
   /* ---------- ② 隊員評分 ---------- */
@@ -1261,9 +1261,9 @@ if (typeof module !== 'undefined' && module.exports) {
       '<button type="button" id="rt-' + m.id + '-self" data-act="rater" data-m="' + m.id + '" data-r="self" aria-pressed="' + (rater === 'self') + '">' + L('本人評分', 'Self') + '</button>' +
       '<button type="button" id="rt-' + m.id + '-lead" data-act="rater" data-m="' + m.id + '" data-r="lead" aria-pressed="' + (rater === 'lead') + '">' + L('領隊評分', 'Leader') + '</button></span>' +
       '<span class="hint">' + L('領隊評分預設同本人，單獨改過就不連動；兩者不同時取低分，差 1 分以上會標出來。本人評分可以留空。', 'Leader rating follows self until you change it; when they differ the lower counts, and a gap of 1+ is flagged. Self rating may stay empty.') + '</span></div>';
-    h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Personal base | everyone must clear the red line') + '</p>' + IND.map(a => sliderRow(m, a, rater)).join('') +
+    h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Individual readiness | everyone must clear the hard minimum') + '</p>' + IND.map(a => sliderRow(m, a, rater)).join('') +
       '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
-      '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、踩踏、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Condition today | each tick raises fitness, footing and self-care need and red line by 0.5 (max 1.0)') + '</p><div class="checks">' +
+      '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、踩踏、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, footing and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
       Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>').join('') +
       '</div>';
     return h + '</div></details>';
@@ -1278,14 +1278,14 @@ if (typeof module !== 'undefined' && module.exports) {
     IND.forEach(a => {
       const x = r.axes[a];
       if (x.status === 'nodata') notes.push(axS(a) + L('無資料', ' no data'));
-      else if (x.status === 'red') notes.push(axS(a) + L('低於紅線', ' below red line'));
+      else if (x.status === 'red') notes.push(axS(a) + L('低於紅線', ' below hard minimum'));
       else if (x.status === 'marg') notes.push(axS(a) + L('邊際', ' marginal'));
     });
     if (r.nFlags) notes.push(L('今日狀態 ' + r.nFlags + ' 項', 'condition: ' + r.nFlags));
     if (r.disc.length) notes.push(L('認知落差 ' + r.disc.length + ' 軸', 'rating gap on ' + r.disc.length));
     return notes.length ? notes.join(L('・', ' · ')) : L('個人軸全部達標', 'All personal axes meet the need');
   }
-  const STATUS = s => L({ ok: '達標', marg: '邊際', red: '低於紅線', nodata: '無資料' }[s], { ok: 'meets need', marg: 'marginal', red: 'below red line', nodata: 'no data' }[s]);
+  const STATUS = s => L({ ok: '達標', marg: '邊際', red: '低於紅線', nodata: '無資料' }[s], { ok: 'meets need', marg: 'marginal', red: 'below hard minimum', nodata: 'no data' }[s]);
   function updateMembersDynamic() {
     res.memberRes.forEach(r => {
       const m = r.m;
@@ -1300,7 +1300,7 @@ if (typeof module !== 'undefined' && module.exports) {
         inp.style.setProperty('--zr', pct(x.R));
         inp.style.setProperty('--zd', pct(x.D));
         const req = document.getElementById('req-' + m.id + '-' + a);
-        req.textContent = L('需求 ', 'Need ') + fmt(x.D) + L('｜紅線 ', ' | red line ') + fmt(x.R) + L('｜', ' | ') + STATUS(x.status);
+        req.textContent = L('需求 ', 'Need ') + fmt(x.D) + L('｜紅線 ', ' | hard minimum ') + fmt(x.R) + L('｜', ' | ') + STATUS(x.status);
         req.className = 'sreq st-' + x.status;
       });
       TEAM_SKILL.forEach(a => {
@@ -1309,7 +1309,7 @@ if (typeof module !== 'undefined' && module.exports) {
         inp.style.setProperty('--zr', pct(t.R));
         inp.style.setProperty('--zd', pct(t.D));
         const req = document.getElementById('req-' + m.id + '-' + a);
-        req.textContent = L('團隊需求 ', 'Team need ') + fmt(t.D) + L('｜紅線 ', ' | red line ') + fmt(t.R) + L('｜主槓桿 ', ' | main ') + (t.main == null ? L('無', 'none') : fmt(t.main) + L('（', ' (') + t.mainWho + L('）', ')'));
+        req.textContent = L('團隊需求 ', 'Team need ') + fmt(t.D) + L('｜紅線 ', ' | hard minimum ') + fmt(t.R) + L('｜主槓桿 ', ' | main ') + (t.main == null ? L('無', 'none') : fmt(t.main) + L('（', ' (') + t.mainWho + L('）', ')'));
         req.className = 'sreq';
       });
     });
@@ -1318,29 +1318,29 @@ if (typeof module !== 'undefined' && module.exports) {
   /* ---------- ③ 清單 ---------- */
   function renderLists() {
     $('#plan-list').innerHTML = PLAN_ITEMS.map(i => '<label class="ck" for="pl-' + i.id + '"><input type="checkbox" id="pl-' + i.id + '" data-plan="' + i.id + '"' + (st.plan[i.id] ? ' checked' : '') + '><span>' + esc(itemText(i)) + '</span></label>').join('');
-    $('#kit-list').innerHTML = KIT_ITEMS.map(i => '<label class="ck" for="kt-' + i.id + '"><input type="checkbox" id="kt-' + i.id + '" data-kit="' + i.id + '"' + (st.kit[i.id] ? ' checked' : '') + '><span>' + esc(itemText(i)) + (i.pair ? '<em class="tag-pair">' + L('成雙', 'pair') + '</em>' : '') + '</span></label>').join('');
+    $('#kit-list').innerHTML = KIT_ITEMS.map(i => '<label class="ck" for="kt-' + i.id + '"><input type="checkbox" id="kt-' + i.id + '" data-kit="' + i.id + '"' + (st.kit[i.id] ? ' checked' : '') + '><span>' + esc(itemText(i)) + (i.pair ? '<em class="tag-pair">' + L('成雙', 'backup') + '</em>' : '') + '</span></label>').join('');
   }
   function updateListHeads() {
     const tp = res.teamRes.plan, tk = res.teamRes.kit;
-    const head = (n, tot, sc, t) => L(n + '／' + tot + ' 項，' + fmt(sc) + ' 分｜需求 ' + fmt(t.D) + '｜紅線 ' + fmt(t.R), n + ' of ' + tot + ', score ' + fmt(sc) + ' | need ' + fmt(t.D) + ' | red line ' + fmt(t.R)) + ' ' + lamp(t.status === 'ok' ? 'green' : t.status === 'marg' ? 'amber' : 'red');
+    const head = (n, tot, sc, t) => L(n + '／' + tot + ' 項，' + fmt(sc) + ' 分｜需求 ' + fmt(t.D) + '｜紅線 ' + fmt(t.R), n + ' of ' + tot + ', score ' + fmt(sc) + ' | need ' + fmt(t.D) + ' | hard minimum ' + fmt(t.R)) + ' ' + lamp(t.status === 'ok' ? 'green' : t.status === 'marg' ? 'amber' : 'red');
     $('#plan-score').innerHTML = head(res.planChecked, PLAN_ITEMS.length, res.planScore, tp);
     $('#kit-score').innerHTML = head(res.kitChecked, KIT_ITEMS.length, res.kitScore, tk);
   }
 
   /* ---------- ④ 槓桿 ---------- */
   function renderLevers() {
-    $('#levers').innerHTML = res.levers.map(x => {
+    $('#mitigations').innerHTML = res.levers.map(x => {
       const lv = x.L;
       let chip;
       if (!x.on) chip = '<span class="chip off">' + L('未採用', 'Off') + '</span>';
       else if (!x.ok) chip = '<span class="chip fail">' + L('前提未達，未計入', 'Not met, not counted') + '</span>';
-      else if (!x.paired) chip = '<span class="chip single">' + L('成立，未成雙', 'Working, no pair') + '</span>';
-      else chip = '<span class="chip ok">' + L('成立，已成雙', 'Working, paired') + '</span>';
+      else if (!x.paired) chip = '<span class="chip single">' + L('成立，未成雙', 'Working, no backup') + '</span>';
+      else chip = '<span class="chip ok">' + L('成立，已成雙', 'Working, backed up') + '</span>';
       const eff = lv.targets.map(axS).join(SEP());
-      return '<div class="lever' + (x.on ? ' on' : '') + '"><div class="lever-head"><label class="ck-inline" for="lv-' + lv.id + '"><input type="checkbox" id="lv-' + lv.id + '" data-lever="' + lv.id + '"' + (x.on ? ' checked' : '') + '><span class="lever-name">' + esc(lvName(lv)) + '</span></label>' + chip + '</div>' +
+      return '<div class="lever' + (x.on ? ' on' : '') + '"><div class="lever-head"><label class="ck-inline" for="lv-' + lv.id + '"><input type="checkbox" id="lv-' + lv.id + '" data-mitigation="' + lv.id + '"' + (x.on ? ' checked' : '') + '><span class="lever-name">' + esc(lvName(lv)) + '</span></label>' + chip + '</div>' +
         '<div class="lever-desc">' + esc(lvDesc(lv)) + '<span class="lever-eff">' + L('需求 −0.5：', 'Need −0.5: ') + esc(eff) + '</span></div>' +
         '<div class="cond"><span class="' + (x.ok ? 'yes' : 'no') + '">' + (x.ok ? '✓' : '✗') + L(' 前提', ' Precondition') + '</span>' + esc(lvPre(lv)) + '</div>' +
-        '<div class="cond"><span class="' + (x.paired ? 'yes' : 'no') + '">' + (x.paired ? '✓' : '✗') + L(' 成雙', ' Pair') + '</span>' + esc(lvPair(lv)) + '</div></div>';
+        '<div class="cond"><span class="' + (x.paired ? 'yes' : 'no') + '">' + (x.paired ? '✓' : '✗') + L(' 成雙', ' Backup') + '</span>' + esc(lvPair(lv)) + '</div></div>';
     }).join('');
   }
 
@@ -1404,7 +1404,7 @@ if (typeof module !== 'undefined' && module.exports) {
     g += T(M + 120, 520, COLOR_WORD(c), 70, COL[c], ' font-weight="700" text-anchor="middle"');
     g += T(M + 220, 490, VERDICT(c), 62, C.ink, ' font-weight="700"');
     const nOk = res.levers.filter(x => x.applied && x.paired).length, nSingle = res.levers.filter(x => x.applied && !x.paired).length;
-    g += T(M + 220, 560, L('隊員 ' + st.members.length + ' 人｜綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '｜槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '｜程式自動判定', st.members.length + ' people  |  green ' + res.counts.green + ', amber ' + res.counts.amber + ', red ' + res.counts.red + '  |  levers working ' + nOk + ', no pair ' + nSingle + '  |  decided by the page'), 40, C.muted);
+    g += T(M + 220, 560, L('隊員 ' + st.members.length + ' 人｜綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '｜槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '｜程式自動判定', st.members.length + ' people  |  green ' + res.counts.green + ', amber ' + res.counts.amber + ', red ' + res.counts.red + '  |  mitigations working ' + nOk + ', no backup ' + nSingle + '  |  decided by the page'), 40, C.muted);
     // 雷達圖
     const RW = 1060, RH = Math.round(RW * 286 / 356), RY = 760;
     const teamMin = IND.map(a => { const v = res.memberRes.map(r => r.axes[a].e); return (!v.length || v.some(x => x == null)) ? null : Math.min.apply(null, v); });
@@ -1412,13 +1412,13 @@ if (typeof module !== 'undefined' && module.exports) {
     const s2 = [{ cls: 'p-demand', values: TEAM.map(a => res.Dp[a]) }, { cls: 'p-team', values: TEAM.map(a => res.teamRes[a].main), dots: true },
       { cls: 'p-backup', values: TEAM.map(a => res.teamRes[a].list ? res.teamRes[a].main : res.teamRes[a].backup) }, { cls: 'p-red', values: TEAM.map(a => res.R[a]) }];
     const place = (svg, x) => svg.replace('<svg ', '<svg x="' + x + '" y="' + RY + '" width="' + RW + '" height="' + RH + '" ');
-    g += T(M, RY - 50, L('個人底盤', 'Personal base'), 58, C.ink, ' font-weight="700"') + T(M + L(270, 400), RY - 50, L('每人都要過紅線，圖上是全隊每軸最低者', 'Everyone must clear the red line'), 34, C.muted);
-    g += T(M + RW + 60, RY - 50, L('團隊能力', 'Team skills'), 58, C.ink, ' font-weight="700"') + T(M + RW + L(330, 400), RY - 50, L('可以借，看主槓桿與第二人', 'Can be shared; main lever and backup'), 34, C.muted);
-    g += place(radarSVG(IND, s1, L('個人底盤', 'Personal base')), M) + place(radarSVG(TEAM, s2, L('團隊能力', 'Team skills')), M + RW + 60);
+    g += T(M, RY - 50, L('個人底盤', 'Individual readiness'), 58, C.ink, ' font-weight="700"') + T(M + L(270, 400), RY - 50, L('每人都要過紅線，圖上是全隊每軸最低者', 'Everyone must clear the hard minimum'), 34, C.muted);
+    g += T(M + RW + 60, RY - 50, L('團隊能力', 'Team skills'), 58, C.ink, ' font-weight="700"') + T(M + RW + L(330, 400), RY - 50, L('可以借，看主槓桿與第二人', 'Can be shared; primary and backup'), 34, C.muted);
+    g += place(radarSVG(IND, s1, L('個人底盤', 'Individual readiness')), M) + place(radarSVG(TEAM, s2, L('團隊能力', 'Team skills')), M + RW + 60);
     const leg = (x, y, items) => { let o = '', cx = x; items.forEach(it => { o += '<line x1="' + cx + '" y1="' + (y - 12) + '" x2="' + (cx + 60) + '" y2="' + (y - 12) + '" stroke="' + it[1] + '" stroke-width="' + (it[2] || 6) + '"' + (it[3] ? ' stroke-dasharray="' + it[3] + '"' : '') + '/>' + T(cx + 75, y, it[0], 34, C.muted); cx += 95 + tw(it[0], 34) + 40; }); return o; };
     const LY = RY + RH + 50;
-    g += leg(M + 60, LY, [[L('需求', 'Need'), C.demand, 14], [L('紅線', 'Red line'), C.stop, 5, '16 12'], [L('全隊最低', 'Team minimum'), C.accent, 7]]);
-    g += leg(M + RW + 120, LY, [[L('需求', 'Need'), C.demand, 14], [L('紅線', 'Red line'), C.stop, 5, '16 12'], [L('主槓桿', 'Main'), C.accent, 7], [L('第二人', 'Backup'), C.accent, 5, '6 9']]);
+    g += leg(M + 60, LY, [[L('需求', 'Need'), C.demand, 14], [L('紅線', 'Hard minimum'), C.stop, 5, '16 12'], [L('全隊最低', 'Team minimum'), C.accent, 7]]);
+    g += leg(M + RW + 120, LY, [[L('需求', 'Need'), C.demand, 14], [L('紅線', 'Hard minimum'), C.stop, 5, '16 12'], [L('主槓桿', 'Main'), C.accent, 7], [L('第二人', 'Backup'), C.accent, 5, '6 9']]);
     // 下排：需要處理與提醒（左）、餘裕（右）
     const PY = LY + 110, LW = 1220, RX = M + LW + 70, RWd = W - M - RX;
     g += T(M, PY, L('需要處理與提醒', 'To fix and notes'), 58, C.ink, ' font-weight="700"');
