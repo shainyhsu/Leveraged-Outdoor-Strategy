@@ -122,7 +122,7 @@ function axisCard(a) {
   const v = st.v[a], bad = st.tried && v == null;
   return '<div class="card' + (v == null ? ' unset' : '') + (bad ? ' bad' : '') + '" id="c-' + a + '">' +
     '<div class="q"><span class="t">' + esc(LANG === 'en' ? AXES[a].fullEn : AXES[a].full) + '</span><span class="v" id="v-' + a + '">' + (v == null ? L('未選', 'Not set') : fmt(v)) + '</span></div>' +
-    '<input type="range" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-a="' + a + '" aria-label="' + esc(AXES[a].full) + '">' +
+    '<input type="range" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-a="' + a + '" aria-label="' + esc(LANG === 'en' ? AXES[a].fullEn : AXES[a].full) + '">' +
     '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
     '<ul class="anc" id="anc-' + a + '">' + ancHTML(a) + '</ul>' + (bad ? '<p class="err">' + L('請選一個分數', 'Please pick a score') + '</p>' : '') + '</div>';
 }
