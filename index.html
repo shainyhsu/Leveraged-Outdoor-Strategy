@@ -218,6 +218,8 @@ details[open] > summary .chev { transform: rotate(90deg); }
 .srow { display: grid; gap: 2px; padding: 8px 10px 9px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); min-width: 0; }
 .shead { display: flex; align-items: baseline; gap: 10px; }
 .sname { font-weight: 600; font-size: 14px; }
+.ssel { margin-left: auto; min-width: 7.5em; text-align: right; text-align-last: right; font-family: var(--font-num); font-weight: 600; font-size: 16px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line, #8885); background: var(--surface); color: inherit; }
+.srow.unset .ssel { color: var(--stop); font-family: var(--font-body); font-size: 14px; }
 .sval { margin-left: auto; font-family: var(--font-num); font-weight: 600; font-size: 17px; font-variant-numeric: tabular-nums; }
 .srow.unset .sval { color: var(--stop); font-family: var(--font-body); font-size: 14px; }
 input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 5px; margin: 9px 0 3px; cursor: pointer;
@@ -471,7 +473,7 @@ const AXES = {
   fit:  { short: '體能', full: '體能（耐力・負重）', group: 'ind', shortEn: "Fitness", fullEn: "Fitness (endurance, load)",
           anchorsEn: ["Struggles with a 2-hour flat walk", "Finishes a light 4–5 h day hike", "Full pack for a day or 8 h light, recovers by next day", "Multi-day heavy pack, 1,000 m daily gain with energy to spare", "Still able to help others after a 12 h+ day"],
           anchors: ['平路健走 2 小時就吃力', '輕裝郊山 4–5 小時可完成', '重裝一天或輕裝 8 小時，隔天能恢復', '重裝連續多日，單日爬升千米仍有餘力', '12 小時以上長日後仍能協助他人'] },
-  foot: { short: '踩踏', full: '踩踏與地形', group: 'ind', shortEn: "Footing", fullEn: "Footing & terrain",
+  foot: { short: '技術', full: '技術與地形', group: 'ind', shortEn: "Technical", fullEn: "Technical terrain",
           anchorsEn: ["Paved trails only", "Steady on dirt trails, nervous on scree or steep slopes", "Steady on scree, roots and wet steep slopes; uses poles", "Steady on landslides, stream beds, rope sections and at night", "Judges exposed or icy terrain alone and helps others"],
           anchors: ['只走過鋪面步道', '泥土步道穩定，碎石陡坡會緊張', '碎石、樹根、濕滑陡坡穩定，會用登山杖', '崩塌地、溪床、拉繩段、夜間行進穩定', '暴露或結冰地形能自主判斷並協助他人'] },
   care: { short: '自我照護', full: '自我照護（保暖・補給・睡眠）', group: 'ind', shortEn: "Self-care", fullEn: "Self-care (warmth, fuel, sleep)",
@@ -504,7 +506,7 @@ const AXES = {
   plan: { short: '計畫備案', full: '計畫與備案（清單）', group: 'list', shortEn: "Plan", fullEn: "Plan & backups (checklist)" },
   kit:  { short: '團隊裝備', full: '團隊裝備（清單）', group: 'list', shortEn: "Team kit", fullEn: "Team kit (checklist)" }
 };
-const IND = ['fit', 'foot', 'care', 'gear', 'exp', 'mind'];      // 對向：體能↔個人裝備、踩踏↔經驗、自我照護↔溝通心態
+const IND = ['fit', 'foot', 'care', 'gear', 'exp', 'mind'];      // 對向：體能↔個人裝備、技術↔經驗、自我照護↔溝通心態
 const TEAM_SKILL = ['nav', 'wx', 'aid', 'crm', 'pace'];
 const TEAM = ['nav', 'wx', 'aid', 'crm', 'pace', 'plan', 'kit'];
 const SCORED = IND.concat(TEAM_SKILL);
@@ -838,7 +840,7 @@ function compute(st) {
       const a = margAxes[0], x = r.axes[a];
       push('amber', nm + q(axS(a)) + L('邊際：', 'marginal: ') + fmt(x.e) + L('／需求 ', ' / need ') + fmt(x.D), L('用槓桿補位，或接受並設檢核點', 'Cover with a mitigation, or accept and set checkpoints'), to);
     }
-    if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': today\'s status, ') + r.nFlags + L(' 項，體能、踩踏、自我照護紅線上移 ', ' item(s); fitness, footing, self-care minimums up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
+    if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': today\'s status, ') + r.nFlags + L(' 項，體能、技術、自我照護紅線上移 ', ' item(s); fitness, technical, self-care minimums up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
     r.disc.forEach(d => push('amber', nm + q(axS(d.a)) + L('本人 ', 'self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l), L('行前對話校準；計分取低分', 'Talk it through before the trip; the lower score counts'), to));
   });
   TEAM.forEach(a => {
@@ -991,7 +993,7 @@ function mergeFormRows(st, rows, code) {
   const head = rows[0].map(h => h.trim());
   const col = t => head.findIndex(h => h === t || h.indexOf(t) === 0);
   const iCode = col('行程代碼'), iName = col('姓名'), iRole = col('角色'), iFlag = col('今日狀態');
-  const iAx = {}; SCORED.forEach(a => { iAx[a] = col(AXES[a].full); });
+  const iAx = {}; SCORED.forEach(a => { iAx[a] = col(AXES[a].full); if (iAx[a] < 0 && a === 'foot') iAx[a] = col('踩踏與地形'); });
   const latest = new Map();
   rows.slice(1).forEach(r => {
     if (iCode < 0 || String(r[iCode] || '').trim().toUpperCase() !== code) return;
@@ -1235,12 +1237,17 @@ if (typeof module !== 'undefined' && module.exports) {
     }
     const clr = (rater === 'lead' && !m.leader) ? (m.lead[a] != null ? L('改回同本人', 'Follow self again') : '') : (v != null ? L('清除', 'Clear') : '');
     return '<div class="srow' + (v == null ? ' unset' : '') + '" id="row-' + m.id + '-' + a + '">' +
-      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + (sv.linked ? '<span class="linked">' + L('同本人', '= self') + '</span>' : '') + '</span></div>' +
-      '<input type="range" id="' + id + '" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-m="' + m.id + '" data-a="' + a + '">' +
-      '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
+      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label>' + scoreSelect(m, a, rater, id, v, sv.linked) + '</div>' +
       '<div class="smeta"><span class="sreq" id="req-' + m.id + '-' + a + '"></span>' + other +
       (clr ? '<button type="button" class="linkbtn" id="clr-' + m.id + '-' + a + '" data-act="clear" data-m="' + m.id + '" data-a="' + a + '">' + clr + '</button>' : '') + '</div>' +
       '<div class="sanchor" id="anc-' + m.id + '-' + a + '">' + anchorLines(a, v).map(esc).join('<br>') + '</div></div>';
+  }
+  function scoreSelect(m, a, rater, id, v, linked) {
+    const raw = (rater === 'self' ? m.self : m.lead)[a];
+    const blank = (rater === 'lead' && !m.leader) ? L('同本人', '= self') + (m.self[a] != null ? '（' + fmt(m.self[a]) + '）' : '') : L('未評', 'Not rated');
+    let o = '<option value=""' + (raw == null ? ' selected' : '') + '>' + blank + '</option>';
+    for (let x = 5; x >= 1; x -= 0.5) o += '<option value="' + x + '"' + (raw === x ? ' selected' : '') + '>' + fmt(x) + '</option>';
+    return '<select class="ssel" id="' + id + '" data-m="' + m.id + '" data-a="' + a + '">' + o + '</select>';
   }
   function delCtl(m) {
     if (m.leader) return '';
@@ -1263,7 +1270,7 @@ if (typeof module !== 'undefined' && module.exports) {
       '<span class="hint">' + L('領隊評分預設同本人，單獨改過就不連動；兩者不同時取低分，差 1 分以上會標出來。本人評分可以留空。', 'Leader rating follows self until you change it; when they differ the lower counts, and a gap of 1+ is flagged. Self rating may stay empty.') + '</span></div>';
     h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Individual readiness | everyone must clear the hard minimum') + '</p>' + IND.map(a => sliderRow(m, a, rater)).join('') +
       '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
-      '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、踩踏、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, footing and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
+      '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、技術、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, technical and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
       Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>').join('') +
       '</div>';
     return h + '</div></details>';
@@ -1309,7 +1316,7 @@ if (typeof module !== 'undefined' && module.exports) {
         inp.style.setProperty('--zr', pct(t.R));
         inp.style.setProperty('--zd', pct(t.D));
         const req = document.getElementById('req-' + m.id + '-' + a);
-        req.textContent = L('團隊需求 ', 'Team need ') + fmt(t.D) + L('｜紅線 ', ' | hard minimum ') + fmt(t.R) + L('｜主槓桿 ', ' | main ') + (t.main == null ? L('無', 'none') : fmt(t.main) + L('（', ' (') + t.mainWho + L('）', ')'));
+        req.textContent = L('團隊需求 ', 'Team need ') + fmt(t.D) + L('｜紅線 ', ' | hard minimum ') + fmt(t.R) + L('｜主槓桿 ', ' | primary ') + (t.main == null ? L('無', 'none') : fmt(t.main) + L('（', ' (') + t.mainWho + L('）', ')'));
         req.className = 'sreq';
       });
     });
@@ -1552,19 +1559,14 @@ if (typeof module !== 'undefined' && module.exports) {
   function setScore(inp) {
     const m = findM(inp.dataset.m), a = inp.dataset.a;
     if (!m) return;
-    const rater = raterOf(m);
-    const v = parseFloat(inp.value);
-    (rater === 'self' ? m.self : m.lead)[a] = v;
-    const row = document.getElementById('row-' + m.id + '-' + a);
-    row.classList.remove('unset');
-    document.getElementById('val-' + m.id + '-' + a).textContent = fmt(v);
-    document.getElementById('anc-' + m.id + '-' + a).innerHTML = anchorLines(a, v).map(esc).join('<br>');
-    refresh();
+    const v = inp.value === '' ? null : parseFloat(inp.value);
+    (raterOf(m) === 'self' ? m.self : m.lead)[a] = v;
+    refresh({ members: true });
   }
+
 
   document.addEventListener('input', e => {
     const t = e.target;
-    if (t.matches('input[type="range"][data-m]')) { setScore(t); return; }
     if (t.id === 'trip-name') { st.trip.name = t.value.slice(0, 80); refresh(); return; }
     if (t.id === 'trip-date') { st.trip.date = t.value; refresh(); return; }
     if (t.id === 'premortem') { st.premortem = t.value.slice(0, 600); refresh(); return; }
@@ -1578,18 +1580,10 @@ if (typeof module !== 'undefined' && module.exports) {
     }
   });
 
-  /* 未評分的滑桿：點一下就以目前位置計分 */
-  document.addEventListener('click', e => {
-    const t = e.target;
-    if (t.matches('input[type="range"][data-m]')) {
-      const row = document.getElementById('row-' + t.dataset.m + '-' + t.dataset.a);
-      if (row && row.classList.contains('unset')) setScore(t);
-    }
-  });
 
   document.addEventListener('change', e => {
     const t = e.target;
-    if (t.matches('input[type="range"][data-m]')) { refresh({ members: true }); return; }
+    if (t.matches('select.ssel[data-m]')) { setScore(t); return; }
     if (t.id === 'tpl') { st.template = t.value; refresh(); return; }
     if (t.id === 'gap') { st.gap = parseFloat(t.value); refresh(); return; }
     if (t.dataset.ov) { const m = findM(t.dataset.ov); if (m) { if (t.checked) delete m.hide; else m.hide = true; ui.ovOpen = true; refresh(); } return; }
