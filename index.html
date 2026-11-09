@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>上山籌碼評估｜登山隊伍能力與路線風險評估表（領隊用）</title>
-<meta name="description" content="給登山領隊的行前評估表：路線需求對隊員能力、紅線不商量、強項撐弱項、槓桿要成雙；隊員自評產生分享碼，領隊匯入覆核並做事前驗屍。">
+<meta name="description" content="給登山領隊的行前評估表：路線需求對隊員能力、紅線不商量、強項撐弱項、槓桿要成雙；隊員用表單自評自動彙整，程式判定綠黃紅，並評估脆弱點、匯出 A4 分享圖。">
 <link rel="canonical" href="https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="上山籌碼評估｜登山隊伍能力與路線風險評估表（領隊用）">
-<meta property="og:description" content="給登山領隊的行前評估表：路線需求對隊員能力、紅線不商量、強項撐弱項、槓桿要成雙；隊員自評產生分享碼，領隊匯入覆核並做事前驗屍。">
+<meta property="og:description" content="給登山領隊的行前評估表：路線需求對隊員能力、紅線不商量、強項撐弱項、槓桿要成雙；隊員用表單自評自動彙整，程式判定綠黃紅，並評估脆弱點、匯出 A4 分享圖。">
 <meta property="og:url" content="https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "上山籌碼評估 Leveraged Outdoor Strategy", "url": "https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/", "description": "給登山領隊的行前評估表：路線需求對隊員能力、紅線不商量、強項撐弱項、槓桿要成雙；隊員自評產生分享碼，領隊匯入覆核並做事前驗屍。", "applicationCategory": "SportsApplication", "operatingSystem": "Any", "inLanguage": "zh-Hant", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "TWD"}, "author": {"@type": "Person", "name": "Shainy Hsu", "url": "https://github.com/shainyhsu"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "上山籌碼評估 Leveraged Outdoor Strategy", "url": "https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/", "description": "給登山領隊的行前評估表：路線需求對隊員能力、紅線不商量、強項撐弱項、槓桿要成雙；隊員用表單自評自動彙整，程式判定綠黃紅，並評估脆弱點、匯出 A4 分享圖。", "applicationCategory": "SportsApplication", "operatingSystem": "Any", "inLanguage": "zh-Hant", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "TWD"}, "author": {"@type": "Person", "name": "Shainy Hsu", "url": "https://github.com/shainyhsu"}}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,11 +94,8 @@ button { font: inherit; }
 .layout { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 .summary { display: grid; gap: 14px; min-width: 0; scroll-margin-top: 64px; }
 .steps { display: grid; gap: 18px; min-width: 0; }
-@media (min-width: 1000px) {
-  .layout { grid-template-columns: minmax(0, 1fr) 410px; }
-  .summary { order: 2; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 60px); max-height: calc(100vh - 76px); overflow-y: auto; padding-right: 4px; }
-  .steps { order: 1; }
-}
+.sumrow { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) { .sumrow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 
 /* 判定卡 */
 .verdict { background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--state, var(--muted)); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; }
@@ -117,7 +114,7 @@ button { font: inherit; }
 
 /* 雷達圖 */
 .radars { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 620px) and (max-width: 999px) { .radars { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 720px) { .radars { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .radar-card { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; }
 .radar-card figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
 .rc-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
@@ -276,6 +273,15 @@ input[type="range"]::-moz-range-track { background: transparent; }
 #sumtext { font-size: 13px; min-height: 16em; }
 
 /* 方法 */
+
+/* 摺疊步驟、表單彙整 */
+details.step.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+details.step.fold > summary::-webkit-details-marker { display: none; }
+details.step.fold > summary .chev { font-size: 22px; color: var(--muted); transition: transform .15s; }
+details.step.fold[open] > summary .chev { transform: rotate(90deg); }
+.intake { display: grid; gap: 10px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 10px; background: var(--bg); }
+.intake .ilink { font-family: var(--font-num); font-size: 12px; word-break: break-all; color: var(--muted); }
+.mem-legend i { border-top-width: 3px; }
 .method { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
 .method > summary { cursor: pointer; font-family: var(--font-display); font-size: 19px; font-weight: 700; }
 .method ul { margin: 10px 0 6px; padding-left: 1.2em; display: grid; gap: 6px; font-size: 14px; max-width: 52em; }
@@ -302,13 +308,13 @@ input[type="range"]::-moz-range-track { background: transparent; }
     <p class="eyebrow">籌碼（LEVERAGE）評估表</p>
     <h1>這次上山，我們有多少籌碼？</h1>
     <p class="slogan">強項撐弱項，<span>紅線不商量</span>，槓桿要成雙。</p>
-    <p class="flow">領隊設定路線需求；隊員各自評分，把分享碼傳給領隊；領隊匯入、補評、勾清單與槓桿，最後寫下覆核。分數 1 到 5，每格 0.5。</p>
+    <p class="flow">領隊設定路線需求；把表單連結傳給隊員自評，回覆自動彙整成隊員 1、2、3…（也可由領隊手動輸入）；領隊補評、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
     <div class="banner" id="banner" hidden><span>目前是範例資料：五位範例隊員、冬季高山長日攻頂。</span><button type="button" class="btn" data-act="clear-example">清空範例，開始新評估</button></div>
-    <nav class="jump" aria-label="快速移動"><a href="#summary">判定</a><a href="#s-demand">① 需求</a><a href="#s-members">② 評分</a><a href="#s-lists">③ 清單</a><a href="#s-levers">④ 槓桿</a><a href="#s-review">⑤ 覆核</a></nav>
+    <nav class="jump" aria-label="快速移動"><a href="#summary">判定</a><a href="#s-demand">① 需求</a><a href="#s-members">② 評分</a><a href="#s-lists">③ 清單</a><a href="#s-levers">④ 槓桿</a><a href="#s-weak">⑤ 脆弱點</a><a href="#s-share">⑥ 分享</a></nav>
   </section>
 
   <div class="layout">
-    <aside class="summary" id="summary" aria-label="判定"></aside>
+    <section class="summary" id="summary" aria-label="判定"></section>
 
     <main class="steps">
       <section class="step" id="s-demand">
@@ -327,12 +333,10 @@ input[type="range"]::-moz-range-track { background: transparent; }
 
       <section class="step" id="s-members">
         <h2><span class="num">②</span>隊員評分</h2>
-        <p class="lead">隊員只要用「本人評分」評自己，按「產生分享碼」傳給領隊。領隊匯入後切到「領隊評分」補評。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
+        <p class="lead">把表單連結傳給隊員，隊員填完送出後，按「抓取表單回覆」就會依姓名彙整成隊員卡；也可以按「加入隊員」由領隊手動輸入。隊員卡裡切到「領隊評分」補評。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
+        <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
-        <div class="row-btns"><button type="button" class="btn" data-act="add">加入隊員</button></div>
-        <label class="f" for="imp">貼上分享碼（隊員碼或全隊資料碼，可連同訊息一起貼）<textarea id="imp" rows="3" placeholder="CM1M.… 或 CM1T.…"></textarea></label>
-        <div class="row-btns"><button type="button" class="btn ghost" data-act="import">匯入分享碼</button><span class="msg" id="imp-msg" role="status"></span></div>
-        <div class="confirm" id="team-confirm" hidden>匯入全隊資料會取代目前內容。<button type="button" class="btn danger" data-act="team-yes">取代並匯入</button><button type="button" class="btn ghost" data-act="team-no">取消</button></div>
+        <div class="row-btns"><button type="button" class="btn ghost" data-act="add">加入隊員（手動輸入）</button></div>
       </section>
 
       <section class="step" id="s-lists">
@@ -351,26 +355,20 @@ input[type="range"]::-moz-range-track { background: transparent; }
         <div class="levers" id="levers"></div>
       </section>
 
-      <section class="step" id="s-review">
-        <h2><span class="num">⑤</span>覆核與紀錄</h2>
-        <p class="lead">系統判定之外，領隊可以覆核，但一定要寫理由。事前驗屍：假設這趟出事了，最可能的原因是什麼。</p>
-        <div class="ovseg" role="group" aria-label="領隊覆核">
-          <button type="button" data-act="ov" data-c="">不覆核</button>
-          <button type="button" data-act="ov" data-c="green">覆核為綠</button>
-          <button type="button" data-act="ov" data-c="amber">覆核為黃</button>
-          <button type="button" data-act="ov" data-c="red">覆核為紅</button>
-        </div>
-        <label class="f" for="ov-reason">覆核理由<textarea id="ov-reason" rows="2" maxlength="400" placeholder="例：副領隊行前補完天氣判讀訓練，已能獨立讀數值預報"></textarea></label>
-        <p class="warnline" id="ov-warn" role="status"></p>
-        <label class="f" for="premortem">事前驗屍<textarea id="premortem" rows="2" maxlength="600" placeholder="假設這趟出事了，最可能的原因是……"></textarea></label>
+      <details class="step fold" id="s-weak">
+        <summary><h2><span class="num">⑤</span>評估脆弱點</h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead">判定由程式依需求、紅線與槓桿自動產生，不由領隊覆核。這裡寫下這趟最脆弱的環節：假設行程出問題，最可能卡在哪裡，出發前怎麼補強。</p>
+        <label class="f" for="premortem">脆弱點與補強<textarea id="premortem" rows="3" maxlength="600" placeholder="例：凌晨出發睡眠不足，回程天黑前到不了檢核點；天氣判讀只有一人可靠。"></textarea></label>
+      </details>
+
+      <section class="step" id="s-share">
+        <h2><span class="num">⑥</span>分享</h2>
+        <p class="lead">產生一張 A4 高解析圖（JPG），內容是判定、個人底盤、團隊能力、需要處理與提醒、餘裕，可直接傳到群組或列印。</p>
+        <div class="row-btns"><button type="button" class="btn" data-act="a4">分享 A4 圖（JPG）</button><span class="msg" id="a4-msg" role="status"></span></div>
         <label class="f" for="sumtext">文字摘要（貼到群組或紀錄）<textarea id="sumtext" readonly></textarea></label>
-        <div class="row-btns"><button type="button" class="btn" data-act="copy" data-target="sumtext" data-msg="sum-msg">複製摘要</button><span class="msg" id="sum-msg" role="status"></span></div>
-        <div class="row-btns"><button type="button" class="btn ghost" data-act="team-export">匯出全隊資料碼</button><button type="button" class="btn danger" data-act="reset-ask">開始新評估</button></div>
+        <div class="row-btns"><button type="button" class="btn ghost" data-act="copy" data-target="sumtext" data-msg="sum-msg">複製文字摘要</button><span class="msg" id="sum-msg" role="status"></span></div>
+        <div class="row-btns"><button type="button" class="btn danger" data-act="reset-ask">開始新評估</button></div>
         <div class="confirm" id="reset-confirm" hidden>清空目前所有資料？<button type="button" class="btn danger" data-act="reset-yes">確認清空</button><button type="button" class="btn ghost" data-act="reset-no">取消</button></div>
-        <div class="codebox" id="teamcode-box" hidden>
-          <label class="f" for="teamcode">全隊資料碼（交接給另一位領隊，或自己備份）<textarea id="teamcode" rows="4" readonly></textarea></label>
-          <div class="row-btns"><button type="button" class="btn" data-act="copy" data-target="teamcode" data-msg="team-msg">複製資料碼</button><span class="msg" id="team-msg" role="status"></span></div>
-        </div>
       </section>
 
       <details class="method">
@@ -384,8 +382,8 @@ input[type="range"]::-moz-range-track { background: transparent; }
           <li><b>今日狀態上移紅線</b>：FAA 個人最低標準工作表，生病、疲勞時提高門檻。</li>
           <li><b>槓桿要成雙</b>：bus factor 與韌性工程的冗餘。團隊軸看第二人是否達紅線；清單軸看成雙項目。</li>
           <li><b>缺資料以紅線計、全員參與評分</b>：GAR 模型（美國海岸防衛隊體系，The Mountaineers 塔科馬分會用於行程）。</li>
-          <li><b>領隊覆核要寫理由</b>：美軍 SORTS 戰備評等允許指揮官主觀調整總評。</li>
-          <li><b>事前驗屍</b>：先假設出事，再回推最可能的原因。</li>
+          <li><b>程式判定、不由領隊覆核</b>：判定只看需求、紅線與槓桿，避免出發壓力下的自我說服與「偏差常態化」（normalization of deviance）。</li>
+          <li><b>評估脆弱點</b>：先假設行程出問題，再回推最脆弱的環節並補強（pre-mortem，Klein 2007）。</li>
         </ul>
         <p class="note">範本數值與門檻是起點。每趟回來對照實際狀況，修正範本與錨點。</p>
       </details>
@@ -741,8 +739,8 @@ function compute(st) {
 
   const sys = issues.some(i => i.level === 'red') ? 'red' : issues.some(i => i.level === 'amber') ? 'amber' : 'green';
   const ov = st.override || {};
-  const overrideApplied = !!(ov.color && ov.reason && ov.reason.trim());
-  const final = overrideApplied ? ov.color : sys;
+  const overrideApplied = false;
+  const final = sys;  // 判定一律由程式產生，不接受人工覆核
 
   const margins = ALL.map(a => {
     const isInd = IND.includes(a);
@@ -768,8 +766,7 @@ function buildSummary(st, res) {
   const conds = Object.keys(CONDS).filter(k => st.conds[k]).map(k => CONDS[k].name);
   L.push('上山籌碼評估｜' + (st.trip.name || '未命名行程') + (st.trip.date ? '｜' + st.trip.date : ''));
   L.push('需求：' + T.name + '；條件：' + (conds.length ? conds.join('、') : '無') + '；紅線距離 ' + st.gap.toFixed(1));
-  let v = '判定：系統 ' + COLOR_ZH[res.sys];
-  if (res.overrideApplied) v += '／領隊覆核 ' + COLOR_ZH[st.override.color] + '（理由：' + st.override.reason.trim() + '）';
+  let v = '判定：程式 ' + COLOR_ZH[res.sys];
   L.push(v + '｜' + VERDICT_ZH[res.final]);
   L.push('隊員：' + st.members.length + ' 人（綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '）');
   const act = res.issues.filter(i => i.level !== 'info');
@@ -806,7 +803,7 @@ function buildSummary(st, res) {
     L.push('', '餘裕最緊');
     tight.forEach(x => L.push('・' + AXES[x.a].short + ' ' + fmtSigned(x.margin)));
   }
-  if (st.premortem && st.premortem.trim()) L.push('', '事前驗屍', st.premortem.trim());
+  if (st.premortem && st.premortem.trim()) L.push('', '評估脆弱點', st.premortem.trim());
   return L.join('\n');
 }
 
@@ -896,10 +893,10 @@ if (typeof module !== 'undefined' && module.exports) {
     for (let k = 1; k <= 5; k++) s += '<text class="ringnum" x="4" y="' + (-R0 * k / 5 - 2).toFixed(1) + '">' + k + '</text>';
     series.forEach(se => {
       if (!se.values.some(v => v != null)) return;
-      s += '<polygon class="' + se.cls + '" points="' + P(axes.map((a, i) => pt(i, se.values[i] == null ? 0 : se.values[i]))) + '"/>';
+      s += '<polygon class="' + se.cls + '"' + (se.color ? ' style="stroke:' + se.color + '"' : '') + ' points="' + P(axes.map((a, i) => pt(i, se.values[i] == null ? 0 : se.values[i]))) + '"/>';
       if (se.dots) axes.forEach((a, i) => {
         const v = se.values[i], p = pt(i, v == null ? 0 : v);
-        s += '<circle class="' + (v == null ? 'dot-nodata' : se.cls + '-dot') + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + (v == null ? 4 : 2.8) + '"/>';
+        s += '<circle class="' + (v == null ? 'dot-nodata' : se.cls + '-dot') + '"' + (se.color && v != null ? ' style="fill:' + se.color + '"' : '') + ' cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + (v == null ? 4 : 2.8) + '"/>';
       });
     });
     axes.forEach((a, i) => {
@@ -910,6 +907,8 @@ if (typeof module !== 'undefined' && module.exports) {
     });
     return s + '</svg>';
   }
+  const MEM_COLORS = ['#e8833a', '#3fa7d6', '#c45ab3', '#59a14f', '#edc948', '#9c755f', '#76b7b2', '#ff9da7', '#af7aa1', '#bab0ac'];
+  function memColor(k) { return MEM_COLORS[k % MEM_COLORS.length]; }
   function clampV(v) { return Math.max(0, Math.min(5, v == null ? 0 : v)); }
 
   function radarCards() {
@@ -918,24 +917,26 @@ if (typeof module !== 'undefined' && module.exports) {
       if (!vals.length || vals.some(v => v == null)) return null;
       return Math.min.apply(null, vals);
     });
-    const ovm = st.members.find(m => m.id === ui.overlay);
+    const ovAll = ui.overlay === '*';
+    const ovm = ovAll ? null : st.members.find(m => m.id === ui.overlay);
     const series1 = [
       { cls: 'p-demand', values: IND.map(a => res.Dp[a]) },
       { cls: 'p-team', values: teamMin, dots: true },
       { cls: 'p-red', values: IND.map(a => res.R[a]) }
     ];
     if (ovm) series1.splice(2, 0, { cls: 'p-member', values: IND.map(a => effScore(ovm, a)), dots: true });
+    if (ovAll) st.members.forEach((m, k) => series1.splice(2 + k, 0, { cls: 'p-member', color: memColor(k), values: IND.map(a => effScore(m, a)), dots: true }));
     const series2 = [
       { cls: 'p-demand', values: TEAM.map(a => res.Dp[a]) },
       { cls: 'p-team', values: TEAM.map(a => res.teamRes[a].main), dots: true },
       { cls: 'p-backup', values: TEAM.map(a => res.teamRes[a].list ? res.teamRes[a].main : res.teamRes[a].backup) },
       { cls: 'p-red', values: TEAM.map(a => res.R[a]) }
     ];
-    let opts = '<option value="">不疊加</option>' + st.members.map(m => '<option value="' + m.id + '"' + (m.id === ui.overlay ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('');
+    let opts = '<option value="">不疊加</option>' + (st.members.length ? '<option value="*"' + (ovAll ? ' selected' : '') + '>疊加所有隊員</option>' : '') + st.members.map(m => '<option value="' + m.id + '"' + (m.id === ui.overlay ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('');
     return '<div class="radars">' +
       '<figure class="radar-card"><figcaption><span class="rc-title">個人底盤</span><span class="rc-sub">每人都要過紅線，圖上是全隊每軸最低者</span></figcaption>' +
       radarSVG(IND, series1, '個人底盤雷達圖：需求、紅線與全隊最低值') +
-      '<div class="legend"><span><i class="sw sw-demand"></i>需求</span><span><i class="sw sw-red"></i>紅線</span><span><i class="sw sw-team"></i>全隊最低</span>' + (ovm ? '<span><i class="sw sw-member"></i>' + esc(ovm.name) + '</span>' : '') + '</div>' +
+      '<div class="legend"><span><i class="sw sw-demand"></i>需求</span><span><i class="sw sw-red"></i>紅線</span><span><i class="sw sw-team"></i>全隊最低</span>' + (ovm ? '<span><i class="sw sw-member"></i>' + esc(ovm.name) + '</span>' : '') + (ovAll ? st.members.map((m, k) => '<span class="mem-legend"><i class="sw" style="border-top-color:' + memColor(k) + '"></i>' + esc(m.name) + '</span>').join('') : '') + '</div>' +
       '<label class="f overlay" for="overlay">疊上隊員<select id="overlay">' + opts + '</select></label></figure>' +
       '<figure class="radar-card"><figcaption><span class="rc-title">團隊能力</span><span class="rc-sub">可以借，看主槓桿與第二人</span></figcaption>' +
       radarSVG(TEAM, series2, '團隊能力雷達圖：需求、紅線、主槓桿與備援') +
@@ -971,15 +972,13 @@ if (typeof module !== 'undefined' && module.exports) {
     const nOk = res.levers.filter(x => x.applied && x.paired).length;
     const nSingle = res.levers.filter(x => x.applied && !x.paired).length;
     const act = res.issues.filter(i => i.level !== 'info').length;
-    let sub;
-    if (res.overrideApplied) sub = '系統判定 ' + COLOR_ZH[res.sys] + '，領隊覆核為 ' + COLOR_ZH[c] + '：' + esc(st.override.reason.trim());
-    else sub = '系統判定' + (st.override.color ? '；覆核還沒寫理由，尚未生效' : '，尚未覆核');
+    const sub = '程式依需求、紅線與槓桿自動判定' + (st.trip.name ? '｜' + esc(st.trip.name) : '') + (st.trip.date ? '｜' + esc(st.trip.date) : '');
     let h = '<div class="verdict" data-c="' + c + '"><div class="vtop">' + lamp(c, true) +
       '<div><div class="vword">' + VERDICT_ZH[c] + '</div><div class="vsub">' + sub + '</div></div></div>' +
       '<div class="vstats"><span>隊員 ' + st.members.length + ' 人</span><span>綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '</span><span>槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '</span></div></div>';
     h += radarCards();
-    h += '<div class="panel"><h3>需要處理（' + act + '）</h3>' + issuesHTML() + '</div>';
-    h += '<div class="panel"><h3>餘裕</h3><p class="note">團隊值減需求。個人軸取全隊最低者，團隊軸取主槓桿。</p>' + barsHTML() + '</div>';
+    h += '<div class="sumrow"><div class="panel"><h3>需要處理與提醒（' + act + '）</h3>' + issuesHTML() + '</div>';
+    h += '<div class="panel"><h3>餘裕</h3><p class="note">團隊值減需求。個人軸取全隊最低者，團隊軸取主槓桿。</p>' + barsHTML() + '</div></div>';
     $('#summary').innerHTML = h;
     const top = $('#topVerdict');
     top.className = 'topverdict ' + c;
@@ -1046,17 +1045,15 @@ if (typeof module !== 'undefined' && module.exports) {
       '<p class="gtitle">團隊能力｜可以借，要成雙</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
       '<p class="gtitle">今日狀態｜每勾一項，體能、踩踏、自我照護的需求與紅線上移 0.5（最多 1.0）</p><div class="checks">' +
       Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + FLAGS[k] + '</span></label>').join('') +
-      '</div><div class="row-btns"><button type="button" class="btn ghost" id="cd-btn-' + m.id + '" data-act="code" data-m="' + m.id + '">產生分享碼</button>';
+      '</div><div class="row-btns">';
     if (ui.delAsk === m.id) h += '<span class="confirm">刪除「' + esc(m.name) + '」？<button type="button" class="btn danger" id="dy-' + m.id + '" data-act="del-yes" data-m="' + m.id + '">確認刪除</button><button type="button" class="btn ghost" id="dn-' + m.id + '" data-act="del-no">取消</button></span>';
     else h += '<button type="button" class="btn danger" id="da-' + m.id + '" data-act="del-ask" data-m="' + m.id + '">刪除隊員</button>';
     h += '</div>';
-    if (ui.code[m.id]) h += '<div class="codebox"><label class="f" for="code-' + m.id + '">傳給領隊的分享碼（只含本人評分與今日狀態）<textarea id="code-' + m.id + '" rows="3" readonly>' + esc(ui.code[m.id]) + '</textarea></label>' +
-      '<div class="row-btns"><button type="button" class="btn" data-act="copy" data-target="code-' + m.id + '" data-msg="msg-code-' + m.id + '">複製分享碼</button><span class="msg" id="msg-code-' + m.id + '" role="status"></span></div></div>';
     return h + '</div></details>';
   }
   function renderMembers() {
     const box = $('#members');
-    box.innerHTML = st.members.length ? st.members.map(memberCard).join('') : '<p class="empty">還沒有隊員。按「加入隊員」開始，或在下方貼上隊員傳來的分享碼。</p>';
+    box.innerHTML = st.members.length ? st.members.map(memberCard).join('') : '<p class="empty">還沒有隊員。抓取表單回覆，或按「加入隊員」手動輸入。</p>';
     updateMembersDynamic();
   }
   function memberNotes(r) {
@@ -1130,24 +1127,138 @@ if (typeof module !== 'undefined' && module.exports) {
     }).join('');
   }
 
-  /* ---------- ⑤ 覆核與紀錄 ---------- */
+  /* ---------- ⑤ 評估脆弱點、⑥ 分享 ---------- */
   function renderReviewStatic() {
-    $('#ov-reason').value = st.override.reason;
     $('#premortem').value = st.premortem;
   }
   function updateReview() {
-    document.querySelectorAll('[data-act="ov"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.c === st.override.color)));
-    const warn = $('#ov-warn');
-    warn.textContent = st.override.color && !st.override.reason.trim() ? '寫下理由後，覆核才會生效。' : (res.overrideApplied ? '覆核已生效：' + COLOR_ZH[res.sys] + ' → ' + COLOR_ZH[res.final] : '');
     $('#sumtext').value = buildSummary(st, res);
-    $('#imp-msg').textContent = ui.importMsg;
-    const pend = $('#team-confirm');
-    pend.hidden = !ui.pendingTeam;
-    const tc = $('#teamcode-box');
-    tc.hidden = !ui.teamCode;
-    if (ui.teamCode) $('#teamcode').value = ui.teamCode;
     $('#reset-confirm').hidden = !ui.resetAsk;
     $('#banner').hidden = !st.example;
+  }
+
+
+  /* ---------- ⑥ A4 分享圖（2480×3508，300 dpi） ---------- */
+  function a4SVG() {
+    const W = 2480, H = 3508, M = 150;
+    const C = { ink: '#1f2a24', muted: '#66736b', line: '#d9dfda', go: '#2f8a4e', warn: '#c98a12', stop: '#c8412f', accent: '#2f7d6b', contour: '#8a5a2b', demand: '#7a8a9a' };
+    const COL = { green: C.go, amber: C.warn, red: C.stop };
+    const FONT = "'Noto Sans TC','PingFang TC','Microsoft JhengHei','Heiti TC',sans-serif";
+    const tw = (t, fs) => Array.from(t).reduce((w, ch) => w + (/[\u0000-\u00ff]/.test(ch) ? fs * 0.56 : fs), 0);
+    const wrap = (t, fs, maxW) => {
+      const out = []; let line = '';
+      Array.from(String(t)).forEach(ch => { if (tw(line + ch, fs) > maxW && line) { out.push(line); line = ch; } else line += ch; });
+      if (line) out.push(line); return out;
+    };
+    const T = (x, y, t, fs, fill, extra) => '<text x="' + x + '" y="' + y + '" font-size="' + fs + '" fill="' + (fill || C.ink) + '"' + (extra || '') + '>' + esc(t) + '</text>';
+    const c = res.final;
+    let g = '';
+    g += '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>';
+    g += '<rect x="0" y="0" width="' + W + '" height="24" fill="' + COL[c] + '"/>';
+    // 標題
+    g += T(M, 250, '上山籌碼評估', 96, C.ink, ' font-weight="700"');
+    const trip = (st.trip.name || '未命名行程') + (st.trip.date ? '｜' + st.trip.date : '') + '｜' + (TEMPLATES[st.template] ? TEMPLATES[st.template].name : '');
+    g += T(M, 340, trip, 46, C.muted);
+    // 判定
+    g += '<rect x="' + M + '" y="400" width="' + (W - 2 * M) + '" height="190" rx="24" fill="#f6f8f6" stroke="' + C.line + '" stroke-width="3"/>';
+    g += '<rect x="' + M + '" y="400" width="22" height="190" rx="8" fill="' + COL[c] + '"/>';
+    g += '<rect x="' + (M + 60) + '" y="435" width="120" height="120" rx="22" fill="none" stroke="' + COL[c] + '" stroke-width="7"/>';
+    g += T(M + 120, 520, COLOR_ZH[c], 70, COL[c], ' font-weight="700" text-anchor="middle"');
+    g += T(M + 220, 490, VERDICT_ZH[c], 62, C.ink, ' font-weight="700"');
+    const nOk = res.levers.filter(x => x.applied && x.paired).length, nSingle = res.levers.filter(x => x.applied && !x.paired).length;
+    g += T(M + 220, 560, '隊員 ' + st.members.length + ' 人｜綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '｜槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '｜程式自動判定', 40, C.muted);
+    // 雷達圖
+    const RW = 1060, RH = Math.round(RW * 286 / 356), RY = 760;
+    const teamMin = IND.map(a => { const v = res.memberRes.map(r => r.axes[a].e); return (!v.length || v.some(x => x == null)) ? null : Math.min.apply(null, v); });
+    const s1 = [{ cls: 'p-demand', values: IND.map(a => res.Dp[a]) }, { cls: 'p-team', values: teamMin, dots: true }, { cls: 'p-red', values: IND.map(a => res.R[a]) }];
+    const s2 = [{ cls: 'p-demand', values: TEAM.map(a => res.Dp[a]) }, { cls: 'p-team', values: TEAM.map(a => res.teamRes[a].main), dots: true },
+      { cls: 'p-backup', values: TEAM.map(a => res.teamRes[a].list ? res.teamRes[a].main : res.teamRes[a].backup) }, { cls: 'p-red', values: TEAM.map(a => res.R[a]) }];
+    const place = (svg, x) => svg.replace('<svg ', '<svg x="' + x + '" y="' + RY + '" width="' + RW + '" height="' + RH + '" ');
+    g += T(M, RY - 50, '個人底盤', 58, C.ink, ' font-weight="700"') + T(M + 270, RY - 50, '每人都要過紅線，圖上是全隊每軸最低者', 34, C.muted);
+    g += T(M + RW + 60, RY - 50, '團隊能力', 58, C.ink, ' font-weight="700"') + T(M + RW + 330, RY - 50, '可以借，看主槓桿與第二人', 34, C.muted);
+    g += place(radarSVG(IND, s1, '個人底盤'), M) + place(radarSVG(TEAM, s2, '團隊能力'), M + RW + 60);
+    const leg = (x, y, items) => { let o = '', cx = x; items.forEach(it => { o += '<line x1="' + cx + '" y1="' + (y - 12) + '" x2="' + (cx + 60) + '" y2="' + (y - 12) + '" stroke="' + it[1] + '" stroke-width="' + (it[2] || 6) + '"' + (it[3] ? ' stroke-dasharray="' + it[3] + '"' : '') + '/>' + T(cx + 75, y, it[0], 34, C.muted); cx += 95 + tw(it[0], 34) + 40; }); return o; };
+    const LY = RY + RH + 50;
+    g += leg(M + 60, LY, [['需求', C.demand, 14], ['紅線', C.stop, 5, '16 12'], ['全隊最低', C.accent, 7]]);
+    g += leg(M + RW + 120, LY, [['需求', C.demand, 14], ['紅線', C.stop, 5, '16 12'], ['主槓桿', C.accent, 7], ['第二人', C.accent, 5, '6 9']]);
+    // 下排：需要處理與提醒（左）、餘裕（右）
+    const PY = LY + 110, LW = 1220, RX = M + LW + 70, RWd = W - M - RX;
+    g += T(M, PY, '需要處理與提醒', 58, C.ink, ' font-weight="700"');
+    let y = PY + 80;
+    const maxY = H - 220;
+    const items = res.issues;
+    let shown = 0;
+    if (!items.length) { g += T(M, y, '沒有紅黃項目。出發前仍照檢核點執行。', 40, C.go); y += 60; }
+    for (const it of items) {
+      const col = it.level === 'red' ? C.stop : it.level === 'amber' ? C.warn : C.muted;
+      const l1 = wrap(it.text, 40, LW - 60), l2 = wrap(it.fix, 34, LW - 60);
+      const need = l1.length * 54 + l2.length * 46 + 30;
+      if (y + need > maxY) break;
+      g += '<circle cx="' + (M + 16) + '" cy="' + (y - 14) + '" r="13" fill="' + col + '"/>';
+      l1.forEach(t => { g += T(M + 50, y, t, 40, C.ink); y += 54; });
+      l2.forEach(t => { g += T(M + 50, y, t, 34, C.muted); y += 46; });
+      y += 30; shown++;
+    }
+    if (shown < items.length) g += T(M + 50, y, '…另有 ' + (items.length - shown) + ' 項，見網頁', 34, C.muted);
+    g += T(RX, PY, '餘裕', 58, C.ink, ' font-weight="700"') + T(RX + 150, PY, '團隊值減需求', 34, C.muted);
+    let by = PY + 90;
+    const NW = 230, BW = RWd - NW - 170, zx = RX + NW + BW / 2;
+    res.margins.forEach(x => {
+      const stt = x.margin == null ? 'nodata' : x.status;
+      const col = stt === 'ok' ? C.go : stt === 'marg' ? C.warn : C.stop;
+      g += T(RX, by, AXES[x.a].short, 40, C.ink);
+      g += '<rect x="' + (RX + NW) + '" y="' + (by - 34) + '" width="' + BW + '" height="30" rx="15" fill="#eef1ee"/>';
+      if (x.margin != null) {
+        const v = Math.max(-2, Math.min(2, x.margin)), w = Math.abs(v) / 2 * (BW / 2);
+        if (w > 0) g += '<rect x="' + (v < 0 ? zx - w : zx) + '" y="' + (by - 34) + '" width="' + w + '" height="30" rx="15" fill="' + col + '"/>';
+        else g += '<circle cx="' + zx + '" cy="' + (by - 19) + '" r="13" fill="' + col + '"/>';
+      }
+      g += '<line x1="' + zx + '" y1="' + (by - 44) + '" x2="' + zx + '" y2="' + (by + 6) + '" stroke="' + C.muted + '" stroke-width="3"/>';
+      g += T(W - M, by, fmtSigned(x.margin), 38, col, ' text-anchor="end" font-weight="700"');
+      by += 78;
+    });
+    g += T(zx - BW / 2, by, '−2', 30, C.muted) + T(zx, by, '0', 30, C.muted, ' text-anchor="middle"') + T(zx + BW / 2, by, '+2', 30, C.muted, ' text-anchor="end"');
+    // 頁尾
+    const d = new Date();
+    g += '<line x1="' + M + '" y1="' + (H - 150) + '" x2="' + (W - M) + '" y2="' + (H - 150) + '" stroke="' + C.line + '" stroke-width="3"/>';
+    g += T(M, H - 90, '上山籌碼評估｜shainyhsu.github.io/Leveraged-Outdoor-Strategy', 32, C.muted);
+    g += T(W - M, H - 90, '產生於 ' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), 32, C.muted, ' text-anchor="end"');
+    const style = '<style>text{font-family:' + FONT + '}' +
+      '.ring{fill:none;stroke:' + C.line + ';stroke-width:1}.ring-outer{stroke:#9aa59e}.spoke{stroke:' + C.line + ';stroke-width:1}' +
+      '.ringnum{font-size:9px;fill:' + C.muted + '}.alabel{font-size:12.5px;font-weight:700;fill:' + C.ink + '}' +
+      '.p-demand{fill:rgba(122,138,154,.22);stroke:' + C.demand + ';stroke-width:1.3}.p-red{fill:none;stroke:' + C.stop + ';stroke-width:1.7;stroke-dasharray:5 4}' +
+      '.p-team{fill:rgba(47,125,107,.16);stroke:' + C.accent + ';stroke-width:2.2;stroke-linejoin:round}.p-team-dot{fill:' + C.accent + '}' +
+      '.p-backup{fill:none;stroke:' + C.accent + ';stroke-width:1.5;stroke-dasharray:2 3}.p-member{fill:none;stroke:' + C.contour + ';stroke-width:2}.p-member-dot{fill:' + C.contour + '}.dot-nodata{fill:' + C.stop + '}</style>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' + style + g + '</svg>';
+  }
+  function shareA4() {
+    const msg = $('#a4-msg');
+    msg.textContent = '產生中…';
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement('canvas');
+      cv.width = 2480; cv.height = 3508;
+      const cx = cv.getContext('2d');
+      cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
+      cx.drawImage(img, 0, 0);
+      cv.toBlob(blob => {
+        if (!blob) { msg.textContent = '產生失敗'; return; }
+        const name = '上山籌碼評估_' + ((st.trip.name || '行程').replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : '') + '.jpg';
+        const file = new File([blob], name, { type: 'image/jpeg' });
+        const download = () => {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob); a.download = name;
+          document.body.appendChild(a); a.click();
+          setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+          msg.textContent = '已下載 ' + name;
+        };
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: '上山籌碼評估' }).then(() => { msg.textContent = '已分享'; }, err => { if (err && err.name === 'AbortError') msg.textContent = ''; else download(); });
+        } else download();
+      }, 'image/jpeg', 0.92);
+    };
+    img.onerror = () => { msg.textContent = '產生失敗'; };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(a4SVG());
   }
 
   /* ---------- 重新計算與繪製 ---------- */
@@ -1195,7 +1306,6 @@ if (typeof module !== 'undefined' && module.exports) {
     if (t.matches('input[type="range"][data-m]')) { setScore(t); return; }
     if (t.id === 'trip-name') { st.trip.name = t.value.slice(0, 80); refresh(); return; }
     if (t.id === 'trip-date') { st.trip.date = t.value; refresh(); return; }
-    if (t.id === 'ov-reason') { st.override.reason = t.value.slice(0, 400); refresh(); return; }
     if (t.id === 'premortem') { st.premortem = t.value.slice(0, 600); refresh(); return; }
     if (t.matches('input[data-field]')) {
       const m = findM(t.dataset.m);
@@ -1244,27 +1354,6 @@ if (typeof module !== 'undefined' && module.exports) {
     } catch (err) { fallback(); }
   }
 
-  function doImport() {
-    const text = $('#imp').value;
-    try {
-      const d = decodeCode(text);
-      if (d.kind === 'member') {
-        const r = mergeMemberCode(st, d.obj);
-        ui.open[r.m.id] = true;
-        ui.importMsg = (r.added ? '已加入 ' : '已更新 ') + r.m.name + '（本人評分 ' + r.n + ' 軸）。請切到「領隊評分」補評。';
-        $('#imp').value = '';
-        refresh({ members: true });
-      } else {
-        ui.pendingTeam = sanitizeState(d.obj);
-        ui.importMsg = '這是全隊資料，匯入會取代目前內容。';
-        refresh();
-      }
-    } catch (err) {
-      ui.importMsg = err.message;
-      refresh();
-    }
-  }
-
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
     if (!b) return;
@@ -1299,25 +1388,10 @@ if (typeof module !== 'undefined' && module.exports) {
       st.members = st.members.filter(m => m.id !== id);
       if (ui.overlay === id) ui.overlay = '';
       ui.delAsk = null; refresh({ members: true });
-    } else if (act === 'code') {
-      const m = findM(id); if (!m) return;
-      ui.code[id] = encodeMember(m);
-      refresh({ members: true });
+    } else if (act === 'a4') {
+      shareA4();
     } else if (act === 'copy') {
       copyFrom(b.dataset.target, b.dataset.msg);
-    } else if (act === 'import') {
-      doImport();
-    } else if (act === 'team-yes') {
-      if (ui.pendingTeam) { st = ui.pendingTeam; st.example = false; }
-      ui.pendingTeam = null; ui.importMsg = '已匯入全隊資料。'; ui.open = {}; ui.code = {}; ui.overlay = '';
-      $('#imp').value = '';
-      renderAll();
-    } else if (act === 'team-no') {
-      ui.pendingTeam = null; ui.importMsg = '已取消匯入。'; refresh();
-    } else if (act === 'team-export') {
-      ui.teamCode = encodeTeam(st); refresh();
-    } else if (act === 'ov') {
-      st.override.color = b.dataset.c; refresh();
     } else if (act === 'clear-example') {
       st = blankState(); ui.open = {}; ui.code = {}; ui.overlay = ''; ui.importMsg = '';
       renderAll();
