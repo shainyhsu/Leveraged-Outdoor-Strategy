@@ -1375,7 +1375,7 @@ if (typeof module !== 'undefined' && module.exports) {
   }
 
 
-  /* ---------- ⑥ A4 分享圖（2 頁，各 2480×3508，300 dpi）：區塊量高後平均分配留白 ---------- */
+  /* ---------- ⑥ A4 分享圖（2 頁，各 2480×3508，A4，輸出 600 dpi）：區塊量高後平均分配留白 ---------- */
   function a4Pages() {
     const W = 2480, H = 3508, M = 150, TOP_END = H - 200;
     const C = { ink: '#1f2a24', muted: '#66736b', line: '#d9dfda', go: '#2f8a4e', warn: '#c98a12', stop: '#c8412f', accent: '#2f7d6b', contour: '#8a5a2b', demand: '#7a8a9a', soft: '#f6f8f6' };
@@ -1631,12 +1631,13 @@ if (typeof module !== 'undefined' && module.exports) {
     return new Promise((ok, bad) => {
       const img = new Image();
       img.onload = () => {
-        const cv = document.createElement('canvas'); cv.width = 2480; cv.height = 3508;
-        const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0);
-        cv.toBlob(b => b ? ok(b) : bad(), 'image/jpeg', 0.92);
+        // 2 倍輸出（4960×7016，A4 600 dpi），向量直接以大尺寸繪製，文字與線條銳利
+        const K = 2, cv = document.createElement('canvas'); cv.width = 2480 * K; cv.height = 3508 * K;
+        const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0, cv.width, cv.height);
+        cv.toBlob(b => b ? ok(b) : bad(), 'image/jpeg', 0.95);
       };
       img.onerror = bad;
-      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace('<svg xmlns="http://www.w3.org/2000/svg" width="2480" height="3508"', '<svg xmlns="http://www.w3.org/2000/svg" width="4960" height="7016"'));
     });
   }
   function shareA4() {
