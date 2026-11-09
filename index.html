@@ -218,19 +218,17 @@ details[open] > summary .chev { transform: rotate(90deg); }
 .srow { display: grid; gap: 2px; padding: 8px 10px 9px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); min-width: 0; }
 .shead { display: flex; align-items: baseline; gap: 10px; }
 .sname { font-weight: 600; font-size: 14px; }
-.ssel { margin-left: auto; min-width: 7.5em; text-align: right; text-align-last: right; font-family: var(--font-num); font-weight: 600; font-size: 16px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line, #8885); background: var(--surface); color: inherit; }
-.srow.unset .ssel { color: var(--stop); font-family: var(--font-body); font-size: 14px; }
 .sval { margin-left: auto; font-family: var(--font-num); font-weight: 600; font-size: 17px; font-variant-numeric: tabular-nums; }
 .srow.unset .sval { color: var(--stop); font-family: var(--font-body); font-size: 14px; }
-input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 5px; margin: 9px 0 3px; cursor: pointer;
+input[type="range"] { -webkit-appearance: none; appearance: none; display: block; width: 50%; min-width: 150px; margin-left: auto !important; touch-action: pan-y; height: 8px; border-radius: 5px; margin: 9px 0 3px; cursor: pointer;
   background: linear-gradient(to right, var(--stop-bg) 0 var(--zr, 0%), var(--warn-bg) var(--zr, 0%) var(--zd, 0%), var(--go-bg) var(--zd, 0%) 100%);
   box-shadow: inset 0 0 0 1px var(--line); }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--accent); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--accent); }
 input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--accent); }
 input[type="range"]::-moz-range-track { background: transparent; }
 .srow.unset input[type="range"]::-webkit-slider-thumb { background: var(--surface-2); box-shadow: 0 0 0 1px var(--muted); }
 .srow.unset input[type="range"]::-moz-range-thumb { background: var(--surface-2); box-shadow: 0 0 0 1px var(--muted); }
-.ticks { display: flex; justify-content: space-between; padding: 0 7px; font-family: var(--font-num); font-size: 10.5px; color: var(--muted); }
+.ticks { display: flex; width: 50%; min-width: 150px; margin-left: auto; box-sizing: border-box; justify-content: space-between; padding: 0 7px; font-family: var(--font-num); font-size: 10.5px; color: var(--muted); }
 .smeta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; font-size: 12.5px; color: var(--muted); }
 .sreq.st-marg { color: var(--warn); font-weight: 600; }
 .sreq.st-red, .sreq.st-nodata { color: var(--stop); font-weight: 600; }
@@ -408,7 +406,7 @@ details.radar-card > summary { align-items: flex-start; }
 
       <details class="step fold" id="s-members" open>
         <summary><h2><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Each score shows its need and hard minimum underneath.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「新增隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。每項分數下方會顯示需求與紅線。</p>
+        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「新增隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
         <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
         <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">新增隊員（手動輸入）</button></div>
@@ -1237,17 +1235,12 @@ if (typeof module !== 'undefined' && module.exports) {
     }
     const clr = (rater === 'lead' && !m.leader) ? (m.lead[a] != null ? L('改回同本人', 'Follow self again') : '') : (v != null ? L('清除', 'Clear') : '');
     return '<div class="srow' + (v == null ? ' unset' : '') + '" id="row-' + m.id + '-' + a + '">' +
-      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label>' + scoreSelect(m, a, rater, id, v, sv.linked) + '</div>' +
+      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + (sv.linked ? '<span class="linked">' + L('同本人', '= self') + '</span>' : '') + '</span></div>' +
+      '<input type="range" id="' + id + '" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-m="' + m.id + '" data-a="' + a + '">' +
+      '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
       '<div class="smeta"><span class="sreq" id="req-' + m.id + '-' + a + '"></span>' + other +
       (clr ? '<button type="button" class="linkbtn" id="clr-' + m.id + '-' + a + '" data-act="clear" data-m="' + m.id + '" data-a="' + a + '">' + clr + '</button>' : '') + '</div>' +
       '<div class="sanchor" id="anc-' + m.id + '-' + a + '">' + anchorLines(a, v).map(esc).join('<br>') + '</div></div>';
-  }
-  function scoreSelect(m, a, rater, id, v, linked) {
-    const raw = (rater === 'self' ? m.self : m.lead)[a];
-    const blank = (rater === 'lead' && !m.leader) ? L('同本人', '= self') + (m.self[a] != null ? '（' + fmt(m.self[a]) + '）' : '') : L('未評', 'Not rated');
-    let o = '<option value=""' + (raw == null ? ' selected' : '') + '>' + blank + '</option>';
-    for (let x = 5; x >= 1; x -= 0.5) o += '<option value="' + x + '"' + (raw === x ? ' selected' : '') + '>' + fmt(x) + '</option>';
-    return '<select class="ssel" id="' + id + '" data-m="' + m.id + '" data-a="' + a + '">' + o + '</select>';
   }
   function delCtl(m) {
     if (m.leader) return '';
@@ -1559,14 +1552,19 @@ if (typeof module !== 'undefined' && module.exports) {
   function setScore(inp) {
     const m = findM(inp.dataset.m), a = inp.dataset.a;
     if (!m) return;
-    const v = inp.value === '' ? null : parseFloat(inp.value);
-    (raterOf(m) === 'self' ? m.self : m.lead)[a] = v;
-    refresh({ members: true });
+    const rater = raterOf(m);
+    const v = parseFloat(inp.value);
+    (rater === 'self' ? m.self : m.lead)[a] = v;
+    const row = document.getElementById('row-' + m.id + '-' + a);
+    row.classList.remove('unset');
+    document.getElementById('val-' + m.id + '-' + a).textContent = fmt(v);
+    document.getElementById('anc-' + m.id + '-' + a).innerHTML = anchorLines(a, v).map(esc).join('<br>');
+    refresh();
   }
-
 
   document.addEventListener('input', e => {
     const t = e.target;
+    if (t.matches('input[type="range"][data-m]')) { setScore(t); return; }
     if (t.id === 'trip-name') { st.trip.name = t.value.slice(0, 80); refresh(); return; }
     if (t.id === 'trip-date') { st.trip.date = t.value; refresh(); return; }
     if (t.id === 'premortem') { st.premortem = t.value.slice(0, 600); refresh(); return; }
@@ -1580,10 +1578,18 @@ if (typeof module !== 'undefined' && module.exports) {
     }
   });
 
+  /* 未評分的滑桿：點一下就以目前位置計分 */
+  document.addEventListener('click', e => {
+    const t = e.target;
+    if (t.matches('input[type="range"][data-m]')) {
+      const row = document.getElementById('row-' + t.dataset.m + '-' + t.dataset.a);
+      if (row && row.classList.contains('unset')) setScore(t);
+    }
+  });
 
   document.addEventListener('change', e => {
     const t = e.target;
-    if (t.matches('select.ssel[data-m]')) { setScore(t); return; }
+    if (t.matches('input[type="range"][data-m]')) { refresh({ members: true }); return; }
     if (t.id === 'tpl') { st.template = t.value; refresh(); return; }
     if (t.id === 'gap') { st.gap = parseFloat(t.value); refresh(); return; }
     if (t.dataset.ov) { const m = findM(t.dataset.ov); if (m) { if (t.checked) delete m.hide; else m.hide = true; ui.ovOpen = true; refresh(); } return; }

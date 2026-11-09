@@ -39,6 +39,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 ## Version history
 
+- V9 | 2026-11-09 20:00 | Sliders are back, half width on the right with a thin touch area, and vertical swipes scroll the page instead of moving them.
 - V8 | 2026-11-09 19:50 | Scores are picked from right-aligned dropdowns instead of sliders, so scrolling can no longer change a score by accident; 踩踏與地形 renamed 技術與地形 (Technical terrain), old form column still read.
 - V7 | 2026-11-09 13:50 | Fix: English term change had renamed internal ids, which stopped the page from drawing; "Add member" button renamed 新增隊員.
 - V6 | 2026-11-09 13:30 | English version switch using common US outdoor terms (hard minimum, mitigation, backup, emergency contact); Save (link or .json file) and New assessment moved to the top bar; amber or red verdict in the top bar jumps to the first flagged item; overlay picker with a checkbox per member (on by default); notes no longer folded; night and fog travel split into two conditions; trip code hidden from the page and moved to the last question of the form; leader has leader ratings only and cannot be deleted; delete button on each member card header; leader ratings follow self ratings until changed, and self ratings may be blank; new condition options (sleep under 5 h or fatigue, ill or injured, digestion, allergy, altitude sickness and other medical history); weak points and text summary open as expandable sections; every section collapsible, open by default.
