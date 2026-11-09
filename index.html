@@ -971,7 +971,7 @@ function newTripCode() {
   for (let i = 1; i < 6; i++) c += A[Math.floor(Math.random() * A.length)];
   return c;
 }
-function formLink(code) { return FORM.view + '?usp=pp_url&' + FORM.codeEntry + '=' + encodeURIComponent(code); }
+function formLink(code) { return 'https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/member.html?c=' + encodeURIComponent(code) + (LANG === 'en' ? '&lang=en' : ''); }
 function parseCSV(text) {
   const rows = []; let row = [], f = '', q = false;
   for (let i = 0; i < text.length; i++) {

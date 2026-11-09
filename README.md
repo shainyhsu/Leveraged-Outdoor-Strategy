@@ -39,6 +39,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 ## Version history
 
+- V10 | 2026-11-09 20:30 | New member self-rating page (member.html) replaces the Google Form screens: sliders with each score's description, follows the phone's light or dark mode, Chinese or English, and the trip code stays hidden. Replies still land in the same response sheet.
 - V9 | 2026-11-09 20:00 | Sliders are back, half width on the right with a thin touch area, and vertical swipes scroll the page instead of moving them.
 - V8 | 2026-11-09 19:50 | Scores are picked from right-aligned dropdowns instead of sliders, so scrolling can no longer change a score by accident; 踩踏與地形 renamed 技術與地形 (Technical terrain), old form column still read.
 - V7 | 2026-11-09 13:50 | Fix: English term change had renamed internal ids, which stopped the page from drawing; "Add member" button renamed 新增隊員.

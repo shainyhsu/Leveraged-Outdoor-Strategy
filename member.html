@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>上山籌碼評估｜隊員自評</title>
+<style>
+:root { --bg:#eef3f0; --card:#ffffff; --border:#d2ddd6; --text:#14201a; --muted:#5a7066; --accent:#2f8a5f; --accent-soft:rgba(47,138,95,.12); --stop:#b3312a; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0f1512; --card:#18211c; --border:#2a3a31; --text:#e3ece6; --muted:#8fa69a; --accent:#3d9b6e; --accent-soft:rgba(61,155,110,.16); --stop:#e0675f; }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; padding: env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0); }
+main { max-width: 640px; margin: 0 auto; padding: 14px 14px 60px; }
+header { display: flex; align-items: center; gap: 10px; padding: 6px 2px 12px; }
+h1 { font-size: 20px; margin: 0; flex: 1; }
+.langbtn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 4px 10px; font-size: 14px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 0 0 12px; }
+.card.bad { border-color: var(--stop); }
+.intro { color: var(--muted); font-size: 14px; margin: 0; }
+label.f { display: block; font-weight: 600; margin: 0 0 6px; }
+input[type="text"] { width: 100%; font: inherit; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+.q { display: flex; align-items: baseline; gap: 8px; }
+.q .t { font-weight: 600; flex: 1; }
+.q .v { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 18px; color: var(--accent); min-width: 3em; text-align: right; }
+.unset .q .v { color: var(--stop); font-size: 14px; font-weight: 600; }
+.anc { margin: 6px 0 0; padding: 0; list-style: none; font-size: 13.5px; color: var(--muted); }
+.anc li { padding: 1px 0; }
+.anc li.on { color: var(--text); font-weight: 600; }
+.anc b { display: inline-block; width: 1.4em; color: var(--accent); }
+input[type="range"] { -webkit-appearance: none; appearance: none; display: block; width: 50%; min-width: 160px; margin: 10px 0 2px auto; height: 8px; border-radius: 4px; background: var(--border); touch-action: pan-y; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); }
+.unset input[type="range"]::-webkit-slider-thumb { background: var(--card); box-shadow: 0 0 0 1px var(--muted); }
+.ticks { display: flex; justify-content: space-between; width: 50%; min-width: 160px; margin-left: auto; padding: 0 6px; font-size: 11px; color: var(--muted); }
+.ck { display: flex; gap: 10px; align-items: center; padding: 6px 0; }
+.ck input { width: 20px; height: 20px; accent-color: var(--accent); }
+.err { color: var(--stop); font-size: 14px; margin: 6px 0 0; }
+button.go { width: 100%; font: inherit; font-weight: 700; font-size: 17px; padding: 13px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; }
+button.go:disabled { opacity: .6; }
+.done { text-align: center; padding: 30px 16px; }
+.done h2 { margin: 0 0 8px; color: var(--accent); }
+.hint { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const AXES = {
+  fit:  { short: '體能', full: '體能（耐力・負重）', group: 'ind', shortEn: "Fitness", fullEn: "Fitness (endurance, load)",
+          anchorsEn: ["Struggles with a 2-hour flat walk", "Finishes a light 4–5 h day hike", "Full pack for a day or 8 h light, recovers by next day", "Multi-day heavy pack, 1,000 m daily gain with energy to spare", "Still able to help others after a 12 h+ day"],
+          anchors: ['平路健走 2 小時就吃力', '輕裝郊山 4–5 小時可完成', '重裝一天或輕裝 8 小時，隔天能恢復', '重裝連續多日，單日爬升千米仍有餘力', '12 小時以上長日後仍能協助他人'] },
+  foot: { short: '技術', full: '技術與地形', group: 'ind', shortEn: "Technical", fullEn: "Technical terrain",
+          anchorsEn: ["Paved trails only", "Steady on dirt trails, nervous on scree or steep slopes", "Steady on scree, roots and wet steep slopes; uses poles", "Steady on landslides, stream beds, rope sections and at night", "Judges exposed or icy terrain alone and helps others"],
+          anchors: ['只走過鋪面步道', '泥土步道穩定，碎石陡坡會緊張', '碎石、樹根、濕滑陡坡穩定，會用登山杖', '崩塌地、溪床、拉繩段、夜間行進穩定', '暴露或結冰地形能自主判斷並協助他人'] },
+  care: { short: '自我照護', full: '自我照護（保暖・補給・睡眠）', group: 'ind', shortEn: "Self-care", fullEn: "Self-care (warmth, fuel, sleep)",
+          anchorsEn: ["Needs reminders to eat, drink and layer", "Eats and drinks, but waits until cold or hungry", "Fuels on schedule, layers early, stays dry", "Spots and treats own early hypothermia or altitude sickness", "Also watches and prompts teammates"],
+          anchors: ['需要他人提醒吃喝與穿脫', '會吃喝，但常等到冷或餓才處理', '定時補給、主動穿脫、維持乾燥', '能辨識自己失溫、高山症早期徵兆並處置', '能同時留意並提醒隊友狀態'] },
+  gear: { short: '個人裝備', full: '個人裝備（保暖・防水・照明・鞋）', group: 'ind', shortEn: "Gear", fullEn: "Personal gear (warmth, rain, light, boots)",
+          anchorsEn: ["Missing key items (rain shell, warm layer or headlamp)", "All items, but below spec (cotton, leaky shell)", "Complete and seasonal; sleeping bag warm enough", "Has spares (batteries, gloves, socks); weight under control", "Complete with backups; can cover teammates"],
+          anchors: ['缺關鍵件（雨衣、保暖層或頭燈）', '件數齊全，規格不足（棉質、雨衣不防水）', '齊全且符合季節，睡袋溫標夠用', '有備用（電池、手套、襪），重量控制好', '齊全有備援，還能替隊友補位'] },
+  exp:  { short: '經驗', full: '經驗（同海拔・同季節・同天數）', group: 'ind', shortEn: "Experience", fullEn: "Experience (same altitude, season, length)",
+          anchorsEn: ["No overnight hiking", "Day hikes or camping", "2+ days in mid or high mountains", "Multi-day at the same season and altitude", "Many similar routes, including bad weather"],
+          anchors: ['沒有過夜登山經驗', '有郊山或露營經驗', '有中級山或高山兩天以上經驗', '有同季節、同海拔的多日經驗', '多次同類路線，含惡劣天候'] },
+  mind: { short: '溝通心態', full: '溝通與心態（回報・撤退・情緒）', group: 'ind', shortEn: "Mindset", fullEn: "Communication & mindset (reporting, retreat, emotions)",
+          anchorsEn: ["Hides discomfort, or emotions affect the pace", "Speaks only when asked; strongly resists retreat", "Reports discomfort; accepts the leader's call", "Steady under stress; raises concerns", "Steadies others; proposes retreat when needed"],
+          anchors: ['不舒服不說，或情緒影響行進', '被問才說，撤退會強烈抗拒', '主動回報不適，接受領隊決定', '壓力下穩定，敢提出疑慮', '能穩定他人，必要時主動提議撤退'] },
+  nav:  { short: '導航', full: '導航（讀圖・軌跡・夜間白霧）', group: 'team', shortEn: "Navigation", fullEn: "Navigation (maps, tracks, night & fog)",
+          anchorsEn: ["Only follows others", "Can find own position on an offline map", "Notices going off track and gets back", "Fixes position by map and altimeter at night or in fog", "Picks route and retreat by terrain with no signal or track"],
+          anchors: ['只會跟著走', '會在離線地圖上看自己的位置', '能用軌跡發現偏離並回到路線', '夜間或白霧中能用地圖、高度計定位', '無訊號無軌跡也能依地形選路與撤退'] },
+  wx:   { short: '天氣', full: '天氣判讀（預報・窗口・現場徵兆）', group: 'team', shortEn: "Weather", fullEn: "Weather (forecast, window, field signs)",
+          anchorsEn: ["Only checks sun/rain icons", "Reads rain chance and temperature", "Reads mountain forecasts: wind, wind chill, rain timing", "Reads charts and models; sets window and cancel criteria", "Adjusts early from clouds and wind on site"],
+          anchors: ['只看晴雨圖示', '會看降雨機率與溫度', '會看山區預報的風速、體感與降雨時段', '能讀天氣圖與數值預報，訂窗口與取消條件', '結合現場雲象與風向修正判斷，提前調整'] },
+  aid:  { short: '急救', full: '急救與應變（處置・求援・撤離）', group: 'team', shortEn: "First aid", fullEn: "First aid & response (treat, call, evacuate)",
+          anchorsEn: ["No first-aid training", "Basic first aid or CPR", "Wilderness first aid (WFA): sprains, blisters, mild hypothermia", "Advanced (WAFA/WFR): assesses patients, decides evacuation", "Real incident experience; coordinates rescue and evacuation"],
+          anchors: ['沒有急救訓練', '基本急救或 CPR', '野外急救（WFA 級），能處理扭傷、水泡、輕度失溫', '野外進階（WAFA／WFR 級），能評估傷患並決定撤離', '有實際處置經驗，能協調搜救與後送'] },
+  crm:  { short: '領導CRM', full: '領導與 CRM（分工・溝通・決策）', group: 'team', shortEn: "Leadership", fullEn: "Leadership & team communication (roles, talk, decisions)",
+          anchorsEn: ["No leading experience", "Assists the leader (roll call, sweep)", "Leads a subgroup and reports back", "Runs briefings, assigns roles, decides under stress", "Handles conflict and emergencies; explains decisions"],
+          anchors: ['沒有帶隊經驗', '能協助領隊（點名、收尾）', '能帶小組執行計畫並回報', '主持行前與現場簡報、分派角色、壓力下決策', '能處理衝突與緊急狀況，並說清決策理由'] },
+  pace: { short: '配速疲勞', full: '配速與疲勞管理（節奏・休息・折返）', group: 'team', shortEn: "Pacing", fullEn: "Pacing & fatigue (rhythm, rest, turnaround)",
+          anchorsEn: ["Unaware of the schedule", "Knows the planned arrival time", "Paces to the slowest; regular rest and fuel", "Projects arrival and turnaround from actual speed", "Anticipates fatigue (incl. pre-dawn starts); splits or shortens early"],
+          anchors: ['不清楚行程時間', '知道預計抵達時間', '依最慢者配速，定時休息補給', '依實際速度推算抵達與折返，即時調整', '預判疲勞累積（含凌晨出發），提前分組或縮短'] },
+  plan: { short: '計畫備案', full: '計畫與備案（清單）', group: 'list', shortEn: "Plan", fullEn: "Plan & backups (checklist)" },
+  kit:  { short: '團隊裝備', full: '團隊裝備（清單）', group: 'list', shortEn: "Team kit", fullEn: "Team kit (checklist)" }
+};
+const IND = ['fit', 'foot', 'care', 'gear', 'exp', 'mind'];      // 對向：體能↔個人裝備、技術↔經驗、自我照護↔溝通心態
+const TEAM_SKILL = ['nav', 'wx', 'aid', 'crm', 'pace'];
+const SCORED = IND.concat(TEAM_SKILL);
+const FLAGS = {
+  s1: '睡眠 <5 小時/疲勞',
+  s2: '生病/受傷',
+  s4: '消化狀態',
+  s6: '過敏史',
+  s7: '高山症史',
+  s8: '特殊病史'
+};
+const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
+
+const ENTRY = { name: '4898134a', role: '09a69d78', fit: '233b0056', foot: '17e17bf0', care: '54b2152c', gear: '7c4501a0', exp: '18eed6dc', mind: '5d7f2ceb', nav: '03f0263e', wx: '184a62e9', aid: '722a31b9', crm: '1d417f44', pace: '06df79b1', flags: '6d4ec7b2', code: '5fe8a856' };
+const POST = 'https://docs.google.com/forms/d/e/1FAIpQLSfmhwnlAEK_BEw280NqN4rx0qN4WSSRlAH3VRQ9fBlRBbJq2g/formResponse';
+const ent = k => 'entry.' + parseInt(ENTRY[k], 16);
+const qs = new URLSearchParams(location.search);
+const CODE = (qs.get('c') || '').trim().toUpperCase().slice(0, 12);
+let LANG = qs.get('lang') === 'en' ? 'en' : (localStorage.getItem('lang') === 'en' ? 'en' : 'zh');
+const L = (zh, en) => LANG === 'en' ? en : zh;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const fmt = v => (v % 1 ? v.toFixed(1) : String(v));
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem('member-self') || '{}'); } catch (e) {}
+const st = { name: saved.name || '', role: saved.role || '', v: {}, flags: {}, tried: false, sent: false };
+SCORED.forEach(a => { if (saved.v && saved.v[a] != null) st.v[a] = saved.v[a]; });
+
+function ancHTML(a) {
+  const ax = AXES[a], list = LANG === 'en' ? ax.anchorsEn : ax.anchors, v = st.v[a];
+  return list.map((t, i) => '<li' + (v != null && Math.round(v) === i + 1 ? ' class="on"' : '') + '><b>' + (i + 1) + '</b>' + esc(t) + '</li>').join('') +
+    '<li>' + L('（介於兩者之間選 .5）', '(Pick .5 when between two)') + '</li>';
+}
+function axisCard(a) {
+  const v = st.v[a], bad = st.tried && v == null;
+  return '<div class="card' + (v == null ? ' unset' : '') + (bad ? ' bad' : '') + '" id="c-' + a + '">' +
+    '<div class="q"><span class="t">' + esc(LANG === 'en' ? AXES[a].fullEn : AXES[a].full) + '</span><span class="v" id="v-' + a + '">' + (v == null ? L('未選', 'Not set') : fmt(v)) + '</span></div>' +
+    '<input type="range" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-a="' + a + '" aria-label="' + esc(AXES[a].full) + '">' +
+    '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
+    '<ul class="anc" id="anc-' + a + '">' + ancHTML(a) + '</ul>' + (bad ? '<p class="err">' + L('請選一個分數', 'Please pick a score') + '</p>' : '') + '</div>';
+}
+function render() {
+  document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant';
+  document.title = L('上山籌碼評估｜隊員自評', 'Trip Leverage Check | Member self-rating');
+  const app = document.getElementById('app');
+  const head = '<header><h1>' + L('隊員自評', 'Member self-rating') + '</h1><button type="button" class="langbtn" id="lang">' + L('EN', '中文') + '</button></header>';
+  if (!CODE) { app.innerHTML = head + '<div class="card"><p>' + L('這條連結少了行程代碼。請向領隊要完整的連結再開啟。', 'This link is missing the trip code. Ask your leader for the full link.') + '</p></div>'; return; }
+  if (st.sent) {
+    app.innerHTML = head + '<div class="card done"><h2>' + L('已送出', 'Sent') + '</h2><p>' + L('謝謝！領隊那邊會依姓名彙整。要修改就再填一次，以最新一次為準。', 'Thanks! Your leader will see it under your name. To change anything, send again; the latest one counts.') + '</p><button type="button" class="go" id="again">' + L('再填一次', 'Edit and send again') + '</button></div>';
+    return;
+  }
+  const nameBad = st.tried && !st.name.trim();
+  app.innerHTML = head +
+    '<div class="card"><p class="intro">' + L('依過去 12 個月的實際表現評分，不是目標。每項都要選，介於兩級之間選 .5。上下滑動頁面不會改到分數，左右拖動圓點才會。', 'Rate what you actually did in the past 12 months, not your goal. Every item needs a score; pick .5 when between two. Scrolling up and down won\'t change a score; drag the dot sideways.') + '</p></div>' +
+    '<div class="card' + (nameBad ? ' bad' : '') + '"><label class="f" for="name">' + L('姓名', 'Name') + '</label><input type="text" id="name" maxlength="30" autocomplete="name" value="' + esc(st.name) + '"><p class="hint">' + L('同一趟請用同一個名字；重填會以最新一次為準', 'Use the same name for this trip; the latest reply counts') + '</p>' + (nameBad ? '<p class="err">' + L('請填姓名', 'Please enter your name') + '</p>' : '') + '</div>' +
+    '<div class="card"><label class="f" for="role">' + L('角色（可留空）', 'Role (optional)') + '</label><input type="text" id="role" maxlength="30" placeholder="' + L('例：隊員、副領隊', 'e.g. member, co-leader') + '" value="' + esc(st.role) + '"></div>' +
+    SCORED.map(axisCard).join('') +
+    '<div class="card"><label class="f">' + L('今日狀態', 'Today\'s status') + '</label><p class="hint">' + L('出發前 48 小時內，有的請勾選（可不勾）', 'Within 48 hours of leaving; tick any that apply (optional)') + '</p>' +
+    Object.keys(FLAGS).map(k => '<label class="ck"><input type="checkbox" data-flag="' + k + '"' + (st.flags[k] ? ' checked' : '') + '><span>' + esc(LANG === 'en' ? FLAGS_EN[k] : FLAGS[k]) + '</span></label>').join('') + '</div>' +
+    '<button type="button" class="go" id="send">' + L('送出', 'Send') + '</button><p class="err" id="msg" role="status"></p>';
+}
+function setVal(inp) {
+  const a = inp.dataset.a, v = parseFloat(inp.value);
+  st.v[a] = v;
+  const c = document.getElementById('c-' + a);
+  c.classList.remove('unset', 'bad');
+  const e = c.querySelector('.err'); if (e) e.remove();
+  document.getElementById('v-' + a).textContent = fmt(v);
+  document.getElementById('anc-' + a).innerHTML = ancHTML(a);
+}
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.matches('input[type="range"]')) setVal(t);
+  else if (t.id === 'name') st.name = t.value;
+  else if (t.id === 'role') st.role = t.value;
+});
+document.addEventListener('click', e => {
+  const t = e.target;
+  if (t.matches('input[type="range"]') && st.v[t.dataset.a] == null) setVal(t);
+});
+document.addEventListener('change', e => { const t = e.target; if (t.dataset.flag) st.flags[t.dataset.flag] = t.checked; });
+document.addEventListener('click', e => {
+  const t = e.target.closest('button');
+  if (!t) return;
+  if (t.id === 'lang') { LANG = LANG === 'en' ? 'zh' : 'en'; try { localStorage.setItem('lang', LANG); } catch (x) {} render(); }
+  else if (t.id === 'again') { st.sent = false; render(); }
+  else if (t.id === 'send') send(t);
+});
+function send(btn) {
+  st.tried = true;
+  const missing = SCORED.filter(a => st.v[a] == null);
+  if (!st.name.trim() || missing.length) {
+    render();
+    const first = !st.name.trim() ? document.getElementById('name') : document.getElementById('c-' + missing[0]);
+    first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('msg').textContent = L('還有 ' + (missing.length + (st.name.trim() ? 0 : 1)) + ' 項沒填', (missing.length + (st.name.trim() ? 0 : 1)) + ' item(s) still empty');
+    return;
+  }
+  const body = new URLSearchParams();
+  body.append(ent('name'), st.name.trim().slice(0, 30));
+  if (st.role.trim()) body.append(ent('role'), st.role.trim().slice(0, 30));
+  SCORED.forEach(a => body.append(ent(a), fmt(st.v[a])));
+  Object.keys(FLAGS).forEach(k => { if (st.flags[k]) body.append(ent('flags'), FLAGS[k]); });
+  body.append(ent('code'), CODE);
+  btn.disabled = true; btn.textContent = L('送出中…', 'Sending…');
+  fetch(POST, { method: 'POST', mode: 'no-cors', body: body }).then(() => {
+    try { localStorage.setItem('member-self', JSON.stringify({ name: st.name.trim(), role: st.role.trim(), v: st.v })); } catch (x) {}
+    st.sent = true; render(); window.scrollTo(0, 0);
+  }).catch(() => {
+    btn.disabled = false; btn.textContent = L('送出', 'Send');
+    document.getElementById('msg').textContent = L('送出失敗，請檢查網路再按一次', 'Could not send; check your connection and tap again');
+  });
+}
+render();
+</script>
+</body>
+</html>
