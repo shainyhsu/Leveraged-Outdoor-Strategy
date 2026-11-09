@@ -160,7 +160,7 @@ button { font: inherit; }
 .bar-scale { font-family: var(--font-num); font-size: 10.5px; color: var(--muted); }
 .bscale { display: flex; justify-content: space-between; }
 .issues { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
-.issues li { border: 1px solid var(--line); border-left: 4px solid var(--sev, var(--muted)); border-radius: 8px; padding: 7px 10px; background: var(--bg); display: grid; gap: 1px; }
+.issues li { scroll-margin-top: 72px; border: 1px solid var(--line); border-left: 4px solid var(--sev, var(--muted)); border-radius: 8px; padding: 7px 10px; background: var(--bg); display: grid; gap: 1px; }
 .issues li.red { --sev: var(--stop); }
 .issues li.amber { --sev: var(--warn); }
 .issues li.info { --sev: var(--muted); }
@@ -201,7 +201,7 @@ input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px;
 
 /* 隊員卡 */
 .members { display: grid; gap: 8px; }
-details.member { border: 1px solid var(--line); border-radius: 10px; background: var(--bg); min-width: 0; }
+details.member { scroll-margin-top: 64px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); min-width: 0; }
 details.member > summary { list-style: none; cursor: pointer; padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
 details.member > summary::-webkit-details-marker { display: none; }
 .mname { font-weight: 700; font-size: 15px; }
@@ -270,7 +270,6 @@ input[type="range"]::-moz-range-track { background: transparent; }
 .ovseg button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 700; }
 .ovseg button[data-c="green"] { color: var(--go); } .ovseg button[data-c="amber"] { color: var(--warn); } .ovseg button[data-c="red"] { color: var(--stop); }
 .warnline { font-size: 13px; color: var(--warn); min-height: 1.2em; }
-#sumtext { font-size: 13px; min-height: 16em; }
 
 /* 方法 */
 
@@ -284,6 +283,7 @@ details.step.fold[open] > summary .chev { transform: rotate(90deg); }
 .mem-legend i { border-top-width: 3px; }
 .method { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
 .method > summary { cursor: pointer; font-family: var(--font-display); font-size: 19px; font-weight: 700; }
+.method[open] > summary { margin-bottom: 4px; }
 .method ul { margin: 10px 0 6px; padding-left: 1.2em; display: grid; gap: 6px; font-size: 14px; max-width: 52em; }
 .method b { color: var(--contour); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
@@ -292,88 +292,162 @@ details.step.fold[open] > summary .chev { transform: rotate(90deg); }
 .theme-toggle { flex: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
 .theme-toggle:hover { border-color: var(--accent); }
 .theme-toggle svg { width: 18px; height: 18px; }
+
+.iconbtn { flex: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.iconbtn:hover, .iconbtn[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
+.iconbtn svg { width: 18px; height: 18px; }
+.langbtn { font-family: var(--font-num); font-size: 12.5px; font-weight: 600; letter-spacing: .02em; }
+a.topverdict { text-decoration: none; color: inherit; border-radius: 8px; padding: 2px 6px 2px 2px; }
+a.topverdict[href] { cursor: pointer; border: 1px solid currentColor; }
+a.topverdict.amber[href] { color: var(--warn); } a.topverdict.red[href] { color: var(--stop); }
+a.topverdict[href] .tv-word { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.pop { border-top: 1px solid var(--line); background: var(--surface); }
+.pop-inner { max-width: 1200px; margin: 0 auto; padding: 12px max(16px, env(safe-area-inset-right, 0px)) 14px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 8px; }
+.pop-title { font-weight: 700; font-size: 15px; }
+@media (max-width: 560px) { .tv-word { display: none; } a.topverdict { padding: 2px; } }
+@media (max-width: 400px) { .brand-t { display: none; } }
+.method > summary, details.panel > summary, details.radar-card > summary, details.sumbox > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; }
+.method > summary::-webkit-details-marker, details.panel > summary::-webkit-details-marker, details.radar-card > summary::-webkit-details-marker, details.sumbox > summary::-webkit-details-marker { display: none; }
+details > summary .chev { font-size: 20px; line-height: 1; color: var(--muted); transition: transform .15s; flex: none; }
+details[open] > summary > .chev { transform: rotate(90deg); }
+details.panel > summary h3 { font-size: 15px; }
+details.panel[open], details.radar-card[open] { gap: 8px; }
+details.panel:not([open]), details.radar-card:not([open]) { gap: 0; }
+details.radar-card > summary { align-items: flex-start; }
+.rc-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.sumbox { border: 1px solid var(--line); border-radius: 10px; background: var(--bg); padding: 8px 12px; }
+.sumbox > summary { font-size: 13.5px; color: var(--muted); }
+.sumbox pre { margin: 8px 0 2px; white-space: pre-wrap; word-break: break-word; font-family: var(--font-body); font-size: 13px; line-height: 1.6; }
+.issues-h { font-size: 13px; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.issues li.flash { animation: flash 1.6s ease-out 1; }
+@keyframes flash { 0%, 30% { box-shadow: 0 0 0 3px var(--sev); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.issues li[data-to] { cursor: pointer; }
+.mdel { margin-left: auto; border: 1px solid var(--line); background: var(--surface); color: var(--stop); border-radius: 8px; font-size: 12.5px; padding: 3px 9px; cursor: pointer; }
+.mdel + .chev { margin-left: 0; }
+.mdel-ask { margin-left: auto; display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; color: var(--stop); }
+.mdel-ask button { font-size: 12.5px; padding: 3px 9px; }
+.mdel-ask + .chev { margin-left: 0; }
+.leadtag { font-size: 11.5px; color: var(--contour); border: 1px solid var(--contour); border-radius: 999px; padding: 0 7px; }
+.linked { font-size: 11.5px; color: var(--muted); margin-left: 6px; font-weight: 400; }
+.ovpick { justify-self: center; width: 100%; max-width: 320px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.ovpick > summary { list-style: none; cursor: pointer; padding: 7px 10px; font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.ovpick > summary::-webkit-details-marker { display: none; }
+.ovlist { display: grid; gap: 2px; padding: 0 8px 8px; }
+.ovlist label { display: flex; align-items: center; gap: 8px; padding: 5px 4px; font-size: 13.5px; cursor: pointer; border-radius: 6px; }
+.ovlist label:hover { background: var(--surface-2); }
+.ovlist .sw { margin-right: 0; }
+.ovlist input { margin: 0 0 0 auto; }
 </style>
 </head>
 <body>
 
 <header class="topbar">
   <div class="topbar-inner">
-    <div class="brand"><svg width="18" height="16" viewBox="0 0 20 18" aria-hidden="true"><path d="M10 1.5 L18.6 16.5 H1.4 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="10" cy="11.6" r="2" fill="currentColor"/></svg>上山籌碼評估</div>
-    <div class="topright"><div id="topVerdict" class="topverdict" role="status" aria-live="polite"></div><button type="button" class="theme-toggle" id="themeToggle"></button></div>
+    <div class="brand"><svg width="18" height="16" viewBox="0 0 20 18" aria-hidden="true"><path d="M10 1.5 L18.6 16.5 H1.4 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="10" cy="11.6" r="2" fill="currentColor"/></svg><span class="brand-t" data-en="Leverage Check">上山籌碼評估</span></div>
+    <div class="topright">
+      <a id="topVerdict" class="topverdict" role="status" aria-live="polite"></a>
+      <button type="button" class="iconbtn" id="btnSave" data-act="pop-save" title="儲存" aria-label="儲存" data-en-title="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.5h11l3.5 3.5v12a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V5A1.5 1.5 0 0 1 5 3.5z"/><path d="M7.5 3.5v5h8v-5M7.5 20.5v-6h9v6"/></svg></button>
+      <button type="button" class="iconbtn" id="btnNew" data-act="pop-new" title="開始新評估" aria-label="開始新評估" data-en-title="New assessment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3.5H6.5A1.5 1.5 0 0 0 5 5v14a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V8.5z"/><path d="M14 3.5v5h5M12 11.5v6M9 14.5h6"/></svg></button>
+      <button type="button" class="iconbtn langbtn" id="langToggle" data-act="lang" title="English" aria-label="Switch to English">EN</button>
+      <button type="button" class="theme-toggle" id="themeToggle"></button>
+    </div>
+  </div>
+  <div class="pop" id="pop" hidden>
+    <div class="pop-inner" id="pop-save" hidden>
+      <p class="pop-title" data-en="Save this assessment">儲存這份評估</p>
+      <p class="note" data-en="It already autosaves in this browser. To move to another device or keep a copy, save it as a link (send it to yourself) or as a small file.">已自動存在這台裝置的瀏覽器。要換裝置或留備份，可以存成一條連結（傳給自己），或下載一個小檔案。</p>
+      <div class="row-btns">
+        <button type="button" class="btn" data-act="save-share" data-en="Share save link">分享儲存連結</button>
+        <button type="button" class="btn ghost" data-act="save-copy" data-en="Copy save link">複製儲存連結</button>
+      </div>
+      <div class="row-btns">
+        <button type="button" class="btn ghost" data-act="save-file" data-en="Download file (.json)">下載評估檔（.json）</button>
+        <button type="button" class="btn ghost" data-act="open-file" data-en="Open file">開啟評估檔</button>
+        <input type="file" id="openfile" accept=".json,application/json" hidden>
+      </div>
+      <p class="msg" id="save-msg" role="status"></p>
+    </div>
+    <div class="pop-inner" id="pop-new" hidden>
+      <p class="pop-title" data-en="Start a new assessment?">開始新評估？</p>
+      <p class="note" data-en="This clears all current data. Save it first if you want to keep it.">會清空目前所有資料。要留著的話，先按儲存。</p>
+      <div class="row-btns"><button type="button" class="btn danger" data-act="reset-yes" data-en="Clear and start">確認清空</button><button type="button" class="btn ghost" data-act="pop-close" data-en="Cancel">取消</button></div>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
   <section class="hero">
-    <p class="eyebrow">籌碼（LEVERAGE）評估表</p>
-    <h1>這次上山，我們有多少籌碼？</h1>
-    <p class="slogan">強項撐弱項，<span>紅線不商量</span>，槓桿要成雙。</p>
-    <p class="flow">領隊設定路線需求；把表單連結傳給隊員自評，回覆自動彙整成隊員 1、2、3…（也可由領隊手動輸入）；領隊補評、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
-    <div class="banner" id="banner" hidden><span>目前是範例資料：五位範例隊員、冬季高山長日攻頂。</span><button type="button" class="btn" data-act="clear-example">清空範例，開始新評估</button></div>
-    <nav class="jump" aria-label="快速移動"><a href="#summary">判定</a><a href="#s-demand">① 需求</a><a href="#s-members">② 評分</a><a href="#s-lists">③ 清單</a><a href="#s-levers">④ 槓桿</a><a href="#s-weak">⑤ 脆弱點</a><a href="#s-share">⑥ 分享</a></nav>
+    <p class="eyebrow" data-en="LEVERAGE CHECK FOR TRIP LEADERS">籌碼（LEVERAGE）評估表</p>
+    <h1 data-en="How much leverage do we have on this trip?">這次上山，我們有多少籌碼？</h1>
+    <p class="slogan" data-en="Strengths cover weaknesses, &lt;span&gt;red lines are not negotiable&lt;/span&gt;, levers come in pairs.">強項撐弱項，<span>紅線不商量</span>，槓桿要成雙。</p>
+    <p class="flow" data-en="The leader sets the route's needs and sends members the form link. Their self-ratings flow in by name (or the leader enters them). The leader rates, ticks the checklists and levers, and the page decides green, amber or red. Scores run 1 to 5 in steps of 0.5.">領隊設定路線需求，把表單連結傳給隊員自評，回覆依姓名自動彙整（也可由領隊手動輸入）；領隊評分、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
+    <div class="banner" id="loadbanner" hidden><span data-en="This link carries a saved assessment.">這個連結帶有一份儲存的評估。</span><button type="button" class="btn" data-act="load-yes" data-en="Load it (replaces current data)">載入（取代目前資料）</button><button type="button" class="btn ghost" data-act="load-no" data-en="Ignore">忽略</button></div>
+    <div class="banner" id="banner" hidden><span data-en="This is example data: five sample members on a winter high-mountain summit day.">目前是範例資料：五位範例隊員、冬季高山長日攻頂。</span><button type="button" class="btn" data-act="clear-example" data-en="Clear example and start">清空範例，開始新評估</button></div>
+    <nav class="jump" aria-label="快速移動"><a href="#summary" data-en="Verdict">判定</a><a href="#s-demand" data-en="① Needs">① 需求</a><a href="#s-members" data-en="② Ratings">② 評分</a><a href="#s-lists" data-en="③ Checklists">③ 清單</a><a href="#s-levers" data-en="④ Levers">④ 槓桿</a><a href="#s-weak" data-en="⑤ Weak points">⑤ 脆弱點</a><a href="#s-share" data-en="⑥ Share">⑥ 分享</a></nav>
   </section>
 
   <div class="layout">
     <section class="summary" id="summary" aria-label="判定"></section>
 
     <main class="steps">
-      <section class="step" id="s-demand">
-        <h2><span class="num">①</span>行程需求</h2>
-        <p class="lead">先選最接近的範本，再勾條件。紅線＝需求減紅線距離；槓桿只會降需求，紅線不動。個別軸可以用 −／＋ 微調。</p>
+      <details class="step fold" id="s-demand" open>
+        <summary><h2><span class="num">①</span><span data-en="Trip needs">行程需求</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="Pick the closest template, then tick conditions. Red line = need minus the red-line gap; levers only lower the need, never the red line. Use − / + to fine-tune an axis.">先選最接近的範本，再勾條件。紅線＝需求減紅線距離；槓桿只會降需求，紅線不動。個別軸可以用 −／＋ 微調。</p>
         <div class="fields">
-          <label class="f" for="trip-name">行程名稱<input type="text" id="trip-name" maxlength="80" placeholder="例：嘉明湖攻頂日"></label>
-          <label class="f" for="trip-date">日期<input type="date" id="trip-date"></label>
-          <label class="f" for="tpl">需求範本<select id="tpl"></select></label>
-          <label class="f" for="gap">紅線距離（需求減幾分）<select id="gap"><option value="0.5">0.5（嚴）</option><option value="1">1.0（標準）</option><option value="1.5">1.5（寬）</option></select></label>
+          <label class="f" for="trip-name"><span data-en="Trip name">行程名稱</span><input type="text" id="trip-name" maxlength="80" placeholder="例：嘉明湖攻頂日" data-en-ph="e.g. Jiaming Lake summit day"></label>
+          <label class="f" for="trip-date"><span data-en="Date">日期</span><input type="date" id="trip-date"></label>
+          <label class="f" for="tpl"><span data-en="Template">需求範本</span><select id="tpl"></select></label>
+          <label class="f" for="gap"><span data-en="Red-line gap (need minus)">紅線距離（需求減幾分）</span><select id="gap"><option value="0.5" data-en="0.5 (strict)">0.5（嚴）</option><option value="1" data-en="1.0 (standard)">1.0（標準）</option><option value="1.5" data-en="1.5 (loose)">1.5（寬）</option></select></label>
         </div>
-        <p class="gtitle">條件｜勾選後相關軸需求 +0.5</p>
+        <p class="gtitle" data-en="Conditions | each tick raises related needs by 0.5">條件｜勾選後相關軸需求 +0.5</p>
         <div class="checks" id="conds"></div>
         <div class="dlist" id="dlist"></div>
-      </section>
-
-      <section class="step" id="s-members">
-        <h2><span class="num">②</span>隊員評分</h2>
-        <p class="lead">把表單連結傳給隊員，隊員填完送出後，按「抓取表單回覆」就會依姓名彙整成隊員卡；也可以按「加入隊員」由領隊手動輸入。隊員卡裡切到「領隊評分」補評。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
-        <div class="intake" id="intake"></div>
-        <div class="members" id="members"></div>
-        <div class="row-btns"><button type="button" class="btn ghost" data-act="add">加入隊員（手動輸入）</button></div>
-      </section>
-
-      <section class="step" id="s-lists">
-        <h2><span class="num">③</span>計畫與團隊裝備</h2>
-        <p class="lead">這兩軸看整隊有沒有準備好，勾選比例換算成 1 到 5 分。標「成雙」的項目本身就是備援。</p>
-        <div class="subhead"><h3>計畫與備案</h3><span class="subscore" id="plan-score"></span></div>
-        <div class="checks" id="plan-list"></div>
-        <p class="note">各段時間可用 <a id="calc-link" href="#" target="_blank" rel="noopener">步程試算</a> 估算。</p>
-        <div class="subhead"><h3>團隊裝備</h3><span class="subscore" id="kit-score"></span></div>
-        <div class="checks" id="kit-list"></div>
-      </section>
-
-      <section class="step" id="s-levers">
-        <h2><span class="num">④</span>槓桿</h2>
-        <p class="lead">每項槓桿讓指定軸的需求降 0.5，同一軸最多降 1.0，而且不低於紅線。前提沒達到就不計入；成立但沒有第二人或備品，會列為「未成雙」。</p>
-        <div class="levers" id="levers"></div>
-      </section>
-
-      <details class="step fold" id="s-weak">
-        <summary><h2><span class="num">⑤</span>評估脆弱點</h2><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead">判定由程式依需求、紅線與槓桿自動產生，不由領隊覆核。這裡寫下這趟最脆弱的環節：假設行程出問題，最可能卡在哪裡，出發前怎麼補強。</p>
-        <label class="f" for="premortem">脆弱點與補強<textarea id="premortem" rows="3" maxlength="600" placeholder="例：凌晨出發睡眠不足，回程天黑前到不了檢核點；天氣判讀只有一人可靠。"></textarea></label>
       </details>
 
-      <section class="step" id="s-share">
-        <h2><span class="num">⑥</span>分享</h2>
-        <p class="lead">產生一張 A4 高解析圖（JPG），內容是判定、個人底盤、團隊能力、需要處理與提醒、餘裕，可直接傳到群組或列印。</p>
-        <div class="row-btns"><button type="button" class="btn" data-act="a4">分享 A4 圖（JPG）</button><span class="msg" id="a4-msg" role="status"></span></div>
-        <label class="f" for="sumtext">文字摘要（貼到群組或紀錄）<textarea id="sumtext" readonly></textarea></label>
-        <div class="row-btns"><button type="button" class="btn ghost" data-act="copy" data-target="sumtext" data-msg="sum-msg">複製文字摘要</button><span class="msg" id="sum-msg" role="status"></span></div>
-        <div class="row-btns"><button type="button" class="btn danger" data-act="reset-ask">開始新評估</button></div>
-        <div class="confirm" id="reset-confirm" hidden>清空目前所有資料？<button type="button" class="btn danger" data-act="reset-yes">確認清空</button><button type="button" class="btn ghost" data-act="reset-no">取消</button></div>
-      </section>
+      <details class="step fold" id="s-members" open>
+        <summary><h2><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below red line, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「加入隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
+        <div class="intake" id="intake"></div>
+        <div class="members" id="members"></div>
+        <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">加入隊員（手動輸入）</button></div>
+      </details>
 
-      <details class="method">
-        <summary>方法與依據</summary>
-        <ul>
+      <details class="step fold" id="s-lists" open>
+        <summary><h2><span class="num">③</span><span data-en="Plan & team kit">計畫與團隊裝備</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="These two axes check whether the whole team is ready; the share of ticks converts to 1–5. Items tagged “pair” are backups in themselves.">這兩軸看整隊有沒有準備好，勾選比例換算成 1 到 5 分。標「成雙」的項目本身就是備援。</p>
+        <div class="subhead"><h3 data-en="Plan & backups">計畫與備案</h3><span class="subscore" id="plan-score"></span></div>
+        <div class="checks" id="plan-list"></div>
+        <p class="note"><span data-en="Estimate leg times with">各段時間可用</span> <a id="calc-link" href="#" target="_blank" rel="noopener" data-en="Hiking Time Calculator">步程試算</a> <span data-en="."> 估算。</span></p>
+        <div class="subhead"><h3 data-en="Team kit">團隊裝備</h3><span class="subscore" id="kit-score"></span></div>
+        <div class="checks" id="kit-list"></div>
+      </details>
+
+      <details class="step fold" id="s-levers" open>
+        <summary><h2><span class="num">④</span><span data-en="Levers">槓桿</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="Each lever lowers its axes' need by 0.5, at most 1.0 per axis, and never below the red line. A lever whose precondition isn't met doesn't count; one that works without a second person or spare is flagged “no pair”.">每項槓桿讓指定軸的需求降 0.5，同一軸最多降 1.0，而且不低於紅線。前提沒達到就不計入；成立但沒有第二人或備品，會列為「未成雙」。</p>
+        <div class="levers" id="levers"></div>
+      </details>
+
+      <details class="step fold" id="s-weak" open>
+        <summary><h2><span class="num">⑤</span><span data-en="Weak points">評估脆弱點</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="The verdict comes from needs, red lines and levers, with no manual override. Write down this trip's weakest link here: if the trip goes wrong, where is it most likely to break, and how will you shore it up before leaving?">判定由程式依需求、紅線與槓桿自動產生，不由領隊覆核。這裡寫下這趟最脆弱的環節：假設行程出問題，最可能卡在哪裡，出發前怎麼補強。</p>
+        <label class="f" for="premortem"><span data-en="Weak points and fixes">脆弱點與補強</span><textarea id="premortem" rows="3" maxlength="600" placeholder="例：凌晨出發睡眠不足，回程天黑前到不了檢核點；天氣判讀只有一人可靠。" data-en-ph="e.g. Short sleep before a pre-dawn start; may miss the checkpoint before dark; only one person reads weather reliably."></textarea></label>
+      </details>
+
+      <details class="step fold" id="s-share" open>
+        <summary><h2><span class="num">⑥</span><span data-en="Share">分享</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+        <p class="lead" data-en="Make a high-resolution A4 image (JPG) with the verdict, personal base, team skills, items to fix and margins, ready for a group chat or printing.">產生一張 A4 高解析圖（JPG），內容是判定、個人底盤、團隊能力、需要處理與提醒、餘裕，可直接傳到群組或列印。</p>
+        <div class="row-btns"><button type="button" class="btn" data-act="a4" data-en="Share A4 image (JPG)">分享 A4 圖（JPG）</button><span class="msg" id="a4-msg" role="status"></span></div>
+        <details class="sumbox" id="sumbox">
+          <summary><span data-en="Text summary (for a group chat or log)">文字摘要（貼到群組或紀錄）</span><span class="chev" aria-hidden="true">›</span></summary>
+          <pre id="sumtext"></pre>
+        </details>
+        <div class="row-btns"><button type="button" class="btn ghost" data-act="copy-sum" data-en="Copy text summary">複製文字摘要</button><span class="msg" id="sum-msg" role="status"></span></div>
+      </details>
+
+      <details class="method" open>
+        <summary><span data-en="Method and sources">方法與依據</span><span class="chev" aria-hidden="true">›</span></summary>
+        <ul data-en="&lt;li&gt;&lt;b&gt;Two overlaid charts&lt;/b&gt;: leverage (ability) against need (route and conditions). Same idea as the Adventure Experience Paradigm (competence vs risk) and FEMA THIRA/SPR (target vs current).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Anchored scores, self and leader&lt;/b&gt;: the self-profile of performance profiling (Butler &amp;amp; Hardy 1992). Self-ratings run high, so when both exist the lower one counts.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Red lines are not negotiable&lt;/b&gt;: the minimum cut-off of hybrid selection models. Red line = need minus the gap; levers only lower the need.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Strengths cover weaknesses&lt;/b&gt;: Munter's reduction method lowers need through behaviour, plus JD-R resource buffering. Each lever lowers 0.5, at most 1.0 per axis.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Two or more marginal means no go&lt;/b&gt;: the rule from the FAA personal minimums checklist.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Today's condition raises the red line&lt;/b&gt;: the FAA personal minimums worksheet raises the bar when ill or tired.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Levers come in pairs&lt;/b&gt;: bus factor and redundancy from resilience engineering. Team axes check whether a second person clears the red line; checklist axes look at paired items.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Missing data counts as the red line; everyone rates&lt;/b&gt;: the GAR model (US Coast Guard; used for trips by The Mountaineers Tacoma branch).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Program verdict, no leader override&lt;/b&gt;: the verdict only looks at needs, red lines and levers, to avoid talking yourself into it under pressure and the normalization of deviance.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Weak points&lt;/b&gt;: assume the trip went wrong, then work back to the weakest link and shore it up (pre-mortem, Klein 2007).&lt;/li&gt;">
           <li><b>兩張圖疊圖</b>：籌碼（能力）對需求（路線與條件）。同 Adventure Experience Paradigm 的能力對風險，也同 FEMA THIRA／SPR 的目標對現況。</li>
           <li><b>錨點評分、本人與領隊各評</b>：Performance profiling（Butler &amp; Hardy 1992）的自評剖面；自評容易偏高，所以兩者都評時取低分。</li>
           <li><b>紅線不商量</b>：人員甄選 hybrid 模型的最低門檻。紅線＝需求減紅線距離，槓桿只降需求。</li>
@@ -385,7 +459,7 @@ details.step.fold[open] > summary .chev { transform: rotate(90deg); }
           <li><b>程式判定、不由領隊覆核</b>：判定只看需求、紅線與槓桿，避免出發壓力下的自我說服與「偏差常態化」（normalization of deviance）。</li>
           <li><b>評估脆弱點</b>：先假設行程出問題，再回推最脆弱的環節並補強（pre-mortem，Klein 2007）。</li>
         </ul>
-        <p class="note">範本數值與門檻是起點。每趟回來對照實際狀況，修正範本與錨點。</p>
+        <p class="note" data-en="Template values and thresholds are a starting point. After each trip, compare with what actually happened and adjust the templates and anchors.">範本數值與門檻是起點。每趟回來對照實際狀況，修正範本與錨點。</p>
       </details>
     </main>
   </div>
@@ -394,30 +468,41 @@ details.step.fold[open] > summary .chev { transform: rotate(90deg); }
 <script>
 /* ===== 籌碼評估：資料定義與運算（純函式，不碰 DOM） ===== */
 const AXES = {
-  fit:  { short: '體能', full: '體能（耐力・負重）', group: 'ind',
+  fit:  { short: '體能', full: '體能（耐力・負重）', group: 'ind', shortEn: "Fitness", fullEn: "Fitness (endurance, load)",
+          anchorsEn: ["Struggles with a 2-hour flat walk", "Finishes a light 4–5 h day hike", "Full pack for a day or 8 h light, recovers by next day", "Multi-day heavy pack, 1,000 m daily gain with energy to spare", "Still able to help others after a 12 h+ day"],
           anchors: ['平路健走 2 小時就吃力', '輕裝郊山 4–5 小時可完成', '重裝一天或輕裝 8 小時，隔天能恢復', '重裝連續多日，單日爬升千米仍有餘力', '12 小時以上長日後仍能協助他人'] },
-  foot: { short: '踩踏', full: '踩踏與地形', group: 'ind',
+  foot: { short: '踩踏', full: '踩踏與地形', group: 'ind', shortEn: "Footing", fullEn: "Footing & terrain",
+          anchorsEn: ["Paved trails only", "Steady on dirt trails, nervous on scree or steep slopes", "Steady on scree, roots and wet steep slopes; uses poles", "Steady on landslides, stream beds, rope sections and at night", "Judges exposed or icy terrain alone and helps others"],
           anchors: ['只走過鋪面步道', '泥土步道穩定，碎石陡坡會緊張', '碎石、樹根、濕滑陡坡穩定，會用登山杖', '崩塌地、溪床、拉繩段、夜間行進穩定', '暴露或結冰地形能自主判斷並協助他人'] },
-  care: { short: '自我照護', full: '自我照護（保暖・補給・睡眠）', group: 'ind',
+  care: { short: '自我照護', full: '自我照護（保暖・補給・睡眠）', group: 'ind', shortEn: "Self-care", fullEn: "Self-care (warmth, fuel, sleep)",
+          anchorsEn: ["Needs reminders to eat, drink and layer", "Eats and drinks, but waits until cold or hungry", "Fuels on schedule, layers early, stays dry", "Spots and treats own early hypothermia or altitude sickness", "Also watches and prompts teammates"],
           anchors: ['需要他人提醒吃喝與穿脫', '會吃喝，但常等到冷或餓才處理', '定時補給、主動穿脫、維持乾燥', '能辨識自己失溫、高山症早期徵兆並處置', '能同時留意並提醒隊友狀態'] },
-  gear: { short: '個人裝備', full: '個人裝備（保暖・防水・照明・鞋）', group: 'ind',
+  gear: { short: '個人裝備', full: '個人裝備（保暖・防水・照明・鞋）', group: 'ind', shortEn: "Gear", fullEn: "Personal gear (warmth, rain, light, boots)",
+          anchorsEn: ["Missing key items (rain shell, warm layer or headlamp)", "All items, but below spec (cotton, leaky shell)", "Complete and seasonal; sleeping bag warm enough", "Has spares (batteries, gloves, socks); weight under control", "Complete with backups; can cover teammates"],
           anchors: ['缺關鍵件（雨衣、保暖層或頭燈）', '件數齊全，規格不足（棉質、雨衣不防水）', '齊全且符合季節，睡袋溫標夠用', '有備用（電池、手套、襪），重量控制好', '齊全有備援，還能替隊友補位'] },
-  exp:  { short: '經驗', full: '經驗（同海拔・同季節・同天數）', group: 'ind',
+  exp:  { short: '經驗', full: '經驗（同海拔・同季節・同天數）', group: 'ind', shortEn: "Experience", fullEn: "Experience (same altitude, season, length)",
+          anchorsEn: ["No overnight hiking", "Day hikes or camping", "2+ days in mid or high mountains", "Multi-day at the same season and altitude", "Many similar routes, including bad weather"],
           anchors: ['沒有過夜登山經驗', '有郊山或露營經驗', '有中級山或高山兩天以上經驗', '有同季節、同海拔的多日經驗', '多次同類路線，含惡劣天候'] },
-  mind: { short: '溝通心態', full: '溝通與心態（回報・撤退・情緒）', group: 'ind',
+  mind: { short: '溝通心態', full: '溝通與心態（回報・撤退・情緒）', group: 'ind', shortEn: "Mindset", fullEn: "Communication & mindset (reporting, retreat, emotions)",
+          anchorsEn: ["Hides discomfort, or emotions affect the pace", "Speaks only when asked; strongly resists retreat", "Reports discomfort; accepts the leader's call", "Steady under stress; raises concerns", "Steadies others; proposes retreat when needed"],
           anchors: ['不舒服不說，或情緒影響行進', '被問才說，撤退會強烈抗拒', '主動回報不適，接受領隊決定', '壓力下穩定，敢提出疑慮', '能穩定他人，必要時主動提議撤退'] },
-  nav:  { short: '導航', full: '導航（讀圖・軌跡・夜間白霧）', group: 'team',
+  nav:  { short: '導航', full: '導航（讀圖・軌跡・夜間白霧）', group: 'team', shortEn: "Navigation", fullEn: "Navigation (maps, tracks, night & fog)",
+          anchorsEn: ["Only follows others", "Can find own position on an offline map", "Notices going off track and gets back", "Fixes position by map and altimeter at night or in fog", "Picks route and retreat by terrain with no signal or track"],
           anchors: ['只會跟著走', '會在離線地圖上看自己的位置', '能用軌跡發現偏離並回到路線', '夜間或白霧中能用地圖、高度計定位', '無訊號無軌跡也能依地形選路與撤退'] },
-  wx:   { short: '天氣', full: '天氣判讀（預報・窗口・現場徵兆）', group: 'team',
+  wx:   { short: '天氣', full: '天氣判讀（預報・窗口・現場徵兆）', group: 'team', shortEn: "Weather", fullEn: "Weather (forecast, window, field signs)",
+          anchorsEn: ["Only checks sun/rain icons", "Reads rain chance and temperature", "Reads mountain forecasts: wind, wind chill, rain timing", "Reads charts and models; sets window and cancel criteria", "Adjusts early from clouds and wind on site"],
           anchors: ['只看晴雨圖示', '會看降雨機率與溫度', '會看山區預報的風速、體感與降雨時段', '能讀天氣圖與數值預報，訂窗口與取消條件', '結合現場雲象與風向修正判斷，提前調整'] },
-  aid:  { short: '急救', full: '急救與應變（處置・求援・撤離）', group: 'team',
+  aid:  { short: '急救', full: '急救與應變（處置・求援・撤離）', group: 'team', shortEn: "First aid", fullEn: "First aid & response (treat, call, evacuate)",
+          anchorsEn: ["No first-aid training", "Basic first aid or CPR", "Wilderness first aid (WFA): sprains, blisters, mild hypothermia", "Advanced (WAFA/WFR): assesses patients, decides evacuation", "Real incident experience; coordinates rescue and evacuation"],
           anchors: ['沒有急救訓練', '基本急救或 CPR', '野外急救（WFA 級），能處理扭傷、水泡、輕度失溫', '野外進階（WAFA／WFR 級），能評估傷患並決定撤離', '有實際處置經驗，能協調搜救與後送'] },
-  crm:  { short: '領導CRM', full: '領導與 CRM（分工・溝通・決策）', group: 'team',
+  crm:  { short: '領導CRM', full: '領導與 CRM（分工・溝通・決策）', group: 'team', shortEn: "Leadership", fullEn: "Leadership & CRM (roles, talk, decisions)",
+          anchorsEn: ["No leading experience", "Assists the leader (roll call, sweep)", "Leads a subgroup and reports back", "Runs briefings, assigns roles, decides under stress", "Handles conflict and emergencies; explains decisions"],
           anchors: ['沒有帶隊經驗', '能協助領隊（點名、收尾）', '能帶小組執行計畫並回報', '主持行前與現場簡報、分派角色、壓力下決策', '能處理衝突與緊急狀況，並說清決策理由'] },
-  pace: { short: '配速疲勞', full: '配速與疲勞管理（節奏・休息・折返）', group: 'team',
+  pace: { short: '配速疲勞', full: '配速與疲勞管理（節奏・休息・折返）', group: 'team', shortEn: "Pacing", fullEn: "Pacing & fatigue (rhythm, rest, turnaround)",
+          anchorsEn: ["Unaware of the schedule", "Knows the planned arrival time", "Paces to the slowest; regular rest and fuel", "Projects arrival and turnaround from actual speed", "Anticipates fatigue (incl. pre-dawn starts); splits or shortens early"],
           anchors: ['不清楚行程時間', '知道預計抵達時間', '依最慢者配速，定時休息補給', '依實際速度推算抵達與折返，即時調整', '預判疲勞累積（含凌晨出發），提前分組或縮短'] },
-  plan: { short: '計畫備案', full: '計畫與備案（清單）', group: 'list' },
-  kit:  { short: '團隊裝備', full: '團隊裝備（清單）', group: 'list' }
+  plan: { short: '計畫備案', full: '計畫與備案（清單）', group: 'list', shortEn: "Plan", fullEn: "Plan & backups (checklist)" },
+  kit:  { short: '團隊裝備', full: '團隊裝備（清單）', group: 'list', shortEn: "Team kit", fullEn: "Team kit (checklist)" }
 };
 const IND = ['fit', 'foot', 'care', 'gear', 'exp', 'mind'];      // 對向：體能↔個人裝備、踩踏↔經驗、自我照護↔溝通心態
 const TEAM_SKILL = ['nav', 'wx', 'aid', 'crm', 'pace'];
@@ -427,68 +512,87 @@ const ALL = IND.concat(TEAM);
 const STATE_AXES = ['fit', 'foot', 'care'];
 
 const TEMPLATES = {
-  T1: { name: '郊山單日', d: { fit: 2, foot: 2, care: 2, gear: 2, exp: 1, mind: 2, nav: 2, wx: 2, aid: 2, crm: 2, pace: 2, plan: 2, kit: 2 } },
-  T2: { name: '中級山（路跡不明顯）', d: { fit: 3, foot: 3.5, care: 3, gear: 3, exp: 2.5, mind: 3, nav: 4, wx: 3, aid: 3, crm: 3, pace: 3, plan: 3.5, kit: 3 } },
-  T3: { name: '高山多日重裝', d: { fit: 4, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3, wx: 3.5, aid: 3.5, crm: 3.5, pace: 3.5, plan: 3.5, kit: 3.5 } },
-  T4: { name: '高山長日攻頂（凌晨出發）', d: { fit: 4.5, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3.5, wx: 4, aid: 3.5, crm: 3.5, pace: 4, plan: 4, kit: 3.5 } }
+  T1: { name: '郊山單日', en: 'Low-hill day hike', d: { fit: 2, foot: 2, care: 2, gear: 2, exp: 1, mind: 2, nav: 2, wx: 2, aid: 2, crm: 2, pace: 2, plan: 2, kit: 2 } },
+  T2: { name: '中級山（路跡不明顯）', en: 'Mid-mountain (faint trail)', d: { fit: 3, foot: 3.5, care: 3, gear: 3, exp: 2.5, mind: 3, nav: 4, wx: 3, aid: 3, crm: 3, pace: 3, plan: 3.5, kit: 3 } },
+  T3: { name: '高山多日重裝', en: 'High mountain, multi-day, heavy pack', d: { fit: 4, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3, wx: 3.5, aid: 3.5, crm: 3.5, pace: 3.5, plan: 3.5, kit: 3.5 } },
+  T4: { name: '高山長日攻頂（凌晨出發）', en: 'High-mountain long summit day (pre-dawn start)', d: { fit: 4.5, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3.5, wx: 4, aid: 3.5, crm: 3.5, pace: 4, plan: 4, kit: 3.5 } }
 };
 const CONDS = {
-  c1: { name: '冬季低溫、可能結冰', add: { gear: 0.5, care: 0.5, foot: 0.5, wx: 0.5 } },
-  c2: { name: '夜間或白霧行進', add: { nav: 0.5, foot: 0.5 } },
-  c3: { name: '隊伍含未成年或新手', add: { crm: 0.5, pace: 0.5 } },
-  c4: { name: '無手機訊號', add: { aid: 0.5, plan: 0.5 } },
-  c5: { name: '天氣不穩（鋒面、午後雷雨）', add: { wx: 0.5, plan: 0.5 } }
+  c1: { name: '冬季低溫、可能結冰', en: 'Winter cold, possible ice', add: { gear: 0.5, care: 0.5, foot: 0.5, wx: 0.5 } },
+  c2: { name: '夜間行進', en: 'Travel at night', add: { nav: 0.5, foot: 0.5 } },
+  c6: { name: '白霧行進', en: 'Travel in fog / whiteout', add: { nav: 0.5, crm: 0.5 } },
+  c3: { name: '隊伍含未成年或新手', en: 'Minors or beginners in the team', add: { crm: 0.5, pace: 0.5 } },
+  c4: { name: '無手機訊號', en: 'No phone signal', add: { aid: 0.5, plan: 0.5 } },
+  c5: { name: '天氣不穩（鋒面、午後雷雨）', en: 'Unstable weather (fronts, afternoon storms)', add: { wx: 0.5, plan: 0.5 } }
 };
+/* 中文標籤必須與 Google 表單「今日狀態」選項文字相同 */
 const FLAGS = {
-  s1: '睡眠不足（少於 6 小時）',
-  s2: '生病或服藥',
-  s3: '壓力或情緒低落',
-  s4: '近期累積疲勞',
-  s5: '進食飲水不足'
+  s1: '睡眠 <5 小時/疲勞',
+  s2: '生病/受傷',
+  s4: '消化狀態',
+  s6: '過敏史',
+  s7: '高山症史',
+  s8: '特殊病史'
 };
+const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
 const PLAN_ITEMS = [
-  { id: 'p1', text: '登山計畫書完成，入山／入園申請已核准' },
-  { id: 'p2', text: '留守人掌握計畫、聯絡時程與報案時間' },
-  { id: 'p3', text: '每個檢核點都有最晚抵達時間，未達即折返' },
-  { id: 'p4', text: '撤退點與替代路線已標在地圖上' },
-  { id: 'p5', text: '分組條件與中途等待點已講清楚（等待至少兩人）' },
-  { id: 'p6', text: '行前簡報：全員知道角色與撤退觸發條件' },
-  { id: 'p7', text: '各段時間已估算並含緩衝', link: true }
+  { id: 'p1', text: '登山計畫書完成，入山／入園申請已核准', en: 'Trip plan written; entry permits approved' },
+  { id: 'p2', text: '留守人掌握計畫、聯絡時程與報案時間', en: 'Home contact has the plan, check-in times and when to call rescue' },
+  { id: 'p3', text: '每個檢核點都有最晚抵達時間，未達即折返', en: 'Every checkpoint has a latest arrival time; turn back if missed' },
+  { id: 'p4', text: '撤退點與替代路線已標在地圖上', en: 'Retreat points and alternate routes marked on the map' },
+  { id: 'p5', text: '分組條件與中途等待點已講清楚（等待至少兩人）', en: 'Split rules and waiting points agreed (wait in pairs at least)' },
+  { id: 'p6', text: '行前簡報：全員知道角色與撤退觸發條件', en: 'Pre-trip briefing: everyone knows roles and retreat triggers' },
+  { id: 'p7', text: '各段時間已估算並含緩衝', en: 'Leg times estimated with buffer', link: true }
 ];
 const KIT_ITEMS = [
-  { id: 'k1', text: '兩種獨立通訊（例：衛星通訊器加手機或無線電）', pair: true },
-  { id: 'k2', text: '兩台以上裝置有離線地圖，另備紙本地圖與指北針', pair: true },
-  { id: 'k3', text: '兩組爐頭與足量燃料', pair: true },
-  { id: 'k4', text: '團體急救包與失溫處置用品（緊急毯、備用保暖衣）' },
-  { id: 'k5', text: '備用電源與頭燈電池' },
-  { id: 'k6', text: '緊急避難：天幕或緊急帳' },
-  { id: 'k7', text: '依路線需要的繩索或扁帶（用不到就勾選）' }
+  { id: 'k1', text: '兩種獨立通訊（例：衛星通訊器加手機或無線電）', en: 'Two independent comms (e.g. satellite messenger plus phone or radio)', pair: true },
+  { id: 'k2', text: '兩台以上裝置有離線地圖，另備紙本地圖與指北針', en: 'Offline maps on 2+ devices, plus paper map and compass', pair: true },
+  { id: 'k3', text: '兩組爐頭與足量燃料', en: 'Two stoves and enough fuel', pair: true },
+  { id: 'k4', text: '團體急救包與失溫處置用品（緊急毯、備用保暖衣）', en: 'Group first-aid kit and hypothermia kit (blanket, spare warm layer)' },
+  { id: 'k5', text: '備用電源與頭燈電池', en: 'Spare power and headlamp batteries' },
+  { id: 'k6', text: '緊急避難：天幕或緊急帳', en: 'Emergency shelter: tarp or bivy tent' },
+  { id: 'k7', text: '依路線需要的繩索或扁帶（用不到就勾選）', en: 'Rope or webbing as the route needs (tick if not needed)' }
 ];
 
 const ge = (v, x) => v != null && v >= x;
 const LEVERS = [
-  { id: 'L1', name: '天氣窗口', desc: '選定穩定窗口，寫下取消條件', targets: ['gear', 'care'],
-    prereqText: '天氣判讀主槓桿 ≥ 4', pairText: '第二人天氣判讀 ≥ 3',
+  { id: 'L1', name: '天氣窗口', en: 'Weather window', desc: '選定穩定窗口，寫下取消條件', descEn: 'Pick a stable window; write down cancel criteria', targets: ['gear', 'care'],
+    prereqText: '天氣判讀主槓桿 ≥ 4', prereqEn: 'Weather main lever ≥ 4', pairText: '第二人天氣判讀 ≥ 3', pairEn: 'Second person weather ≥ 3',
     prereq: c => ge(c.team.wx.main, 4), pair: c => ge(c.team.wx.backup, 3) },
-  { id: 'L2', name: '輕裝攻頂', desc: '大背包與營具留在營地', targets: ['fit'],
-    prereqText: '計畫與備案 ≥ 3', pairText: '攻頂組帶天幕或緊急帳（團隊裝備勾選）',
+  { id: 'L2', name: '輕裝攻頂', en: 'Light summit push', desc: '大背包與營具留在營地', descEn: 'Leave big packs and camp gear at camp', targets: ['fit'],
+    prereqText: '計畫與備案 ≥ 3', prereqEn: 'Plan & backups ≥ 3', pairText: '攻頂組帶天幕或緊急帳（團隊裝備勾選）', pairEn: 'Summit group carries a tarp or bivy (team kit ticked)',
     prereq: c => c.planScore >= 3, pair: c => !!c.kit.k6 },
-  { id: 'L3', name: '分組與中途等待點', desc: '體力不支者在中途點等待或先回營地，至少兩人一組', targets: ['fit'],
-    prereqText: '領導與 CRM 主槓桿 ≥ 4，計畫寫明分組條件', pairText: '第二位帶隊者領導與 CRM ≥ 3',
+  { id: 'L3', name: '分組與中途等待點', en: 'Split & waiting points', desc: '體力不支者在中途點等待或先回營地，至少兩人一組', descEn: 'Tired members wait at a midpoint or return to camp, at least in pairs', targets: ['fit'],
+    prereqText: '領導與 CRM 主槓桿 ≥ 4，計畫寫明分組條件', prereqEn: 'Leadership main lever ≥ 4; split rules in the plan', pairText: '第二位帶隊者領導與 CRM ≥ 3', pairEn: 'Second leader\'s leadership ≥ 3',
     prereq: c => ge(c.team.crm.main, 4) && !!c.plan.p5, pair: c => ge(c.team.crm.backup, 3) },
-  { id: 'L4', name: '夥伴制', desc: '老手一帶一新手', targets: ['exp', 'foot'],
-    prereqText: '經驗 ≥ 4 的人數不少於經驗 ≤ 2 的人數', pairText: '一帶一本身成雙',
+  { id: 'L4', name: '夥伴制', en: 'Buddy system', desc: '老手一帶一新手', descEn: 'One veteran paired with each beginner', targets: ['exp', 'foot'],
+    prereqText: '經驗 ≥ 4 的人數不少於經驗 ≤ 2 的人數', prereqEn: 'Members with experience ≥ 4 at least match those ≤ 2', pairText: '一帶一本身成雙', pairEn: 'One-on-one pairing is itself paired',
     prereq: c => c.vets > 0 && c.vets >= c.novices, pair: () => true },
-  { id: 'L5', name: '時間緩衝', desc: '各段時間含緩衝，檢核點有最晚抵達時間', targets: ['fit'],
-    prereqText: '配速與疲勞管理主槓桿 ≥ 3.5，計畫勾選檢核點與時間估算', pairText: '第二人配速與疲勞管理 ≥ 3',
+  { id: 'L5', name: '時間緩衝', en: 'Time buffer', desc: '各段時間含緩衝，檢核點有最晚抵達時間', descEn: 'Leg times include buffer; checkpoints have a latest arrival', targets: ['fit'],
+    prereqText: '配速與疲勞管理主槓桿 ≥ 3.5，計畫勾選檢核點與時間估算', prereqEn: 'Pacing main lever ≥ 3.5; plan has checkpoints and time estimates', pairText: '第二人配速與疲勞管理 ≥ 3', pairEn: 'Second person pacing ≥ 3',
     prereq: c => ge(c.team.pace.main, 3.5) && !!c.plan.p3 && !!c.plan.p7, pair: c => ge(c.team.pace.backup, 3) },
-  { id: 'L6', name: '雙通訊求援', desc: '兩種獨立通訊加留守人', targets: ['aid'],
-    prereqText: '團隊裝備勾選兩種通訊，計畫勾選留守人', pairText: '兩種通訊本身成雙',
+  { id: 'L6', name: '雙通訊求援', en: 'Dual-comms rescue', desc: '兩種獨立通訊加留守人', descEn: 'Two independent comms plus a home contact', targets: ['aid'],
+    prereqText: '團隊裝備勾選兩種通訊，計畫勾選留守人', prereqEn: 'Team kit has two comms; plan has a home contact', pairText: '兩種通訊本身成雙', pairEn: 'Two comms are themselves paired',
     prereq: c => !!c.kit.k1 && !!c.plan.p2, pair: () => true }
 ];
 const LEVER_STEP = 0.5, LEVER_CAP = 1.0;
-const COLOR_ZH = { green: '綠', amber: '黃', red: '紅' };
-const VERDICT_ZH = { green: '可出發', amber: '可出發，先處理標示項目', red: '不出發，或改計畫後重評' };
+/* 語言：zh／en，存在 localStorage「lang」 */
+let LANG = 'zh';
+try { LANG = localStorage.getItem('lang') === 'en' ? 'en' : 'zh'; } catch (e) { /* 預設中文 */ }
+const L = (zh, en) => (LANG === 'en' ? en : zh);
+const axS = a => L(AXES[a].short, AXES[a].shortEn);
+const axF = a => L(AXES[a].full, AXES[a].fullEn);
+const axAnch = a => L(AXES[a].anchors, AXES[a].anchorsEn);
+const tplName = k => L(TEMPLATES[k].name, TEMPLATES[k].en);
+const condName = k => L(CONDS[k].name, CONDS[k].en);
+const flagName = k => L(FLAGS[k], FLAGS_EN[k]);
+const itemText = i => L(i.text, i.en);
+const lvName = x => L(x.name, x.en), lvDesc = x => L(x.desc, x.descEn), lvPre = x => L(x.prereqText, x.prereqEn), lvPair = x => L(x.pairText, x.pairEn);
+const COLOR_WORD = c => L({ green: '綠', amber: '黃', red: '紅' }[c], { green: 'G', amber: 'A', red: 'R' }[c]);
+const COLOR_LONG = c => L({ green: '綠', amber: '黃', red: '紅' }[c], { green: 'Green', amber: 'Amber', red: 'Red' }[c]);
+const VERDICT = c => L({ green: '可出發', amber: '可出發，先處理標示項目', red: '不出發，或改計畫後重評' }[c],
+  { green: 'Go', amber: 'Go after fixing flagged items', red: 'No go, or change the plan and reassess' }[c]);
+const SEP = () => L('、', ', ');
 
 const round5 = x => Math.round(x * 2) / 2;
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -505,59 +609,74 @@ function effScore(m, a) {
 }
 
 function anchorLines(a, v) {
-  const ax = AXES[a];
-  if (!ax.anchors) return [];
-  if (v == null) return ['未評分：缺資料以紅線計'];
+  const an = axAnch(a);
+  if (!an) return [];
+  if (v == null) return [L('未評分：缺資料以紅線計', 'Not rated: missing data counts as the red line')];
   const n = Math.floor(v);
-  const lines = [n + '｜' + ax.anchors[n - 1]];
-  if (v % 1 && n < 5) lines.push('半級：部分做到 ' + (n + 1) + '｜' + ax.anchors[n]);
+  const lines = [n + '｜' + an[n - 1]];
+  if (v % 1 && n < 5) lines.push(L('半級：部分做到 ', 'Half step: partly ') + (n + 1) + '｜' + an[n]);
   return lines;
 }
 
+/* 領隊是 members[0]，leader:true；只有領隊評分、不能刪除 */
 function blankMember(name, role) {
   const id = 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const m = { id, name: name || '新隊員', role: role || '隊員', self: {}, lead: {}, flags: {} };
+  const m = { id, name: name || L('新隊員', 'New member'), role: role || '', self: {}, lead: {}, flags: {} };
   SCORED.forEach(a => { m.self[a] = null; m.lead[a] = null; });
   return m;
 }
+function blankLeader() { const m = blankMember(L('領隊', 'Leader'), ''); m.leader = true; return m; }
+function ensureLeader(st) {
+  let i = st.members.findIndex(m => m.leader);
+  if (i < 0) i = st.members.findIndex(m => /^(領隊|leader)$/i.test(String(m.role || '').trim()));
+  if (i < 0) { st.members.unshift(blankLeader()); return st; }
+  const m = st.members.splice(i, 1)[0];
+  m.leader = true;
+  st.members.forEach(x => { delete x.leader; });
+  SCORED.forEach(a => { if (m.lead[a] == null && m.self[a] != null) m.lead[a] = m.self[a]; m.self[a] = null; });
+  st.members.unshift(m);
+  return st;
+}
 
 function blankState() {
-  const st = { v: 1, example: false, trip: { name: '', date: '', code: '' }, template: 'T3', conds: {}, gap: 1,
-    dAdj: {}, plan: {}, kit: {}, levers: {}, members: [], override: { color: '', reason: '' }, premortem: '' };
+  const st = { v: 2, example: false, trip: { name: '', date: '', code: '' }, template: 'T3', conds: {}, gap: 1,
+    dAdj: {}, plan: {}, kit: {}, levers: {}, members: [blankLeader()], premortem: '' };
   Object.keys(CONDS).forEach(k => { st.conds[k] = false; });
   ALL.forEach(a => { st.dAdj[a] = 0; });
   PLAN_ITEMS.forEach(i => { st.plan[i.id] = false; });
   KIT_ITEMS.forEach(i => { st.kit[i.id] = false; });
-  LEVERS.forEach(L => { st.levers[L.id] = false; });
+  LEVERS.forEach(x => { st.levers[x.id] = false; });
   return st;
 }
 
 function exampleState() {
   const st = blankState();
   st.example = true;
-  st.trip = { name: '範例｜高山長日攻頂', date: '' };
+  st.trip = { name: L('範例｜高山長日攻頂', 'Example | long high-mountain summit day'), date: '', code: '' };
   st.template = 'T4';
   st.conds.c1 = true; st.conds.c2 = true; st.conds.c3 = true;
   ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(k => { st.plan[k] = true; });
   ['k1', 'k2', 'k3', 'k4', 'k5', 'k6'].forEach(k => { st.kit[k] = true; });
-  LEVERS.forEach(L => { st.levers[L.id] = true; });
-  const mk = (id, name, role, vals, flags) => {
+  LEVERS.forEach(x => { st.levers[x.id] = true; });
+  const mk = (id, name, role, vals, flags, leadOnly) => {
     const m = blankMember(name, role); m.id = id;
     SCORED.forEach(a => {
       const v = vals[a];
-      if (Array.isArray(v)) { m.self[a] = v[0]; m.lead[a] = v[1]; } else { m.self[a] = v; m.lead[a] = v; }
+      if (leadOnly) m.lead[a] = Array.isArray(v) ? v[1] : v;
+      else if (Array.isArray(v)) { m.self[a] = v[0]; m.lead[a] = v[1]; } else m.self[a] = v;
     });
     m.flags = flags || {};
     return m;
   };
-  st.members = [
-    mk('ex1', '領隊', '領隊', { fit: 4.5, foot: 4.5, care: 4.5, gear: 4.5, exp: 5, mind: 4.5, nav: 4.5, wx: 4, aid: 4, crm: 4.5, pace: 4.5 }),
-    mk('ex2', '副領隊', '副領隊', { fit: 4, foot: 4, care: 4, gear: 4, exp: 4, mind: 4, nav: 4, wx: 3, aid: 4.5, crm: 3.5, pace: 3.5 }),
-    mk('ex3', '隊員甲', '隊員', { fit: 4, foot: 3.5, care: 3.5, gear: 3.5, exp: 3, mind: 3.5, nav: 2.5, wx: 2, aid: 2, crm: 2, pace: 2.5 }),
-    mk('ex4', '隊員乙', '隊員（國中生）', { fit: [4.5, 3.5], foot: 3.5, care: 3, gear: 4, exp: 2, mind: 3, nav: 1.5, wx: 1, aid: 1, crm: 1, pace: 1.5 }),
-    mk('ex5', '隊員丙', '隊員', { fit: 4, foot: 3.5, care: 4, gear: 3.5, exp: 2.5, mind: 4, nav: 2, wx: 2.5, aid: 2, crm: 2, pace: 2.5 }, { s4: true })
+  const ld = mk('ex1', L('領隊', 'Leader'), '', { fit: 4.5, foot: 4.5, care: 4.5, gear: 4.5, exp: 5, mind: 4.5, nav: 4.5, wx: 4, aid: 4, crm: 4.5, pace: 4.5 }, null, true);
+  ld.leader = true;
+  st.members = [ld,
+    mk('ex2', L('副領隊', 'Co-leader'), L('副領隊', 'Co-leader'), { fit: 4, foot: 4, care: 4, gear: 4, exp: 4, mind: 4, nav: 4, wx: 3, aid: 4.5, crm: 3.5, pace: 3.5 }),
+    mk('ex3', L('隊員甲', 'Member A'), L('隊員', 'Member'), { fit: 4, foot: 3.5, care: 3.5, gear: 3.5, exp: 3, mind: 3.5, nav: 2.5, wx: 2, aid: 2, crm: 2, pace: 2.5 }),
+    mk('ex4', L('隊員乙', 'Member B'), L('隊員（國中生）', 'Member (teen)'), { fit: [4.5, 3.5], foot: 3.5, care: 3, gear: 4, exp: 2, mind: 3, nav: 1.5, wx: 1, aid: 1, crm: 1, pace: 1.5 }),
+    mk('ex5', L('隊員丙', 'Member C'), L('隊員', 'Member'), { fit: 4, foot: 3.5, care: 4, gear: 3.5, exp: 2.5, mind: 4, nav: 2, wx: 2.5, aid: 2, crm: 2, pace: 2.5 }, { s1: true })
   ];
-  st.premortem = '凌晨出發睡眠不足，回程天黑前沒到檢核點；天氣判讀只有一人可靠。';
+  st.premortem = L('凌晨出發睡眠不足，回程天黑前沒到檢核點；天氣判讀只有一人可靠。', 'Short sleep before a pre-dawn start; missing the checkpoint before dark on the way back; only one person reads weather reliably.');
   return st;
 }
 
@@ -570,24 +689,27 @@ function sanitizeState(raw) {
   if (TEMPLATES[raw.template]) st.template = raw.template;
   if ([0.5, 1, 1.5].includes(raw.gap)) st.gap = raw.gap;
   Object.keys(CONDS).forEach(k => { st.conds[k] = !!(raw.conds && raw.conds[k]); });
+  if (raw.v !== 2 && raw.conds && raw.conds.c2) st.conds.c6 = true;   // 舊版「夜間或白霧」拆成兩項
   ALL.forEach(a => { const d = raw.dAdj && raw.dAdj[a]; st.dAdj[a] = (typeof d === 'number' && Math.abs(d) <= 4) ? round5(d) : 0; });
   PLAN_ITEMS.forEach(i => { st.plan[i.id] = !!(raw.plan && raw.plan[i.id]); });
   KIT_ITEMS.forEach(i => { st.kit[i.id] = !!(raw.kit && raw.kit[i.id]); });
-  LEVERS.forEach(L => { st.levers[L.id] = !!(raw.levers && raw.levers[L.id]); });
+  LEVERS.forEach(x => { st.levers[x.id] = !!(raw.levers && raw.levers[x.id]); });
+  st.members = [];
   (Array.isArray(raw.members) ? raw.members : []).slice(0, 60).forEach(rm => {
-    const m = blankMember(String(rm.name || '隊員').slice(0, 30), String(rm.role || '隊員').slice(0, 30));
+    const m = blankMember(String(rm.name || L('隊員', 'Member')).slice(0, 30), String(rm.role || '').slice(0, 30));
     if (rm.id && /^[A-Za-z0-9]{1,24}$/.test(rm.id)) m.id = rm.id;
+    if (rm.leader) m.leader = true;
     SCORED.forEach(a => {
       if (rm.self && isScore(rm.self[a])) m.self[a] = rm.self[a];
       if (rm.lead && isScore(rm.lead[a])) m.lead[a] = rm.lead[a];
     });
     Object.keys(FLAGS).forEach(k => { if (rm.flags && rm.flags[k]) m.flags[k] = true; });
+    if (raw.v !== 2 && rm.flags && rm.flags.s4) m.flags.s1 = true;  // 舊版「近期累積疲勞」併入睡眠/疲勞
+    if (raw.v !== 2 && rm.flags) delete m.flags.s4;
+    if (rm.hide) m.hide = true;
     st.members.push(m);
   });
-  if (raw.override && ['', 'green', 'amber', 'red'].includes(raw.override.color)) {
-    st.override.color = raw.override.color;
-    st.override.reason = String(raw.override.reason || '').slice(0, 400);
-  }
+  ensureLeader(st);
   st.premortem = String(raw.premortem || '').slice(0, 600);
   return st;
 }
@@ -698,47 +820,48 @@ function compute(st) {
     teamRes[a] = Object.assign({}, t, { D: Dp[a], R: R[a], status, single, margin: t.main == null ? null : t.main - Dp[a] });
   });
 
-  /* 待處理清單：先紅後黃，最後是提醒 */
+  /* 待處理清單：先紅後黃，最後是提醒；每項帶 to（要跳去的區塊或卡片 id） */
   const issues = [];
-  const push = (level, text, fix) => issues.push({ level, text, fix });
-  if (!members.length) push('red', '尚未加入隊員', '到「② 隊員評分」加入隊員；缺資料以紅線計');
+  const push = (level, text, fix, to) => issues.push({ level, text, fix, to: to || '' });
+  const q = t => L('「' + t + '」', ' "' + t + '" ');
+  if (!members.length) push('red', L('尚未加入隊員', 'No members yet'), L('到「② 隊員評分」加入隊員；缺資料以紅線計', 'Add members in ② Ratings; missing data counts as the red line'), 's-members');
   memberRes.forEach(r => {
-    const nm = r.m.name;
+    const nm = r.m.name, to = 'card-' + r.m.id;
     IND.forEach(a => {
       const x = r.axes[a];
-      if (x.status === 'nodata') push('red', nm + '「' + AXES[a].short + '」無資料', '補評分；缺資料以紅線計');
-      else if (x.status === 'red') push('red', nm + '「' + AXES[a].short + '」' + fmt(x.e) + ' 低於紅線 ' + fmt(x.R), '迴避或轉移：換路線、改任務分組，或補訓練後重評');
+      if (x.status === 'nodata') push('red', nm + q(axS(a)) + L('無資料', 'has no data'), L('補評分；缺資料以紅線計', 'Rate it; missing data counts as the red line'), to);
+      else if (x.status === 'red') push('red', nm + q(axS(a)) + fmt(x.e) + L(' 低於紅線 ', ' is below red line ') + fmt(x.R), L('迴避或轉移：換路線、改任務分組，或補訓練後重評', 'Avoid or transfer: change route or roles, or train and reassess'), to);
     });
     const margAxes = IND.filter(a => r.axes[a].status === 'marg');
-    if (margAxes.length >= 2) push('red', nm + ' 兩項以上邊際（' + margAxes.map(a => AXES[a].short).join('、') + '）', '兩項以上邊際就不出發；用槓桿降低需求，或調整分組');
+    if (margAxes.length >= 2) push('red', nm + L(' 兩項以上邊際（', ': 2+ marginal axes (') + margAxes.map(axS).join(SEP()) + L('）', ')'), L('兩項以上邊際就不出發；用槓桿降低需求，或調整分組', 'Two or more marginal means no go; use levers or regroup'), to);
     else if (margAxes.length === 1) {
       const a = margAxes[0], x = r.axes[a];
-      push('amber', nm + '「' + AXES[a].short + '」邊際：' + fmt(x.e) + '／需求 ' + fmt(x.D), '用槓桿補位，或接受並設檢核點');
+      push('amber', nm + q(axS(a)) + L('邊際：', 'marginal: ') + fmt(x.e) + L('／需求 ', ' / need ') + fmt(x.D), L('用槓桿補位，或接受並設檢核點', 'Cover with a lever, or accept and set checkpoints'), to);
     }
-    if (r.nFlags) push('amber', nm + ' 今日狀態 ' + r.nFlags + ' 項，體能、踩踏、自我照護紅線上移 ' + fmt(r.mod), '出發前再確認；未改善就降低任務');
-    r.disc.forEach(d => push('amber', nm + '「' + AXES[d.a].short + '」本人 ' + fmt(d.s) + '／領隊 ' + fmt(d.l), '行前對話校準；計分取低分'));
+    if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': condition today, ') + r.nFlags + L(' 項，體能、踩踏、自我照護紅線上移 ', ' item(s); fitness, footing, self-care lines up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
+    r.disc.forEach(d => push('amber', nm + q(axS(d.a)) + L('本人 ', 'self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l), L('行前對話校準；計分取低分', 'Talk it through before the trip; the lower score counts'), to));
   });
   TEAM.forEach(a => {
-    const t = teamRes[a], nm = '團隊「' + AXES[a].short + '」';
-    if (t.status === 'nodata') push('red', nm + '無資料', '補評分；缺資料以紅線計');
-    else if (t.status === 'red') push('red', nm + (t.list ? '清單 ' : '主槓桿 ') + fmt(t.main) + ' 低於紅線 ' + fmt(t.R), t.list ? '補齊清單項目' : '補人或換路線');
-    else if (t.status === 'marg') push('amber', nm + '邊際：' + fmt(t.main) + '／需求 ' + fmt(t.D), t.list ? '補齊清單項目' : '找人補位或用槓桿');
-    if (t.single) push('amber', nm + '只有一人達紅線（備援 ' + fmt(t.backup) + '，紅線 ' + fmt(t.R) + '）', '指定第二人並行前演練');
+    const t = teamRes[a], nm = L('團隊「' + axS(a) + '」', 'Team "' + axS(a) + '" ');
+    const to = t.list ? 's-lists' : 's-members';
+    if (t.status === 'nodata') push('red', nm + L('無資料', 'has no data'), L('補評分；缺資料以紅線計', 'Rate it; missing data counts as the red line'), to);
+    else if (t.status === 'red') push('red', nm + (t.list ? L('清單 ', 'checklist ') : L('主槓桿 ', 'main lever ')) + fmt(t.main) + L(' 低於紅線 ', ' is below red line ') + fmt(t.R), t.list ? L('補齊清單項目', 'Complete the checklist') : L('補人或換路線', 'Add someone or change route'), to);
+    else if (t.status === 'marg') push('amber', nm + L('邊際：', 'marginal: ') + fmt(t.main) + L('／需求 ', ' / need ') + fmt(t.D), t.list ? L('補齊清單項目', 'Complete the checklist') : L('找人補位或用槓桿', 'Find cover or use a lever'), to);
+    if (t.single) push('amber', nm + L('只有一人達紅線（備援 ', 'has only one person above the red line (backup ') + fmt(t.backup) + L('，紅線 ', ', red line ') + fmt(t.R) + L('）', ')'), L('指定第二人並行前演練', 'Name a second person and rehearse'), to);
   });
-  if (teamMargs >= 2) push('red', '團隊兩項以上邊際', '兩項以上邊際就不出發；補人、用槓桿或換路線');
+  if (teamMargs >= 2) push('red', L('團隊兩項以上邊際', 'Team has 2+ marginal axes'), L('兩項以上邊際就不出發；補人、用槓桿或換路線', 'Two or more marginal means no go; add people, use levers or change route'), 's-levers');
   levers.forEach(x => {
-    if (x.on && !x.ok) push('info', '槓桿「' + x.L.name + '」前提未達，未計入', x.L.prereqText);
-    else if (x.applied && !x.paired) push('amber', '槓桿「' + x.L.name + '」未成雙', x.L.pairText);
+    if (x.on && !x.ok) push('info', L('槓桿「' + lvName(x.L) + '」前提未達，未計入', 'Lever "' + lvName(x.L) + '" not met, not counted'), lvPre(x.L), 's-levers');
+    else if (x.applied && !x.paired) push('amber', L('槓桿「' + lvName(x.L) + '」未成雙', 'Lever "' + lvName(x.L) + '" has no pair'), lvPair(x.L), 's-levers');
   });
   ALL.forEach(a => {
-    if (leverInfo[a].capped) push('info', '「' + AXES[a].short + '」槓桿合計超過 ' + fmt(LEVER_CAP) + '，以 ' + fmt(LEVER_CAP) + ' 計', '同一軸最多降 ' + fmt(LEVER_CAP));
-    else if (leverInfo[a].floored && leverInfo[a].want > 0) push('info', '「' + AXES[a].short + '」需求已降到紅線', '紅線不隨槓桿移動');
+    if (leverInfo[a].capped) push('info', L('「' + axS(a) + '」槓桿合計超過 ' + fmt(LEVER_CAP) + '，以 ' + fmt(LEVER_CAP) + ' 計', '"' + axS(a) + '" levers exceed ' + fmt(LEVER_CAP) + '; counted as ' + fmt(LEVER_CAP)), L('同一軸最多降 ', 'Max reduction per axis is ') + fmt(LEVER_CAP), 's-levers');
+    else if (leverInfo[a].floored && leverInfo[a].want > 0) push('info', L('「' + axS(a) + '」需求已降到紅線', '"' + axS(a) + '" need is down to the red line'), L('紅線不隨槓桿移動', 'Levers never move the red line'), 's-levers');
   });
   const order = { red: 0, amber: 1, info: 2 };
   issues.sort((x, y) => order[x.level] - order[y.level]);
 
   const sys = issues.some(i => i.level === 'red') ? 'red' : issues.some(i => i.level === 'amber') ? 'amber' : 'green';
-  const ov = st.override || {};
   const overrideApplied = false;
   const final = sys;  // 判定一律由程式產生，不接受人工覆核
 
@@ -761,93 +884,78 @@ function compute(st) {
 
 /* ===== 純文字摘要（方便貼到群組或紀錄） ===== */
 function buildSummary(st, res) {
-  const L = [];
-  const T = TEMPLATES[st.template];
-  const conds = Object.keys(CONDS).filter(k => st.conds[k]).map(k => CONDS[k].name);
-  L.push('上山籌碼評估｜' + (st.trip.name || '未命名行程') + (st.trip.date ? '｜' + st.trip.date : ''));
-  L.push('需求：' + T.name + '；條件：' + (conds.length ? conds.join('、') : '無') + '；紅線距離 ' + st.gap.toFixed(1));
-  let v = '判定：程式 ' + COLOR_ZH[res.sys];
-  L.push(v + '｜' + VERDICT_ZH[res.final]);
-  L.push('隊員：' + st.members.length + ' 人（綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '）');
+  const out = [];
+  const conds = Object.keys(CONDS).filter(k => st.conds[k]).map(condName);
+  const bar = L('｜', ' | ');
+  out.push(L('上山籌碼評估', 'Trip Leverage Check') + bar + (st.trip.name || L('未命名行程', 'Untitled trip')) + (st.trip.date ? bar + st.trip.date : ''));
+  out.push(L('需求：', 'Need: ') + tplName(st.template) + L('；條件：', '; conditions: ') + (conds.length ? conds.join(SEP()) : L('無', 'none')) + L('；紅線距離 ', '; red-line gap ') + st.gap.toFixed(1));
+  out.push(L('判定：', 'Verdict: ') + COLOR_LONG(res.final) + bar + VERDICT(res.final));
+  out.push(L('隊員：', 'Team: ') + st.members.length + L(' 人（綠 ', ' people (green ') + res.counts.green + L('・黃 ', ', amber ') + res.counts.amber + L('・紅 ', ', red ') + res.counts.red + L('）', ')'));
   const act = res.issues.filter(i => i.level !== 'info');
   if (act.length) {
-    L.push('', '需要處理');
-    act.forEach(i => L.push('・' + i.text + '｜' + i.fix));
+    out.push('', L('需要處理', 'To fix'));
+    act.forEach(i => out.push('・' + i.text + bar + i.fix));
   }
-  const ok = res.levers.filter(x => x.applied && x.paired).map(x => x.L.name);
-  const single = res.levers.filter(x => x.applied && !x.paired).map(x => x.L.name);
-  const off = res.levers.filter(x => x.on && !x.ok).map(x => x.L.name + '（' + x.L.prereqText + '）');
+  const ok = res.levers.filter(x => x.applied && x.paired).map(x => lvName(x.L));
+  const single = res.levers.filter(x => x.applied && !x.paired).map(x => lvName(x.L));
+  const off = res.levers.filter(x => x.on && !x.ok).map(x => lvName(x.L) + L('（', ' (') + lvPre(x.L) + L('）', ')'));
   if (ok.length || single.length || off.length) {
-    L.push('', '槓桿');
-    if (ok.length) L.push('・成立：' + ok.join('、'));
-    if (single.length) L.push('・未成雙：' + single.join('、'));
-    if (off.length) L.push('・未計入：' + off.join('、'));
+    out.push('', L('槓桿', 'Levers'));
+    if (ok.length) out.push(L('・成立：', '・Working: ') + ok.join(SEP()));
+    if (single.length) out.push(L('・未成雙：', '・No pair: ') + single.join(SEP()));
+    if (off.length) out.push(L('・未計入：', '・Not counted: ') + off.join(SEP()));
   }
   if (res.memberRes.length) {
-    L.push('', '隊員明細');
+    out.push('', L('隊員明細', 'Members'));
     res.memberRes.forEach(r => {
       const notes = [];
       IND.forEach(a => {
         const x = r.axes[a];
-        if (x.status === 'nodata') notes.push(AXES[a].short + ' 無資料');
-        else if (x.status === 'red') notes.push(AXES[a].short + ' 低於紅線');
-        else if (x.status === 'marg') notes.push(AXES[a].short + ' 邊際（差 ' + fmt(x.D - x.e) + '）');
+        if (x.status === 'nodata') notes.push(axS(a) + L(' 無資料', ' no data'));
+        else if (x.status === 'red') notes.push(axS(a) + L(' 低於紅線', ' below red line'));
+        else if (x.status === 'marg') notes.push(axS(a) + L(' 邊際（差 ', ' marginal (short ') + fmt(x.D - x.e) + L('）', ')'));
       });
-      if (r.nFlags) notes.push('今日狀態 ' + r.nFlags + ' 項');
-      r.disc.forEach(d => notes.push(AXES[d.a].short + ' 本人 ' + fmt(d.s) + '／領隊 ' + fmt(d.l)));
-      L.push('・' + r.m.name + (r.m.role && r.m.role !== r.m.name ? '・' + r.m.role : '') + ' ' + COLOR_ZH[r.color] + (notes.length ? '：' + notes.join('；') : ''));
+      if (r.nFlags) notes.push(L('今日狀態 ', 'condition today: ') + r.nFlags + L(' 項', ''));
+      r.disc.forEach(d => notes.push(axS(d.a) + L(' 本人 ', ' self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l)));
+      const role = r.m.leader ? L('領隊', 'leader') : (r.m.role && r.m.role !== r.m.name ? r.m.role : '');
+      out.push('・' + r.m.name + (role && role.toLowerCase() !== r.m.name.toLowerCase() ? '・' + role : '') + ' ' + COLOR_LONG(r.color) + (notes.length ? L('：', ': ') + notes.join(L('；', '; ')) : ''));
     });
   }
   const tight = res.margins.slice(0, 4);
   if (tight.length) {
-    L.push('', '餘裕最緊');
-    tight.forEach(x => L.push('・' + AXES[x.a].short + ' ' + fmtSigned(x.margin)));
+    out.push('', L('餘裕最緊', 'Tightest margins'));
+    tight.forEach(x => out.push('・' + axS(x.a) + ' ' + fmtSigned(x.margin)));
   }
-  if (st.premortem && st.premortem.trim()) L.push('', '評估脆弱點', st.premortem.trim());
-  return L.join('\n');
+  if (st.premortem && st.premortem.trim()) out.push('', L('評估脆弱點', 'Weak points'), st.premortem.trim());
+  return out.join('\n');
 }
 
-/* ===== 分享碼 ===== */
-function b64urlEncode(str) {
-  const bytes = new TextEncoder().encode(str);
+/* ===== 儲存連結：狀態壓縮後放在網址 #s= ===== */
+function b64urlFromBytes(bytes) {
   let bin = '';
-  bytes.forEach(b => { bin += String.fromCharCode(b); });
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
   return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
-function b64urlDecode(s) {
+function bytesFromB64url(s) {
   s = s.replace(/-/g, '+').replace(/_/g, '/');
   while (s.length % 4) s += '=';
-  const bin = atob(s);
-  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
+  return Uint8Array.from(atob(s), c => c.charCodeAt(0));
 }
-function encodeMember(m) {
-  const s = {};
-  SCORED.forEach(a => { if (m.self[a] != null) s[a] = m.self[a]; });
-  const f = Object.keys(FLAGS).filter(k => m.flags && m.flags[k]);
-  return 'CM1M.' + b64urlEncode(JSON.stringify({ n: m.name, r: m.role, s, f }));
+async function packState(st) {
+  const raw = new TextEncoder().encode(JSON.stringify(st));
+  if (typeof CompressionStream === 'undefined') return 'j' + b64urlFromBytes(raw);
+  const buf = await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer();
+  return 'z' + b64urlFromBytes(new Uint8Array(buf));
 }
-function encodeTeam(st) {
-  return 'CM1T.' + b64urlEncode(JSON.stringify(st));
-}
-function decodeCode(text) {
-  const t = String(text || '').replace(/\s+/g, '');
-  const mt = t.match(/CM1([MT])\.([A-Za-z0-9_-]+)/);
-  if (!mt) throw new Error('找不到分享碼，分享碼以 CM1 開頭');
-  let obj;
-  try { obj = JSON.parse(b64urlDecode(mt[2])); } catch (e) { throw new Error('分享碼不完整，請重新複製整段'); }
-  return { kind: mt[1] === 'M' ? 'member' : 'team', obj };
-}
-/* 隊員分享碼只帶本人評分與今日狀態，不覆蓋領隊評分 */
-function mergeMemberCode(st, obj) {
-  const name = String(obj.n || '').trim().slice(0, 30) || '未命名';
-  let m = st.members.find(x => x.name.trim() === name);
-  let added = false;
-  if (!m) { m = blankMember(name, String(obj.r || '隊員').slice(0, 30)); st.members.push(m); added = true; }
-  let n = 0;
-  SCORED.forEach(a => { const v = obj.s && obj.s[a]; if (isScore(v)) { m.self[a] = v; n++; } });
-  (Array.isArray(obj.f) ? obj.f : []).forEach(k => { if (FLAGS[k]) m.flags[k] = true; });
-  return { m, added, n };
+async function unpackState(code) {
+  const kind = code[0], bytes = bytesFromB64url(code.slice(1));
+  let txt;
+  if (kind === 'z') {
+    const buf = await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer();
+    txt = new TextDecoder().decode(buf);
+  } else if (kind === 'j') txt = new TextDecoder().decode(bytes);
+  else throw new Error('bad');
+  return sanitizeState(JSON.parse(txt));
 }
 
 
@@ -892,8 +1000,8 @@ function mergeFormRows(st, rows, code) {
   });
   let added = 0, updated = 0;
   latest.forEach((r, name) => {
-    let m = st.members.find(x => x.name.trim() === name);
-    if (!m) { m = blankMember(name, String((iRole >= 0 && r[iRole]) || '隊員').trim().slice(0, 30) || '隊員'); st.members.push(m); added++; } else updated++;
+    let m = st.members.find(x => !x.leader && x.name.trim() === name);
+    if (!m) { m = blankMember(name, String((iRole >= 0 && r[iRole]) || '').trim().slice(0, 30)); st.members.push(m); added++; } else updated++;
     SCORED.forEach(a => { const v = parseFloat(r[iAx[a]]); if (isScore(v)) m.self[a] = v; });
     const fl = iFlag >= 0 ? String(r[iFlag] || '') : '';
     m.flags = {};
@@ -904,8 +1012,8 @@ function mergeFormRows(st, rows, code) {
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { AXES, IND, TEAM, TEAM_SKILL, SCORED, ALL, TEMPLATES, CONDS, FLAGS, PLAN_ITEMS, KIT_ITEMS, LEVERS,
-    compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, encodeMember, encodeTeam, decodeCode,
-    mergeMemberCode, effScore, anchorLines, fmt, fmtSigned };
+    compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, packState, unpackState, mergeFormRows, parseCSV,
+    effScore, anchorLines, fmt, fmtSigned, setLang: x => { LANG = x; } };
 }
 
 </script>
@@ -928,11 +1036,34 @@ if (typeof module !== 'undefined' && module.exports) {
 
   let st = loadState() || exampleState();
   let res = compute(st);
-  const ui = { rater: {}, open: {}, code: {}, delAsk: null, overlay: '', importMsg: '', pendingTeam: null, teamCode: '', resetAsk: false, formMsg: '' };
+  const ui = { rater: {}, open: {}, delAsk: null, ovOpen: false, formMsg: '', pop: '', pendingLoad: null, sumOpen: false };
   if (st.example) ui.open.ex4 = true;
 
+  /* ---------- 語言 ---------- */
+  function applyStaticLang() {
+    document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      if (el.dataset.zh == null) el.dataset.zh = el.innerHTML;
+      el.innerHTML = LANG === 'en' ? el.dataset.en : el.dataset.zh;
+    });
+    document.querySelectorAll('[data-en-ph]').forEach(el => {
+      if (el.dataset.zhPh == null) el.dataset.zhPh = el.getAttribute('placeholder') || '';
+      el.setAttribute('placeholder', LANG === 'en' ? el.dataset.enPh : el.dataset.zhPh);
+    });
+    document.querySelectorAll('[data-en-title]').forEach(el => {
+      if (el.dataset.zhTitle == null) el.dataset.zhTitle = el.getAttribute('title') || '';
+      const t = LANG === 'en' ? el.dataset.enTitle : el.dataset.zhTitle;
+      el.setAttribute('title', t); el.setAttribute('aria-label', t);
+    });
+    const lb = $('#langToggle');
+    lb.textContent = LANG === 'en' ? '中' : 'EN';
+    lb.title = LANG === 'en' ? '切換為中文' : 'English';
+    lb.setAttribute('aria-label', LANG === 'en' ? '切換為中文' : 'Switch to English');
+    $('#summary').setAttribute('aria-label', L('判定', 'Verdict'));
+  }
+
   /* ---------- 判定區 ---------- */
-  function lamp(c, big) { return '<span class="lamp ' + c + (big ? ' big' : '') + '">' + COLOR_ZH[c] + '</span>'; }
+  function lamp(c, big) { return '<span class="lamp ' + c + (big ? ' big' : '') + '">' + COLOR_WORD(c) + '</span>'; }
 
   function radarSVG(axes, series, label) {
     const n = axes.length, R0 = 100;
@@ -955,13 +1086,14 @@ if (typeof module !== 'undefined' && module.exports) {
       const r = R0 + 14, x = r * Math.cos(ang(i)), y = r * Math.sin(ang(i));
       const anchor = Math.abs(x) < 10 ? 'middle' : (x > 0 ? 'start' : 'end');
       const dy = y < -R0 * 0.7 ? -2 : (y > R0 * 0.7 ? 12 : 4);
-      s += '<text class="alabel" text-anchor="' + anchor + '" x="' + x.toFixed(1) + '" y="' + (y + dy).toFixed(1) + '">' + esc(AXES[a].short) + '</text>';
+      s += '<text class="alabel" text-anchor="' + anchor + '" x="' + x.toFixed(1) + '" y="' + (y + dy).toFixed(1) + '">' + esc(axS(a)) + '</text>';
     });
     return s + '</svg>';
   }
   const MEM_COLORS = ['#e8833a', '#c45ab3', '#edc948', '#a0c544', '#ff9da7', '#9c755f', '#8f6fd1', '#bab0ac', '#f2b880', '#d37295'];
   function memColor(k) { return MEM_COLORS[k % MEM_COLORS.length]; }
   function clampV(v) { return Math.max(0, Math.min(5, v == null ? 0 : v)); }
+  const others = () => st.members.filter(m => !m.leader);
 
   function radarCards() {
     const teamMin = IND.map(a => {
@@ -969,30 +1101,30 @@ if (typeof module !== 'undefined' && module.exports) {
       if (!vals.length || vals.some(v => v == null)) return null;
       return Math.min.apply(null, vals);
     });
-    const ovAll = ui.overlay === '*';
-    const ovm = ovAll ? null : st.members.find(m => m.id === ui.overlay);
+    const mem = others();
+    const shown = mem.map((m, k) => ({ m, k })).filter(x => !x.m.hide);
     const series1 = [
       { cls: 'p-demand', values: IND.map(a => res.Dp[a]) },
       { cls: 'p-team', values: teamMin, dots: true },
       { cls: 'p-red', values: IND.map(a => res.R[a]) }
     ];
-    if (ovm) series1.splice(2, 0, { cls: 'p-member', values: IND.map(a => effScore(ovm, a)), dots: true });
-    if (ovAll) st.members.forEach((m, k) => series1.splice(2 + k, 0, { cls: 'p-member', color: memColor(k), values: IND.map(a => effScore(m, a)), dots: true }));
+    shown.forEach((x, j) => series1.splice(2 + j, 0, { cls: 'p-member', color: memColor(x.k), values: IND.map(a => effScore(x.m, a)), dots: true }));
     const series2 = [
       { cls: 'p-demand', values: TEAM.map(a => res.Dp[a]) },
       { cls: 'p-team', values: TEAM.map(a => res.teamRes[a].main), dots: true },
       { cls: 'p-backup', values: TEAM.map(a => res.teamRes[a].list ? res.teamRes[a].main : res.teamRes[a].backup) },
       { cls: 'p-red', values: TEAM.map(a => res.R[a]) }
     ];
-    let opts = '<option value="">不疊加</option>' + (st.members.length ? '<option value="*"' + (ovAll ? ' selected' : '') + '>疊加所有隊員</option>' : '') + st.members.map(m => '<option value="' + m.id + '"' + (m.id === ui.overlay ? ' selected' : '') + '>' + esc(m.name) + '</option>').join('');
+    const pick = mem.length ? '<details class="ovpick" id="ovpick"' + (ui.ovOpen ? ' open' : '') + '><summary><span>' + L('疊上隊員', 'Overlay members') + '（' + shown.length + '／' + mem.length + '）</span><span class="chev" aria-hidden="true">›</span></summary><div class="ovlist">' +
+      mem.map((m, k) => '<label for="ov-' + m.id + '"><i class="sw" style="border-top:3px solid ' + memColor(k) + '"></i><span>' + esc(m.name) + '</span><input type="checkbox" id="ov-' + m.id + '" data-ov="' + m.id + '"' + (m.hide ? '' : ' checked') + '></label>').join('') + '</div></details>' : '';
     return '<div class="radars">' +
-      '<figure class="radar-card"><figcaption><span class="rc-title">個人底盤</span><span class="rc-sub">每人都要過紅線，圖上是全隊每軸最低者</span></figcaption>' +
-      radarSVG(IND, series1, '個人底盤雷達圖：需求、紅線與全隊最低值') +
-      '<div class="legend"><span><i class="sw sw-demand"></i>需求</span><span><i class="sw sw-red"></i>紅線</span><span><i class="sw sw-team"></i>全隊最低</span>' + (ovm ? '<span><i class="sw sw-member"></i>' + esc(ovm.name) + '</span>' : '') + (ovAll ? st.members.map((m, k) => '<span class="mem-legend"><i class="sw" style="border-top-color:' + memColor(k) + '"></i>' + esc(m.name) + '</span>').join('') : '') + '</div>' +
-      '<label class="f overlay" for="overlay">疊上隊員<select id="overlay">' + opts + '</select></label></figure>' +
-      '<figure class="radar-card"><figcaption><span class="rc-title">團隊能力</span><span class="rc-sub">可以借，看主槓桿與第二人</span></figcaption>' +
-      radarSVG(TEAM, series2, '團隊能力雷達圖：需求、紅線、主槓桿與備援') +
-      '<div class="legend"><span><i class="sw sw-demand"></i>需求</span><span><i class="sw sw-red"></i>紅線</span><span><i class="sw sw-team"></i>主槓桿</span><span><i class="sw sw-backup"></i>第二人</span></div></figure>' +
+      '<details class="radar-card" id="rc-ind" open><summary><span class="rc-head"><span class="rc-title">' + L('個人底盤', 'Personal base') + '</span><span class="rc-sub">' + L('每人都要過紅線，圖上是全隊每軸最低者', 'Everyone must clear the red line; the line shows the team minimum') + '</span></span><span class="chev" aria-hidden="true">›</span></summary>' +
+      radarSVG(IND, series1, L('個人底盤雷達圖：需求、紅線與全隊最低值', 'Personal base radar: need, red line and team minimum')) +
+      '<div class="legend"><span><i class="sw sw-demand"></i>' + L('需求', 'Need') + '</span><span><i class="sw sw-red"></i>' + L('紅線', 'Red line') + '</span><span><i class="sw sw-team"></i>' + L('全隊最低', 'Team minimum') + '</span>' + shown.map(x => '<span class="mem-legend"><i class="sw" style="border-top-color:' + memColor(x.k) + '"></i>' + esc(x.m.name) + '</span>').join('') + '</div>' +
+      pick + '</details>' +
+      '<details class="radar-card" id="rc-team" open><summary><span class="rc-head"><span class="rc-title">' + L('團隊能力', 'Team skills') + '</span><span class="rc-sub">' + L('可以借，看主槓桿與第二人', 'Can be shared; main lever and backup') + '</span></span><span class="chev" aria-hidden="true">›</span></summary>' +
+      radarSVG(TEAM, series2, L('團隊能力雷達圖：需求、紅線、主槓桿與備援', 'Team skills radar: need, red line, main lever and backup')) +
+      '<div class="legend"><span><i class="sw sw-demand"></i>' + L('需求', 'Need') + '</span><span><i class="sw sw-red"></i>' + L('紅線', 'Red line') + '</span><span><i class="sw sw-team"></i>' + L('主槓桿', 'Main lever') + '</span><span><i class="sw sw-backup"></i>' + L('第二人', 'Backup') + '</span></div></details>' +
       '</div>';
   }
 
@@ -1005,7 +1137,7 @@ if (typeof module !== 'undefined' && module.exports) {
         const left = v < 0 ? 50 + v * 25 : 50, width = Math.abs(v) * 25;
         fill = width > 0 ? '<span class="bfill s-' + st2 + '" style="left:' + left + '%;width:' + width + '%"></span>' : '<span class="bzero-dot s-' + st2 + '"></span>';
       }
-      return '<div class="bar-row"><span class="bname">' + esc(AXES[x.a].short) + '</span><span class="btrack"><span class="bzero"></span>' + fill + '</span><span class="bval s-' + st2 + '">' + fmtSigned(x.margin) + '</span></div>';
+      return '<div class="bar-row"><span class="bname">' + esc(axS(x.a)) + '</span><span class="btrack"><span class="bzero"></span>' + fill + '</span><span class="bval s-' + st2 + '">' + fmtSigned(x.margin) + '</span></div>';
     }).join('');
     return '<div class="bars">' + rows + '<div class="bar-row bar-scale" aria-hidden="true"><span></span><span class="bscale"><span>−2</span><span>0</span><span>+2</span></span><span></span></div></div>';
   }
@@ -1013,9 +1145,9 @@ if (typeof module !== 'undefined' && module.exports) {
   function issuesHTML() {
     const act = res.issues.filter(i => i.level !== 'info');
     const info = res.issues.filter(i => i.level === 'info');
-    const li = i => '<li class="' + i.level + '"><span class="itext">' + esc(i.text) + '</span><span class="ifix">' + esc(i.fix) + '</span></li>';
-    let h = act.length ? '<ul class="issues">' + act.map(li).join('') + '</ul>' : '<p class="note ok-note">沒有紅黃項目。出發前仍照檢核點執行。</p>';
-    if (info.length) h += '<details class="infos"><summary>提醒（' + info.length + '）</summary><ul class="issues">' + info.map(li).join('') + '</ul></details>';
+    const li = (i, k) => '<li class="' + i.level + '"' + (k === 0 ? ' id="iss-first"' : '') + (i.to ? ' data-to="' + i.to + '" title="' + L('點一下跳到相關區塊', 'Tap to jump there') + '"' : '') + '><span class="itext">' + esc(i.text) + '</span><span class="ifix">' + esc(i.fix) + '</span></li>';
+    let h = act.length ? '<ul class="issues">' + act.map(li).join('') + '</ul>' : '<p class="note ok-note">' + L('沒有紅黃項目。出發前仍照檢核點執行。', 'No red or amber items. Still follow the checkpoints.') + '</p>';
+    if (info.length) h += '<p class="issues-h">' + L('提醒', 'Notes') + '（' + info.length + '）</p><ul class="issues">' + info.map(i => li(i, -1)).join('') + '</ul>';
     return h;
   }
 
@@ -1024,111 +1156,141 @@ if (typeof module !== 'undefined' && module.exports) {
     const nOk = res.levers.filter(x => x.applied && x.paired).length;
     const nSingle = res.levers.filter(x => x.applied && !x.paired).length;
     const act = res.issues.filter(i => i.level !== 'info').length;
-    const sub = '程式依需求、紅線與槓桿自動判定' + (st.trip.name ? '｜' + esc(st.trip.name) : '') + (st.trip.date ? '｜' + esc(st.trip.date) : '');
+    const bar = L('｜', ' | ');
+    const sub = L('程式依需求、紅線與槓桿自動判定', 'Decided by needs, red lines and levers') + (st.trip.name ? bar + esc(st.trip.name) : '') + (st.trip.date ? bar + esc(st.trip.date) : '');
+    const keep = id => { const d = document.getElementById(id); return d ? d.open : true; };
+    const o = { ind: keep('rc-ind'), team: keep('rc-team'), iss: keep('p-issues'), mar: keep('p-margins') };
     let h = '<div class="verdict" data-c="' + c + '"><div class="vtop">' + lamp(c, true) +
-      '<div><div class="vword">' + VERDICT_ZH[c] + '</div><div class="vsub">' + sub + '</div></div></div>' +
-      '<div class="vstats"><span>隊員 ' + st.members.length + ' 人</span><span>綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '</span><span>槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '</span></div></div>';
+      '<div><div class="vword">' + VERDICT(c) + '</div><div class="vsub">' + sub + '</div></div></div>' +
+      '<div class="vstats"><span>' + L('隊員 ' + st.members.length + ' 人', st.members.length + ' people') + '</span><span>' + L('綠 ', 'green ') + res.counts.green + L('・黃 ', ', amber ') + res.counts.amber + L('・紅 ', ', red ') + res.counts.red + '</span><span>' + L('槓桿成立 ', 'levers working ') + nOk + L('・未成雙 ', ', no pair ') + nSingle + '</span></div></div>';
     h += radarCards();
-    h += '<div class="sumrow"><div class="panel"><h3>需要處理與提醒（' + act + '）</h3>' + issuesHTML() + '</div>';
-    h += '<div class="panel"><h3>餘裕</h3><p class="note">團隊值減需求。個人軸取全隊最低者，團隊軸取主槓桿。</p>' + barsHTML() + '</div></div>';
+    h += '<div class="sumrow"><details class="panel" id="p-issues" open><summary><h3>' + L('需要處理與提醒', 'To fix and notes') + '（' + act + '）</h3><span class="chev" aria-hidden="true">›</span></summary>' + issuesHTML() + '</details>';
+    h += '<details class="panel" id="p-margins" open><summary><h3>' + L('餘裕', 'Margins') + '</h3><span class="chev" aria-hidden="true">›</span></summary><p class="note">' + L('團隊值減需求。個人軸取全隊最低者，團隊軸取主槓桿。', 'Team value minus need. Personal axes use the team minimum; team axes use the main lever.') + '</p>' + barsHTML() + '</details></div>';
     $('#summary').innerHTML = h;
+    $('#rc-ind').open = o.ind; $('#rc-team').open = o.team; $('#p-issues').open = o.iss; $('#p-margins').open = o.mar;
     const top = $('#topVerdict');
     top.className = 'topverdict ' + c;
-    top.innerHTML = lamp(c) + '<span class="tv-word">' + VERDICT_ZH[c] + '</span>';
+    top.innerHTML = lamp(c) + '<span class="tv-word">' + VERDICT(c) + '</span>';
+    if (c === 'green') { top.removeAttribute('href'); top.removeAttribute('title'); }
+    else { top.setAttribute('href', '#iss-first'); top.title = L('跳到第一個' + COLOR_LONG(c) + '標示項目', 'Jump to the first ' + COLOR_LONG(c).toLowerCase() + ' item'); }
+  }
+
+  /* 跳到某區塊：先把它和外層的收合都打開，再捲動並閃一下 */
+  function jumpTo(el) {
+    if (!el) return;
+    for (let p = el; p; p = p.parentElement) if (p.tagName === 'DETAILS' && !p.open) { p.open = true; if (p.dataset.m) ui.open[p.dataset.m] = true; }
+    el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    if (el.tagName === 'LI') { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
   }
 
   /* ---------- ① 行程需求 ---------- */
   function renderDemandStatic() {
     $('#trip-name').value = st.trip.name;
     $('#trip-date').value = st.trip.date;
-    $('#tpl').innerHTML = Object.keys(TEMPLATES).map(k => '<option value="' + k + '"' + (k === st.template ? ' selected' : '') + '>' + TEMPLATES[k].name + '</option>').join('');
+    $('#tpl').innerHTML = Object.keys(TEMPLATES).map(k => '<option value="' + k + '"' + (k === st.template ? ' selected' : '') + '>' + esc(tplName(k)) + '</option>').join('');
     $('#gap').value = String(st.gap);
     $('#conds').innerHTML = Object.keys(CONDS).map(k => {
-      const adds = Object.keys(CONDS[k].add).map(a => AXES[a].short).join('、');
-      return '<label class="ck" for="cd-' + k + '"><input type="checkbox" id="cd-' + k + '" data-cond="' + k + '"' + (st.conds[k] ? ' checked' : '') + '><span>' + CONDS[k].name + '<small>需求 +0.5：' + adds + '</small></span></label>';
+      const adds = Object.keys(CONDS[k].add).map(axS).join(SEP());
+      return '<label class="ck" for="cd-' + k + '"><input type="checkbox" id="cd-' + k + '" data-cond="' + k + '"' + (st.conds[k] ? ' checked' : '') + '><span>' + esc(condName(k)) + '<small>' + L('需求 +0.5：', 'Need +0.5: ') + esc(adds) + '</small></span></label>';
     }).join('');
   }
   function demandRow(a) {
     const Dp = res.Dp[a], Dset = res.Dset[a], R = res.R[a], li = res.leverInfo[a], adj = st.dAdj[a] || 0;
     let req;
-    if (AXES[a].anchors) req = '需求 ' + Math.floor(Dp) + '｜' + AXES[a].anchors[Math.floor(Dp) - 1];
-    else if (a === 'plan') req = '清單勾選 ' + res.planChecked + '／' + PLAN_ITEMS.length + ' 項，換算 ' + fmt(res.planScore) + ' 分';
-    else req = '清單勾選 ' + res.kitChecked + '／' + KIT_ITEMS.length + ' 項，換算 ' + fmt(res.kitScore) + ' 分';
-    return '<div class="drow"><div class="dmain"><span class="dname">' + esc(AXES[a].full) + '</span>' +
-      '<span class="dnums"><span class="nw">需求 <b>' + fmt(Dp) + '</b></span>' +
-      (li.used ? '<span class="nw dlev">設定 ' + fmt(Dset) + '，槓桿 −' + fmt(li.used) + '</span>' : '') +
-      '<span class="nw">紅線 <b class="rl">' + fmt(R) + '</b></span>' +
-      (adj ? '<span class="nw">手動 ' + (adj > 0 ? '+' : '−') + fmt(Math.abs(adj)) + '</span>' : '') + '</span></div>' +
-      '<div class="stepper"><button type="button" id="adjm-' + a + '" data-act="adj" data-a="' + a + '" data-d="-0.5" aria-label="降低' + AXES[a].short + '需求">−</button>' +
-      '<button type="button" id="adjp-' + a + '" data-act="adj" data-a="' + a + '" data-d="0.5" aria-label="提高' + AXES[a].short + '需求">＋</button></div>' +
+    const an = axAnch(a);
+    if (an) req = L('需求 ', 'Need ') + Math.floor(Dp) + '｜' + an[Math.floor(Dp) - 1];
+    else if (a === 'plan') req = L('清單勾選 ' + res.planChecked + '／' + PLAN_ITEMS.length + ' 項，換算 ' + fmt(res.planScore) + ' 分', res.planChecked + ' of ' + PLAN_ITEMS.length + ' ticked = ' + fmt(res.planScore));
+    else req = L('清單勾選 ' + res.kitChecked + '／' + KIT_ITEMS.length + ' 項，換算 ' + fmt(res.kitScore) + ' 分', res.kitChecked + ' of ' + KIT_ITEMS.length + ' ticked = ' + fmt(res.kitScore));
+    return '<div class="drow"><div class="dmain"><span class="dname">' + esc(axF(a)) + '</span>' +
+      '<span class="dnums"><span class="nw">' + L('需求', 'Need') + ' <b>' + fmt(Dp) + '</b></span>' +
+      (li.used ? '<span class="nw dlev">' + L('設定 ', 'set ') + fmt(Dset) + L('，槓桿 −', ', levers −') + fmt(li.used) + '</span>' : '') +
+      '<span class="nw">' + L('紅線', 'Red line') + ' <b class="rl">' + fmt(R) + '</b></span>' +
+      (adj ? '<span class="nw">' + L('手動 ', 'manual ') + (adj > 0 ? '+' : '−') + fmt(Math.abs(adj)) + '</span>' : '') + '</span></div>' +
+      '<div class="stepper"><button type="button" id="adjm-' + a + '" data-act="adj" data-a="' + a + '" data-d="-0.5" aria-label="' + esc(L('降低' + axS(a) + '需求', 'Lower ' + axS(a) + ' need')) + '">−</button>' +
+      '<button type="button" id="adjp-' + a + '" data-act="adj" data-a="' + a + '" data-d="0.5" aria-label="' + esc(L('提高' + axS(a) + '需求', 'Raise ' + axS(a) + ' need')) + '">＋</button></div>' +
       '<div class="dreq">' + esc(req) + '</div></div>';
   }
   function renderDemandAxes() {
-    $('#dlist').innerHTML = '<p class="gtitle">個人底盤｜每人比對</p>' + IND.map(demandRow).join('') +
-      '<p class="gtitle">團隊能力｜主槓桿比對</p>' + TEAM.map(demandRow).join('');
+    $('#dlist').innerHTML = '<p class="gtitle">' + L('個人底盤｜每人比對', 'Personal base | checked per person') + '</p>' + IND.map(demandRow).join('') +
+      '<p class="gtitle">' + L('團隊能力｜主槓桿比對', 'Team skills | checked against the main lever') + '</p>' + TEAM.map(demandRow).join('');
   }
 
   /* ---------- ② 隊員評分 ---------- */
+  /* 領隊卡只有領隊評分；隊員卡的領隊評分未單獨設定時跟著本人評分（m.lead[a] 為 null 即連動） */
+  const raterOf = m => (m.leader ? 'lead' : (ui.rater[m.id] || 'self'));
+  function shownVal(m, a, rater) {
+    if (rater === 'self') return { v: m.self[a], linked: false };
+    if (m.lead[a] != null) return { v: m.lead[a], linked: false };
+    return { v: m.leader ? null : m.self[a], linked: !m.leader && m.self[a] != null };
+  }
   function sliderRow(m, a, rater) {
-    const v = (rater === 'self' ? m.self : m.lead)[a];
-    const other = (rater === 'self' ? m.lead : m.self)[a];
+    const sv = shownVal(m, a, rater), v = sv.v;
     const id = 'sl-' + m.id + '-' + a;
+    let other = '';
+    if (!m.leader) {
+      const ov = rater === 'self' ? m.lead[a] : m.self[a];
+      other = '<span class="sother">' + (rater === 'self' ? (m.lead[a] == null ? L('領隊 同本人', 'leader follows self') : L('領隊 ', 'leader ') + fmt(ov)) : L('本人 ', 'self ') + (ov == null ? L('未評', 'none') : fmt(ov))) + '</span>';
+    }
+    const clr = (rater === 'lead' && !m.leader) ? (m.lead[a] != null ? L('改回同本人', 'Follow self again') : '') : (v != null ? L('清除', 'Clear') : '');
     return '<div class="srow' + (v == null ? ' unset' : '') + '" id="row-' + m.id + '-' + a + '">' +
-      '<div class="shead"><label class="sname" for="' + id + '">' + esc(AXES[a].full) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? '未評' : fmt(v)) + '</span></div>' +
+      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + (sv.linked ? '<span class="linked">' + L('同本人', '= self') + '</span>' : '') + '</span></div>' +
       '<input type="range" id="' + id + '" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-m="' + m.id + '" data-a="' + a + '">' +
       '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
-      '<div class="smeta"><span class="sreq" id="req-' + m.id + '-' + a + '"></span><span class="sother">' + (rater === 'self' ? '領隊' : '本人') + ' ' + (other == null ? '未評' : fmt(other)) + '</span>' +
-      '<button type="button" class="linkbtn" id="clr-' + m.id + '-' + a + '" data-act="clear" data-m="' + m.id + '" data-a="' + a + '">清除</button></div>' +
+      '<div class="smeta"><span class="sreq" id="req-' + m.id + '-' + a + '"></span>' + other +
+      (clr ? '<button type="button" class="linkbtn" id="clr-' + m.id + '-' + a + '" data-act="clear" data-m="' + m.id + '" data-a="' + a + '">' + clr + '</button>' : '') + '</div>' +
       '<div class="sanchor" id="anc-' + m.id + '-' + a + '">' + anchorLines(a, v).map(esc).join('<br>') + '</div></div>';
   }
+  function delCtl(m) {
+    if (m.leader) return '';
+    if (ui.delAsk === m.id) return '<span class="mdel-ask">' + L('刪除？', 'Delete?') + '<button type="button" class="btn danger" id="dy-' + m.id + '" data-act="del-yes" data-m="' + m.id + '">' + L('確認刪除', 'Delete') + '</button><button type="button" class="btn ghost" id="dn-' + m.id + '" data-act="del-no">' + L('取消', 'Cancel') + '</button></span>';
+    return '<button type="button" class="mdel" id="da-' + m.id + '" data-act="del-ask" data-m="' + m.id + '">' + L('刪除隊員', 'Delete') + '</button>';
+  }
   function memberCard(m) {
-    const rater = ui.rater[m.id] || 'self';
+    const rater = raterOf(m);
     let h = '<details class="member" id="card-' + m.id + '" data-m="' + m.id + '"' + (ui.open[m.id] ? ' open' : '') + '>' +
       '<summary><span class="lamp" id="lamp-' + m.id + '"></span><span class="mname" id="mname-' + m.id + '">' + esc(m.name) + '</span>' +
-      '<span class="mrole" id="mrole-' + m.id + '">' + esc(m.role) + '</span><span class="chev" aria-hidden="true">›</span>' +
+      (m.leader ? '<span class="leadtag">' + L('領隊', 'Leader') + '</span>' : '<span class="mrole" id="mrole-' + m.id + '">' + esc(m.role) + '</span>') +
+      delCtl(m) + '<span class="chev" aria-hidden="true">›</span>' +
       '<span class="mhint" id="mhint-' + m.id + '"></span></summary><div class="mbody">' +
-      '<div class="fields"><label class="f" for="nm-' + m.id + '">名稱<input type="text" id="nm-' + m.id + '" data-m="' + m.id + '" data-field="name" value="' + esc(m.name) + '" maxlength="30"></label>' +
-      '<label class="f" for="rl-' + m.id + '">角色<input type="text" id="rl-' + m.id + '" data-m="' + m.id + '" data-field="role" value="' + esc(m.role) + '" maxlength="30"></label></div>' +
-      '<div class="raterbar"><span class="seg" role="group" aria-label="評分者">' +
-      '<button type="button" id="rt-' + m.id + '-self" data-act="rater" data-m="' + m.id + '" data-r="self" aria-pressed="' + (rater === 'self') + '">本人評分</button>' +
-      '<button type="button" id="rt-' + m.id + '-lead" data-act="rater" data-m="' + m.id + '" data-r="lead" aria-pressed="' + (rater === 'lead') + '">領隊評分</button></span>' +
-      '<span class="hint">兩者都評時取低分；差 1 分以上會標出來</span></div>' +
-      '<p class="gtitle">個人底盤｜每人都要過紅線</p>' + IND.map(a => sliderRow(m, a, rater)).join('') +
-      '<p class="gtitle">團隊能力｜可以借，要成雙</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
-      '<p class="gtitle">今日狀態｜每勾一項，體能、踩踏、自我照護的需求與紅線上移 0.5（最多 1.0）</p><div class="checks">' +
-      Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + FLAGS[k] + '</span></label>').join('') +
-      '</div><div class="row-btns">';
-    if (ui.delAsk === m.id) h += '<span class="confirm">刪除「' + esc(m.name) + '」？<button type="button" class="btn danger" id="dy-' + m.id + '" data-act="del-yes" data-m="' + m.id + '">確認刪除</button><button type="button" class="btn ghost" id="dn-' + m.id + '" data-act="del-no">取消</button></span>';
-    else h += '<button type="button" class="btn danger" id="da-' + m.id + '" data-act="del-ask" data-m="' + m.id + '">刪除隊員</button>';
-    h += '</div>';
+      '<div class="fields"><label class="f" for="nm-' + m.id + '">' + L('名稱', 'Name') + '<input type="text" id="nm-' + m.id + '" data-m="' + m.id + '" data-field="name" value="' + esc(m.name) + '" maxlength="30"></label>' +
+      (m.leader ? '' : '<label class="f" for="rl-' + m.id + '">' + L('角色', 'Role') + '<input type="text" id="rl-' + m.id + '" data-m="' + m.id + '" data-field="role" value="' + esc(m.role) + '" maxlength="30"></label>') + '</div>';
+    if (m.leader) h += '<p class="hint">' + L('領隊本人只有領隊評分。', 'The leader only has leader ratings.') + '</p>';
+    else h += '<div class="raterbar"><span class="seg" role="group" aria-label="' + L('評分者', 'Rater') + '">' +
+      '<button type="button" id="rt-' + m.id + '-self" data-act="rater" data-m="' + m.id + '" data-r="self" aria-pressed="' + (rater === 'self') + '">' + L('本人評分', 'Self') + '</button>' +
+      '<button type="button" id="rt-' + m.id + '-lead" data-act="rater" data-m="' + m.id + '" data-r="lead" aria-pressed="' + (rater === 'lead') + '">' + L('領隊評分', 'Leader') + '</button></span>' +
+      '<span class="hint">' + L('領隊評分預設同本人，單獨改過就不連動；兩者不同時取低分，差 1 分以上會標出來。本人評分可以留空。', 'Leader rating follows self until you change it; when they differ the lower counts, and a gap of 1+ is flagged. Self rating may stay empty.') + '</span></div>';
+    h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Personal base | everyone must clear the red line') + '</p>' + IND.map(a => sliderRow(m, a, rater)).join('') +
+      '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
+      '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、踩踏、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Condition today | each tick raises fitness, footing and self-care need and red line by 0.5 (max 1.0)') + '</p><div class="checks">' +
+      Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>').join('') +
+      '</div>';
     return h + '</div></details>';
   }
   function renderMembers() {
     const box = $('#members');
-    box.innerHTML = st.members.length ? st.members.map(memberCard).join('') : '<p class="empty">還沒有隊員。抓取表單回覆，或按「加入隊員」手動輸入。</p>';
+    box.innerHTML = st.members.map(memberCard).join('') + (others().length ? '' : '<p class="empty">' + L('還沒有隊員。把表單連結傳給隊員，或按「加入隊員」手動輸入。', 'No members yet. Send the form link, or add members by hand.') + '</p>');
     updateMembersDynamic();
   }
   function memberNotes(r) {
     const notes = [];
     IND.forEach(a => {
       const x = r.axes[a];
-      if (x.status === 'nodata') notes.push(AXES[a].short + '無資料');
-      else if (x.status === 'red') notes.push(AXES[a].short + '低於紅線');
-      else if (x.status === 'marg') notes.push(AXES[a].short + '邊際');
+      if (x.status === 'nodata') notes.push(axS(a) + L('無資料', ' no data'));
+      else if (x.status === 'red') notes.push(axS(a) + L('低於紅線', ' below red line'));
+      else if (x.status === 'marg') notes.push(axS(a) + L('邊際', ' marginal'));
     });
-    if (r.nFlags) notes.push('今日狀態 ' + r.nFlags + ' 項');
-    if (r.disc.length) notes.push('認知落差 ' + r.disc.length + ' 軸');
-    if (r.selfOnly) notes.push(r.selfOnly + ' 軸待領隊補評');
-    return notes.length ? notes.join('・') : '個人軸全部達標';
+    if (r.nFlags) notes.push(L('今日狀態 ' + r.nFlags + ' 項', 'condition: ' + r.nFlags));
+    if (r.disc.length) notes.push(L('認知落差 ' + r.disc.length + ' 軸', 'rating gap on ' + r.disc.length));
+    return notes.length ? notes.join(L('・', ' · ')) : L('個人軸全部達標', 'All personal axes meet the need');
   }
-  const STATUS_ZH = { ok: '達標', marg: '邊際', red: '低於紅線', nodata: '無資料' };
+  const STATUS = s => L({ ok: '達標', marg: '邊際', red: '低於紅線', nodata: '無資料' }[s], { ok: 'meets need', marg: 'marginal', red: 'below red line', nodata: 'no data' }[s]);
   function updateMembersDynamic() {
     res.memberRes.forEach(r => {
       const m = r.m;
       const lampEl = document.getElementById('lamp-' + m.id);
       if (!lampEl) return;
       lampEl.className = 'lamp ' + r.color;
-      lampEl.textContent = COLOR_ZH[r.color];
+      lampEl.textContent = COLOR_WORD(r.color);
       document.getElementById('mhint-' + m.id).textContent = memberNotes(r);
       IND.forEach(a => {
         const x = r.axes[a];
@@ -1136,7 +1298,7 @@ if (typeof module !== 'undefined' && module.exports) {
         inp.style.setProperty('--zr', pct(x.R));
         inp.style.setProperty('--zd', pct(x.D));
         const req = document.getElementById('req-' + m.id + '-' + a);
-        req.textContent = '需求 ' + fmt(x.D) + '｜紅線 ' + fmt(x.R) + '｜' + STATUS_ZH[x.status];
+        req.textContent = L('需求 ', 'Need ') + fmt(x.D) + L('｜紅線 ', ' | red line ') + fmt(x.R) + L('｜', ' | ') + STATUS(x.status);
         req.className = 'sreq st-' + x.status;
       });
       TEAM_SKILL.forEach(a => {
@@ -1145,7 +1307,7 @@ if (typeof module !== 'undefined' && module.exports) {
         inp.style.setProperty('--zr', pct(t.R));
         inp.style.setProperty('--zd', pct(t.D));
         const req = document.getElementById('req-' + m.id + '-' + a);
-        req.textContent = '團隊需求 ' + fmt(t.D) + '｜紅線 ' + fmt(t.R) + '｜主槓桿 ' + (t.main == null ? '無' : fmt(t.main) + '（' + t.mainWho + '）');
+        req.textContent = L('團隊需求 ', 'Team need ') + fmt(t.D) + L('｜紅線 ', ' | red line ') + fmt(t.R) + L('｜主槓桿 ', ' | main ') + (t.main == null ? L('無', 'none') : fmt(t.main) + L('（', ' (') + t.mainWho + L('）', ')'));
         req.className = 'sreq';
       });
     });
@@ -1153,54 +1315,52 @@ if (typeof module !== 'undefined' && module.exports) {
 
   /* ---------- ③ 清單 ---------- */
   function renderLists() {
-    $('#plan-list').innerHTML = PLAN_ITEMS.map(i => '<label class="ck" for="pl-' + i.id + '"><input type="checkbox" id="pl-' + i.id + '" data-plan="' + i.id + '"' + (st.plan[i.id] ? ' checked' : '') + '><span>' + esc(i.text) + '</span></label>').join('');
-    $('#kit-list').innerHTML = KIT_ITEMS.map(i => '<label class="ck" for="kt-' + i.id + '"><input type="checkbox" id="kt-' + i.id + '" data-kit="' + i.id + '"' + (st.kit[i.id] ? ' checked' : '') + '><span>' + esc(i.text) + (i.pair ? '<em class="tag-pair">成雙</em>' : '') + '</span></label>').join('');
+    $('#plan-list').innerHTML = PLAN_ITEMS.map(i => '<label class="ck" for="pl-' + i.id + '"><input type="checkbox" id="pl-' + i.id + '" data-plan="' + i.id + '"' + (st.plan[i.id] ? ' checked' : '') + '><span>' + esc(itemText(i)) + '</span></label>').join('');
+    $('#kit-list').innerHTML = KIT_ITEMS.map(i => '<label class="ck" for="kt-' + i.id + '"><input type="checkbox" id="kt-' + i.id + '" data-kit="' + i.id + '"' + (st.kit[i.id] ? ' checked' : '') + '><span>' + esc(itemText(i)) + (i.pair ? '<em class="tag-pair">' + L('成雙', 'pair') + '</em>' : '') + '</span></label>').join('');
   }
   function updateListHeads() {
     const tp = res.teamRes.plan, tk = res.teamRes.kit;
-    $('#plan-score').innerHTML = res.planChecked + '／' + PLAN_ITEMS.length + ' 項，' + fmt(res.planScore) + ' 分｜需求 ' + fmt(tp.D) + '｜紅線 ' + fmt(tp.R) + ' ' + lamp(tp.status === 'ok' ? 'green' : tp.status === 'marg' ? 'amber' : 'red');
-    $('#kit-score').innerHTML = res.kitChecked + '／' + KIT_ITEMS.length + ' 項，' + fmt(res.kitScore) + ' 分｜需求 ' + fmt(tk.D) + '｜紅線 ' + fmt(tk.R) + ' ' + lamp(tk.status === 'ok' ? 'green' : tk.status === 'marg' ? 'amber' : 'red');
+    const head = (n, tot, sc, t) => L(n + '／' + tot + ' 項，' + fmt(sc) + ' 分｜需求 ' + fmt(t.D) + '｜紅線 ' + fmt(t.R), n + ' of ' + tot + ', score ' + fmt(sc) + ' | need ' + fmt(t.D) + ' | red line ' + fmt(t.R)) + ' ' + lamp(t.status === 'ok' ? 'green' : t.status === 'marg' ? 'amber' : 'red');
+    $('#plan-score').innerHTML = head(res.planChecked, PLAN_ITEMS.length, res.planScore, tp);
+    $('#kit-score').innerHTML = head(res.kitChecked, KIT_ITEMS.length, res.kitScore, tk);
   }
 
   /* ---------- ④ 槓桿 ---------- */
   function renderLevers() {
     $('#levers').innerHTML = res.levers.map(x => {
-      const L = x.L;
+      const lv = x.L;
       let chip;
-      if (!x.on) chip = '<span class="chip off">未採用</span>';
-      else if (!x.ok) chip = '<span class="chip fail">前提未達，未計入</span>';
-      else if (!x.paired) chip = '<span class="chip single">成立，未成雙</span>';
-      else chip = '<span class="chip ok">成立，已成雙</span>';
-      const eff = L.targets.map(a => AXES[a].short).join('、');
-      return '<div class="lever' + (x.on ? ' on' : '') + '"><div class="lever-head"><label class="ck-inline" for="lv-' + L.id + '"><input type="checkbox" id="lv-' + L.id + '" data-lever="' + L.id + '"' + (x.on ? ' checked' : '') + '><span class="lever-name">' + L.name + '</span></label>' + chip + '</div>' +
-        '<div class="lever-desc">' + L.desc + '<span class="lever-eff">需求 −0.5：' + eff + '</span></div>' +
-        '<div class="cond"><span class="' + (x.ok ? 'yes' : 'no') + '">' + (x.ok ? '✓' : '✗') + ' 前提</span>' + L.prereqText + '</div>' +
-        '<div class="cond"><span class="' + (x.paired ? 'yes' : 'no') + '">' + (x.paired ? '✓' : '✗') + ' 成雙</span>' + L.pairText + '</div></div>';
+      if (!x.on) chip = '<span class="chip off">' + L('未採用', 'Off') + '</span>';
+      else if (!x.ok) chip = '<span class="chip fail">' + L('前提未達，未計入', 'Not met, not counted') + '</span>';
+      else if (!x.paired) chip = '<span class="chip single">' + L('成立，未成雙', 'Working, no pair') + '</span>';
+      else chip = '<span class="chip ok">' + L('成立，已成雙', 'Working, paired') + '</span>';
+      const eff = lv.targets.map(axS).join(SEP());
+      return '<div class="lever' + (x.on ? ' on' : '') + '"><div class="lever-head"><label class="ck-inline" for="lv-' + lv.id + '"><input type="checkbox" id="lv-' + lv.id + '" data-lever="' + lv.id + '"' + (x.on ? ' checked' : '') + '><span class="lever-name">' + esc(lvName(lv)) + '</span></label>' + chip + '</div>' +
+        '<div class="lever-desc">' + esc(lvDesc(lv)) + '<span class="lever-eff">' + L('需求 −0.5：', 'Need −0.5: ') + esc(eff) + '</span></div>' +
+        '<div class="cond"><span class="' + (x.ok ? 'yes' : 'no') + '">' + (x.ok ? '✓' : '✗') + L(' 前提', ' Precondition') + '</span>' + esc(lvPre(lv)) + '</div>' +
+        '<div class="cond"><span class="' + (x.paired ? 'yes' : 'no') + '">' + (x.paired ? '✓' : '✗') + L(' 成雙', ' Pair') + '</span>' + esc(lvPair(lv)) + '</div></div>';
     }).join('');
   }
 
-
-  /* ---------- ② 表單彙整 ---------- */
+  /* ---------- ② 表單彙整（行程代碼放在連結裡，不顯示） ---------- */
   function renderIntake() {
     if (!st.trip.code) { st.trip.code = newTripCode(); saveState(); }
-    const link = formLink(st.trip.code);
-    $('#intake').innerHTML = '<div class="subhead"><h3>隊員表單</h3><span class="subscore">行程代碼 <b>' + esc(st.trip.code) + '</b> <button type="button" class="linkbtn" data-act="newcode">換一組</button></span></div>' +
-      '<p class="note">把連結傳給隊員（LINE、訊息都可以），代碼已自動帶入。隊員送出後按「抓取表單回覆」，依姓名彙整成隊員卡，只寫入本人評分與今日狀態，不動領隊評分。</p>' +
-      '<div class="ilink" id="form-link">' + esc(link) + '</div>' +
-      '<div class="row-btns"><button type="button" class="btn" data-act="form-share">分享表單連結</button><button type="button" class="btn ghost" data-act="form-copy">複製連結</button>' +
-      '<button type="button" class="btn ghost" data-act="form-pull">抓取表單回覆</button><span class="msg" id="form-msg" role="status">' + esc(ui.formMsg || '') + '</span></div>';
+    $('#intake').innerHTML = '<div class="subhead"><h3>' + L('隊員表單', 'Member form') + '</h3><button type="button" class="linkbtn" data-act="newcode">' + L('換一條新連結', 'Make a new link') + '</button></div>' +
+      '<p class="note">' + L('把連結傳給隊員（LINE、訊息都可以）。隊員送出後，頁面開啟時會自動抓取，也可以按「抓取表單回覆」；依姓名彙整成隊員卡，只寫入本人評分與今日狀態。', 'Send the link to members (LINE or any chat). Replies are pulled when the page opens, or tap "Pull replies". They become member cards by name, filling self ratings and condition only.') + '</p>' +
+      '<div class="row-btns"><button type="button" class="btn" data-act="form-share">' + L('分享表單連結', 'Share form link') + '</button><button type="button" class="btn ghost" data-act="form-copy">' + L('複製連結', 'Copy link') + '</button>' +
+      '<button type="button" class="btn ghost" data-act="form-pull">' + L('抓取表單回覆', 'Pull replies') + '</button><span class="msg" id="form-msg" role="status">' + esc(ui.formMsg || '') + '</span></div>';
   }
   function pullForm(silent) {
     const msg = () => { const el = $('#form-msg'); if (el) el.textContent = ui.formMsg; };
-    if (!FORM.sheetId) { if (!silent) { ui.formMsg = '回覆試算表尚未設定'; msg(); } return; }
-    if (!silent) { ui.formMsg = '抓取中…'; msg(); }
+    if (!FORM.sheetId) { if (!silent) { ui.formMsg = L('回覆試算表尚未設定', 'No response sheet set'); msg(); } return; }
+    if (!silent) { ui.formMsg = L('抓取中…', 'Pulling…'); msg(); }
     const url = 'https://docs.google.com/spreadsheets/d/' + FORM.sheetId + '/gviz/tq?tqx=out:csv&_=' + Date.now();
     fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
       const r = mergeFormRows(st, parseCSV(t), st.trip.code);
-      if (r.n) { st.example = false; ui.formMsg = '已彙整 ' + r.n + ' 位（新增 ' + r.added + '、更新 ' + r.updated + '）'; refresh({ members: true }); }
-      else ui.formMsg = '代碼 ' + st.trip.code + ' 還沒有回覆';
+      if (r.n) { st.example = false; ui.formMsg = L('已彙整 ' + r.n + ' 位（新增 ' + r.added + '、更新 ' + r.updated + '）', 'Merged ' + r.n + ' (' + r.added + ' new, ' + r.updated + ' updated)'); refresh({ members: true }); }
+      else ui.formMsg = L('這條連結還沒有回覆', 'No replies on this link yet');
       msg();
-    }).catch(() => { ui.formMsg = '抓取失敗，請稍後再試'; msg(); });
+    }).catch(() => { ui.formMsg = L('抓取失敗，請稍後再試', 'Pull failed; try again later'); msg(); });
   }
 
   /* ---------- ⑤ 評估脆弱點、⑥ 分享 ---------- */
@@ -1208,8 +1368,7 @@ if (typeof module !== 'undefined' && module.exports) {
     $('#premortem').value = st.premortem;
   }
   function updateReview() {
-    $('#sumtext').value = buildSummary(st, res);
-    $('#reset-confirm').hidden = !ui.resetAsk;
+    $('#sumtext').textContent = buildSummary(st, res);
     $('#banner').hidden = !st.example;
   }
 
@@ -1232,17 +1391,18 @@ if (typeof module !== 'undefined' && module.exports) {
     g += '<rect width="' + W + '" height="' + H + '" fill="#ffffff"/>';
     g += '<rect x="0" y="0" width="' + W + '" height="24" fill="' + COL[c] + '"/>';
     // 標題
-    g += T(M, 250, '上山籌碼評估', 96, C.ink, ' font-weight="700"');
-    const trip = (st.trip.name || '未命名行程') + (st.trip.date ? '｜' + st.trip.date : '') + '｜' + (TEMPLATES[st.template] ? TEMPLATES[st.template].name : '');
+    g += T(M, 250, L('上山籌碼評估', 'Trip Leverage Check'), 96, C.ink, ' font-weight="700"');
+    const bar = L('｜', '  |  ');
+    const trip = (st.trip.name || L('未命名行程', 'Untitled trip')) + (st.trip.date ? bar + st.trip.date : '') + bar + tplName(st.template);
     g += T(M, 340, trip, 46, C.muted);
     // 判定
     g += '<rect x="' + M + '" y="400" width="' + (W - 2 * M) + '" height="190" rx="24" fill="#f6f8f6" stroke="' + C.line + '" stroke-width="3"/>';
     g += '<rect x="' + M + '" y="400" width="22" height="190" rx="8" fill="' + COL[c] + '"/>';
     g += '<rect x="' + (M + 60) + '" y="435" width="120" height="120" rx="22" fill="none" stroke="' + COL[c] + '" stroke-width="7"/>';
-    g += T(M + 120, 520, COLOR_ZH[c], 70, COL[c], ' font-weight="700" text-anchor="middle"');
-    g += T(M + 220, 490, VERDICT_ZH[c], 62, C.ink, ' font-weight="700"');
+    g += T(M + 120, 520, COLOR_WORD(c), 70, COL[c], ' font-weight="700" text-anchor="middle"');
+    g += T(M + 220, 490, VERDICT(c), 62, C.ink, ' font-weight="700"');
     const nOk = res.levers.filter(x => x.applied && x.paired).length, nSingle = res.levers.filter(x => x.applied && !x.paired).length;
-    g += T(M + 220, 560, '隊員 ' + st.members.length + ' 人｜綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '｜槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '｜程式自動判定', 40, C.muted);
+    g += T(M + 220, 560, L('隊員 ' + st.members.length + ' 人｜綠 ' + res.counts.green + '・黃 ' + res.counts.amber + '・紅 ' + res.counts.red + '｜槓桿成立 ' + nOk + '・未成雙 ' + nSingle + '｜程式自動判定', st.members.length + ' people  |  green ' + res.counts.green + ', amber ' + res.counts.amber + ', red ' + res.counts.red + '  |  levers working ' + nOk + ', no pair ' + nSingle + '  |  decided by the page'), 40, C.muted);
     // 雷達圖
     const RW = 1060, RH = Math.round(RW * 286 / 356), RY = 760;
     const teamMin = IND.map(a => { const v = res.memberRes.map(r => r.axes[a].e); return (!v.length || v.some(x => x == null)) ? null : Math.min.apply(null, v); });
@@ -1250,21 +1410,21 @@ if (typeof module !== 'undefined' && module.exports) {
     const s2 = [{ cls: 'p-demand', values: TEAM.map(a => res.Dp[a]) }, { cls: 'p-team', values: TEAM.map(a => res.teamRes[a].main), dots: true },
       { cls: 'p-backup', values: TEAM.map(a => res.teamRes[a].list ? res.teamRes[a].main : res.teamRes[a].backup) }, { cls: 'p-red', values: TEAM.map(a => res.R[a]) }];
     const place = (svg, x) => svg.replace('<svg ', '<svg x="' + x + '" y="' + RY + '" width="' + RW + '" height="' + RH + '" ');
-    g += T(M, RY - 50, '個人底盤', 58, C.ink, ' font-weight="700"') + T(M + 270, RY - 50, '每人都要過紅線，圖上是全隊每軸最低者', 34, C.muted);
-    g += T(M + RW + 60, RY - 50, '團隊能力', 58, C.ink, ' font-weight="700"') + T(M + RW + 330, RY - 50, '可以借，看主槓桿與第二人', 34, C.muted);
-    g += place(radarSVG(IND, s1, '個人底盤'), M) + place(radarSVG(TEAM, s2, '團隊能力'), M + RW + 60);
+    g += T(M, RY - 50, L('個人底盤', 'Personal base'), 58, C.ink, ' font-weight="700"') + T(M + L(270, 400), RY - 50, L('每人都要過紅線，圖上是全隊每軸最低者', 'Everyone must clear the red line'), 34, C.muted);
+    g += T(M + RW + 60, RY - 50, L('團隊能力', 'Team skills'), 58, C.ink, ' font-weight="700"') + T(M + RW + L(330, 400), RY - 50, L('可以借，看主槓桿與第二人', 'Can be shared; main lever and backup'), 34, C.muted);
+    g += place(radarSVG(IND, s1, L('個人底盤', 'Personal base')), M) + place(radarSVG(TEAM, s2, L('團隊能力', 'Team skills')), M + RW + 60);
     const leg = (x, y, items) => { let o = '', cx = x; items.forEach(it => { o += '<line x1="' + cx + '" y1="' + (y - 12) + '" x2="' + (cx + 60) + '" y2="' + (y - 12) + '" stroke="' + it[1] + '" stroke-width="' + (it[2] || 6) + '"' + (it[3] ? ' stroke-dasharray="' + it[3] + '"' : '') + '/>' + T(cx + 75, y, it[0], 34, C.muted); cx += 95 + tw(it[0], 34) + 40; }); return o; };
     const LY = RY + RH + 50;
-    g += leg(M + 60, LY, [['需求', C.demand, 14], ['紅線', C.stop, 5, '16 12'], ['全隊最低', C.accent, 7]]);
-    g += leg(M + RW + 120, LY, [['需求', C.demand, 14], ['紅線', C.stop, 5, '16 12'], ['主槓桿', C.accent, 7], ['第二人', C.accent, 5, '6 9']]);
+    g += leg(M + 60, LY, [[L('需求', 'Need'), C.demand, 14], [L('紅線', 'Red line'), C.stop, 5, '16 12'], [L('全隊最低', 'Team minimum'), C.accent, 7]]);
+    g += leg(M + RW + 120, LY, [[L('需求', 'Need'), C.demand, 14], [L('紅線', 'Red line'), C.stop, 5, '16 12'], [L('主槓桿', 'Main'), C.accent, 7], [L('第二人', 'Backup'), C.accent, 5, '6 9']]);
     // 下排：需要處理與提醒（左）、餘裕（右）
     const PY = LY + 110, LW = 1220, RX = M + LW + 70, RWd = W - M - RX;
-    g += T(M, PY, '需要處理與提醒', 58, C.ink, ' font-weight="700"');
+    g += T(M, PY, L('需要處理與提醒', 'To fix and notes'), 58, C.ink, ' font-weight="700"');
     let y = PY + 80;
     const maxY = H - 220;
     const items = res.issues;
     let shown = 0;
-    if (!items.length) { g += T(M, y, '沒有紅黃項目。出發前仍照檢核點執行。', 40, C.go); y += 60; }
+    if (!items.length) { g += T(M, y, L('沒有紅黃項目。出發前仍照檢核點執行。', 'No red or amber items. Still follow the checkpoints.'), 40, C.go); y += 60; }
     for (const it of items) {
       const col = it.level === 'red' ? C.stop : it.level === 'amber' ? C.warn : C.muted;
       const l1 = wrap(it.text, 40, LW - 60), l2 = wrap(it.fix, 34, LW - 60);
@@ -1275,14 +1435,14 @@ if (typeof module !== 'undefined' && module.exports) {
       l2.forEach(t => { g += T(M + 50, y, t, 34, C.muted); y += 46; });
       y += 30; shown++;
     }
-    if (shown < items.length) g += T(M + 50, y, '…另有 ' + (items.length - shown) + ' 項，見網頁', 34, C.muted);
-    g += T(RX, PY, '餘裕', 58, C.ink, ' font-weight="700"') + T(RX + 150, PY, '團隊值減需求', 34, C.muted);
+    if (shown < items.length) g += T(M + 50, y, L('…另有 ' + (items.length - shown) + ' 項，見網頁', '…' + (items.length - shown) + ' more on the page'), 34, C.muted);
+    g += T(RX, PY, L('餘裕', 'Margins'), 58, C.ink, ' font-weight="700"') + T(RX + L(150, 240), PY, L('團隊值減需求', 'team value minus need'), 34, C.muted);
     let by = PY + 90;
     const NW = 230, BW = RWd - NW - 170, zx = RX + NW + BW / 2;
     res.margins.forEach(x => {
       const stt = x.margin == null ? 'nodata' : x.status;
       const col = stt === 'ok' ? C.go : stt === 'marg' ? C.warn : C.stop;
-      g += T(RX, by, AXES[x.a].short, 40, C.ink);
+      g += T(RX, by, axS(x.a), L(40, 34), C.ink);
       g += '<rect x="' + (RX + NW) + '" y="' + (by - 34) + '" width="' + BW + '" height="30" rx="15" fill="#eef1ee"/>';
       if (x.margin != null) {
         const v = Math.max(-2, Math.min(2, x.margin)), w = Math.abs(v) / 2 * (BW / 2);
@@ -1297,8 +1457,8 @@ if (typeof module !== 'undefined' && module.exports) {
     // 頁尾
     const d = new Date();
     g += '<line x1="' + M + '" y1="' + (H - 150) + '" x2="' + (W - M) + '" y2="' + (H - 150) + '" stroke="' + C.line + '" stroke-width="3"/>';
-    g += T(M, H - 90, '上山籌碼評估｜shainyhsu.github.io/Leveraged-Outdoor-Strategy', 32, C.muted);
-    g += T(W - M, H - 90, '產生於 ' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), 32, C.muted, ' text-anchor="end"');
+    g += T(M, H - 90, L('上山籌碼評估', 'Trip Leverage Check') + bar + 'shainyhsu.github.io/Leveraged-Outdoor-Strategy', 32, C.muted);
+    g += T(W - M, H - 90, L('產生於 ', 'Made ') + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), 32, C.muted, ' text-anchor="end"');
     const style = '<style>text{font-family:' + FONT + '}' +
       '.ring{fill:none;stroke:' + C.line + ';stroke-width:1}.ring-outer{stroke:#9aa59e}.spoke{stroke:' + C.line + ';stroke-width:1}' +
       '.ringnum{font-size:9px;fill:' + C.muted + '}.alabel{font-size:12.5px;font-weight:700;fill:' + C.ink + '}' +
@@ -1309,7 +1469,7 @@ if (typeof module !== 'undefined' && module.exports) {
   }
   function shareA4() {
     const msg = $('#a4-msg');
-    msg.textContent = '產生中…';
+    msg.textContent = L('產生中…', 'Making…');
     const img = new Image();
     img.onload = () => {
       const cv = document.createElement('canvas');
@@ -1318,22 +1478,22 @@ if (typeof module !== 'undefined' && module.exports) {
       cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
       cx.drawImage(img, 0, 0);
       cv.toBlob(blob => {
-        if (!blob) { msg.textContent = '產生失敗'; return; }
-        const name = '上山籌碼評估_' + ((st.trip.name || '行程').replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : '') + '.jpg';
+        if (!blob) { msg.textContent = L('產生失敗', 'Failed'); return; }
+        const name = L('上山籌碼評估_', 'leverage_') + ((st.trip.name || L('行程', 'trip')).replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : '') + '.jpg';
         const file = new File([blob], name, { type: 'image/jpeg' });
         const download = () => {
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob); a.download = name;
           document.body.appendChild(a); a.click();
           setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-          msg.textContent = '已下載 ' + name;
+          msg.textContent = L('已下載 ', 'Downloaded ') + name;
         };
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], title: '上山籌碼評估' }).then(() => { msg.textContent = '已分享'; }, err => { if (err && err.name === 'AbortError') msg.textContent = ''; else download(); });
+          navigator.share({ files: [file], title: L('上山籌碼評估', 'Trip Leverage Check') }).then(() => { msg.textContent = L('已分享', 'Shared'); }, err => { if (err && err.name === 'AbortError') msg.textContent = ''; else download(); });
         } else download();
       }, 'image/jpeg', 0.92);
     };
-    img.onerror = () => { msg.textContent = '產生失敗'; };
+    img.onerror = () => { msg.textContent = L('產生失敗', 'Failed'); };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(a4SVG());
   }
 
@@ -1355,6 +1515,7 @@ if (typeof module !== 'undefined' && module.exports) {
     }
   }
   function renderAll() {
+    applyStaticLang();
     renderIntake();
     renderDemandStatic();
     renderLists();
@@ -1362,13 +1523,34 @@ if (typeof module !== 'undefined' && module.exports) {
     refresh({ members: true });
   }
 
+  /* ---------- 頁首：儲存、新評估 ---------- */
+  function setPop(name) {
+    ui.pop = name;
+    $('#pop').hidden = !name;
+    $('#pop-save').hidden = name !== 'save';
+    $('#pop-new').hidden = name !== 'new';
+    $('#btnSave').setAttribute('aria-expanded', String(name === 'save'));
+    $('#btnNew').setAttribute('aria-expanded', String(name === 'new'));
+    if (name !== 'save') $('#save-msg').textContent = '';
+  }
+  function saveMsg(t) { $('#save-msg').textContent = t; }
+  function fileBase() { return L('上山籌碼評估_', 'leverage_') + ((st.trip.name || L('行程', 'trip')).replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : ''); }
+  function saveLink() {
+    return packState(st).then(code => location.origin + location.pathname + '#s=' + code);
+  }
+  function copyText(text, done, fail) {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail);
+    else fail();
+  }
+  function clearHash() { if (location.hash) history.replaceState(null, '', location.pathname + location.search); }
+
   /* ---------- 事件 ---------- */
   const findM = id => st.members.find(m => m.id === id);
 
   function setScore(inp) {
     const m = findM(inp.dataset.m), a = inp.dataset.a;
     if (!m) return;
-    const rater = ui.rater[m.id] || 'self';
+    const rater = raterOf(m);
     const v = parseFloat(inp.value);
     (rater === 'self' ? m.self : m.lead)[a] = v;
     const row = document.getElementById('row-' + m.id + '-' + a);
@@ -1405,35 +1587,39 @@ if (typeof module !== 'undefined' && module.exports) {
 
   document.addEventListener('change', e => {
     const t = e.target;
+    if (t.matches('input[type="range"][data-m]')) { refresh({ members: true }); return; }
     if (t.id === 'tpl') { st.template = t.value; refresh(); return; }
     if (t.id === 'gap') { st.gap = parseFloat(t.value); refresh(); return; }
-    if (t.id === 'overlay') { ui.overlay = t.value; refresh(); return; }
+    if (t.dataset.ov) { const m = findM(t.dataset.ov); if (m) { if (t.checked) delete m.hide; else m.hide = true; ui.ovOpen = true; refresh(); } return; }
     if (t.dataset.cond) { st.conds[t.dataset.cond] = t.checked; refresh(); return; }
     if (t.dataset.plan) { st.plan[t.dataset.plan] = t.checked; refresh(); return; }
     if (t.dataset.kit) { st.kit[t.dataset.kit] = t.checked; refresh(); return; }
     if (t.dataset.lever) { st.levers[t.dataset.lever] = t.checked; refresh(); return; }
-    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { m.flags[t.dataset.flag] = t.checked; refresh(); } }
+    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { m.flags[t.dataset.flag] = t.checked; refresh(); } return; }
+    if (t.id === 'openfile' && t.files && t.files[0]) {
+      t.files[0].text().then(txt => {
+        st = sanitizeState(JSON.parse(txt)); st.example = false;
+        ui.open = {}; ui.delAsk = null; setPop(''); renderAll(); pullForm(true);
+      }).catch(() => saveMsg(L('無法讀取這個檔案', 'Could not read this file')));
+      t.value = '';
+    }
   });
 
   document.addEventListener('toggle', e => {
     const d = e.target;
-    if (d.matches && d.matches('details.member')) ui.open[d.dataset.m] = d.open;
+    if (!d.matches) return;
+    if (d.matches('details.member')) ui.open[d.dataset.m] = d.open;
+    else if (d.id === 'ovpick') ui.ovOpen = d.open;
   }, true);
 
-  function copyFrom(id, msgId) {
-    const ta = document.getElementById(id);
-    if (!ta) return;
-    const msg = msgId ? document.getElementById(msgId) : null;
-    const fallback = () => { ta.focus(); ta.select(); if (msg) msg.textContent = '已選取全文，請手動複製'; };
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(() => { if (msg) msg.textContent = '已複製'; }, fallback);
-      else fallback();
-    } catch (err) { fallback(); }
-  }
-
   document.addEventListener('click', e => {
+    const iss = e.target.closest('.issues li[data-to]');
+    if (iss) { jumpTo(document.getElementById(iss.dataset.to)); return; }
+    const tv = e.target.closest('#topVerdict');
+    if (tv) { e.preventDefault(); if (tv.hasAttribute('href')) jumpTo(document.getElementById('iss-first')); return; }
     const b = e.target.closest('[data-act]');
     if (!b) return;
+    if (b.closest('summary')) e.preventDefault();
     const act = b.dataset.act, id = b.dataset.m;
     if (act === 'adj') {
       const a = b.dataset.a, d = parseFloat(b.dataset.d);
@@ -1448,10 +1634,10 @@ if (typeof module !== 'undefined' && module.exports) {
       refresh({ members: true });
     } else if (act === 'clear') {
       const m = findM(id); if (!m) return;
-      (((ui.rater[id] || 'self') === 'self') ? m.self : m.lead)[b.dataset.a] = null;
+      ((raterOf(m) === 'self') ? m.self : m.lead)[b.dataset.a] = null;
       refresh({ members: true });
     } else if (act === 'add') {
-      const m = blankMember('隊員' + (st.members.length + 1), st.members.length ? '隊員' : '領隊');
+      const m = blankMember(L('隊員 ', 'Member ') + (others().length + 1), '');
       st.members.push(m);
       ui.open[m.id] = true;
       refresh({ members: true });
@@ -1462,32 +1648,58 @@ if (typeof module !== 'undefined' && module.exports) {
     } else if (act === 'del-no') {
       ui.delAsk = null; refresh({ members: true });
     } else if (act === 'del-yes') {
-      st.members = st.members.filter(m => m.id !== id);
-      if (ui.overlay === id) ui.overlay = '';
+      st.members = st.members.filter(m => m.id !== id || m.leader);
       ui.delAsk = null; refresh({ members: true });
     } else if (act === 'newcode') {
-      st.trip.code = newTripCode(); ui.formMsg = ''; saveState(); renderIntake();
+      st.trip.code = newTripCode(); ui.formMsg = L('已換新連結，舊連結的回覆不再彙整', 'New link made; replies to the old link are no longer pulled'); saveState(); renderIntake();
     } else if (act === 'form-copy' || act === 'form-share') {
       const link = formLink(st.trip.code), el = $('#form-msg');
       const done = t => { ui.formMsg = t; if (el) el.textContent = t; };
-      const copy = () => { if (navigator.clipboard) navigator.clipboard.writeText(link).then(() => done('已複製連結'), () => done('請長按連結手動複製')); else done('請長按連結手動複製'); };
-      if (act === 'form-share' && navigator.share) navigator.share({ title: '上山籌碼評估｜隊員自評' + (st.trip.name ? '｜' + st.trip.name : ''), text: '請填寫行前自評（行程代碼 ' + st.trip.code + '）', url: link }).catch(() => {});
+      const copy = () => copyText(link, () => done(L('已複製連結', 'Link copied')), () => done(L('無法複製，請改用分享', 'Could not copy; use Share')));
+      if (act === 'form-share' && navigator.share) navigator.share({ title: L('上山籌碼評估｜隊員自評', 'Trip leverage self-rating') + (st.trip.name ? '｜' + st.trip.name : ''), text: L('請填寫行前自評', 'Please fill in your pre-trip self-rating'), url: link }).catch(() => {});
       else copy();
     } else if (act === 'form-pull') {
       pullForm(false);
     } else if (act === 'a4') {
       shareA4();
-    } else if (act === 'copy') {
-      copyFrom(b.dataset.target, b.dataset.msg);
+    } else if (act === 'copy-sum') {
+      const msg = $('#sum-msg');
+      copyText(buildSummary(st, res), () => { msg.textContent = L('已複製', 'Copied'); }, () => { $('#sumbox').open = true; msg.textContent = L('請展開後長按手動複製', 'Open it and copy by hand'); });
     } else if (act === 'clear-example') {
-      st = blankState(); ui.open = {}; ui.code = {}; ui.overlay = ''; ui.importMsg = '';
+      st = blankState(); ui.open = {}; ui.delAsk = null;
       renderAll();
-    } else if (act === 'reset-ask') {
-      ui.resetAsk = true; refresh();
-    } else if (act === 'reset-no') {
-      ui.resetAsk = false; refresh();
+    } else if (act === 'pop-save' || act === 'pop-new') {
+      const n = act === 'pop-save' ? 'save' : 'new';
+      setPop(ui.pop === n ? '' : n);
+    } else if (act === 'pop-close') {
+      setPop('');
     } else if (act === 'reset-yes') {
-      st = blankState(); ui.resetAsk = false; ui.open = {}; ui.code = {}; ui.overlay = ''; ui.teamCode = ''; ui.importMsg = '';
+      st = blankState(); ui.open = {}; ui.delAsk = null; ui.formMsg = '';
+      setPop(''); clearHash(); renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (act === 'save-share' || act === 'save-copy') {
+      saveMsg(L('產生中…', 'Making…'));
+      saveLink().then(url => {
+        if (act === 'save-share' && navigator.share) navigator.share({ title: L('上山籌碼評估', 'Trip Leverage Check') + (st.trip.name ? '｜' + st.trip.name : ''), url }).then(() => saveMsg(L('已分享。打開這條連結就能載入這份評估。', 'Shared. Opening the link loads this assessment.')), () => saveMsg(''));
+        else copyText(url, () => saveMsg(L('已複製。打開這條連結就能載入這份評估。', 'Copied. Opening the link loads this assessment.')), () => saveMsg(L('無法複製，請改用分享', 'Could not copy; use Share')));
+      }).catch(() => saveMsg(L('產生失敗', 'Failed')));
+    } else if (act === 'save-file') {
+      const blob = new Blob([JSON.stringify(st, null, 1)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = fileBase() + '.json';
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      saveMsg(L('已下載 ', 'Downloaded ') + a.download);
+    } else if (act === 'open-file') {
+      $('#openfile').click();
+    } else if (act === 'load-yes') {
+      if (ui.pendingLoad) { st = ui.pendingLoad; st.example = false; ui.open = {}; ui.delAsk = null; }
+      ui.pendingLoad = null; $('#loadbanner').hidden = true; clearHash(); renderAll(); pullForm(true);
+    } else if (act === 'load-no') {
+      ui.pendingLoad = null; $('#loadbanner').hidden = true; clearHash();
+    } else if (act === 'lang') {
+      LANG = LANG === 'en' ? 'zh' : 'en';
+      try { localStorage.setItem('lang', LANG); } catch (err) { /* 無法記住語言 */ }
       renderAll();
     }
   });
@@ -1495,6 +1707,9 @@ if (typeof module !== 'undefined' && module.exports) {
   $('#calc-link').href = CALC_URL;
   renderAll();
   pullForm(true);
+  if (/^#s=/.test(location.hash)) {
+    unpackState(location.hash.slice(3)).then(s2 => { ui.pendingLoad = s2; $('#loadbanner').hidden = false; }).catch(() => clearHash());
+  }
 })();
 
 </script>

@@ -15,13 +15,16 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 ## Workflow
 
 1. Leader sets trip demand (pick a template, then fine-tune)
-2. The leader shares a Google Form link; each member rates themselves there, and the page pulls the responses in by trip code (or the leader enters members by hand)
-3. Leader adds their own ratings, checks plan/team gear and leverage items
+2. The leader shares a Google Form link; each member rates themselves there, and the page pulls the responses in by a trip code hidden in the link (or the leader enters members by hand)
+3. The leader rates themselves (leader rating only) and reviews each member; a member's leader rating follows their self rating until the leader changes it. Then check plan/team gear and leverage items
 4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
 ## Layout and display
 
 - **Two columns on wide screens** (1000 px and up): the five steps on the left, the verdict pinned on the right as you scroll. Phones get a single column with the verdict first.
+- **Top bar:** the verdict (amber or red jumps to the first flagged item), Save, New assessment, an English/Chinese switch and a light/dark toggle.
+- **Save** as a link (the whole assessment packed into the URL, so it opens on another device) or as a small .json file; it also autosaves in the browser.
+- Every section can be collapsed and starts open.
 - **Light/dark toggle** in the top-right corner. Dark is the default; your choice is remembered in the browser.
 
 Time estimates pair well with the [Hiking Time Estimator](https://shainyhsu.github.io/class-hiking-calculator/).
@@ -32,10 +35,11 @@ Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profilin
 
 ## Tech
 
-Single HTML page on GitHub Pages (interface in Traditional Chinese). Ratings stay in the browser; member self-assessments go to the leader's Google Form responses sheet. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-assessments go to the leader's Google Form responses sheet. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
 
 ## Version history
 
+- V6 | 2026-11-09 14:30 | English version switch; Save (link or .json file) and New assessment moved to the top bar; amber or red verdict in the top bar jumps to the first flagged item; overlay picker with a checkbox per member (on by default); notes no longer folded; night and fog travel split into two conditions; trip code hidden from the page and the form; leader has leader ratings only and cannot be deleted; delete button on each member card header; leader ratings follow self ratings until changed, and self ratings may be blank; new condition options (sleep under 5 h or fatigue, ill or injured, digestion, allergy, altitude sickness and other medical history); weak points and text summary open as expandable sections; every section collapsible, open by default.
 - V5 | 2026-11-09 11:40 | Redesigned layout: verdict, both radar charts side by side, then items to handle and margins at the top; option to overlay all members; members self-assess through a Google Form whose responses are pulled in by trip code (share codes removed); verdict is computed only by the program (leader override removed); “Weak points” review folded by default; new A4 high-resolution JPG share image.
 - V4 | 2026-11-09 09:23 | Added a light/dark toggle in the top-right corner, with dark as the default and your choice remembered.
 - V3 | 2026-11-08 20:28 | Added a fuller page title, search description, canonical link, social-share preview tags and structured data so the tool shows up better in search and link previews.
