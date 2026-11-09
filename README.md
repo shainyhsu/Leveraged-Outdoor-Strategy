@@ -39,7 +39,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 ## Version history
 
-- V11 | 2026-11-09 21:00 | A4 share is now two pages: page 1 summary, page 2 details (route and conditions, member score table with primary and backup, team roles, mitigations with what each still needs, open checklist items, weak points, member notes, how to read).
+- V11 | 2026-11-09 21:00 | A4 share is now two balanced pages: page 1 summary with team roles and mitigations, page 2 details (route and conditions, member score table with primary and backup, checklists, weak points, member notes, overflow items, how to read); blocks are measured and spare space is spread between them.
 - V10 | 2026-11-09 20:30 | New member self-rating page (member.html) replaces the Google Form screens: sliders with each score's description, follows the phone's light or dark mode, Chinese or English, and the trip code stays hidden. Replies still land in the same response sheet.
 - V9 | 2026-11-09 20:00 | Sliders are back, half width on the right with a thin touch area, and vertical swipes scroll the page instead of moving them.
 - V8 | 2026-11-09 19:50 | Scores are picked from right-aligned dropdowns instead of sliders, so scrolling can no longer change a score by accident; 踩踏與地形 renamed 技術與地形 (Technical terrain), old form column still read.
