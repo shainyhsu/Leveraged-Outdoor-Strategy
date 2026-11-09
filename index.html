@@ -1042,6 +1042,8 @@ if (typeof module !== 'undefined' && module.exports) {
   /* ---------- 語言 ---------- */
   function applyStaticLang() {
     document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant';
+    if (!document.documentElement.dataset.zhTitle) document.documentElement.dataset.zhTitle = document.title;
+    document.title = LANG === 'en' ? 'Leveraged Outdoor Strategy | Team ability vs route risk check (for trip leaders)' : document.documentElement.dataset.zhTitle;
     document.querySelectorAll('[data-en]').forEach(el => {
       if (el.dataset.zh == null) el.dataset.zh = el.innerHTML;
       el.innerHTML = LANG === 'en' ? el.dataset.en : el.dataset.zh;
