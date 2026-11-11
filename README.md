@@ -39,6 +39,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 ## Version history
 
+- V15 | 2026-11-11 11:40 | Save links are now short (about 90 characters): the assessment is encrypted in your browser, only the scrambled copy is stored online, and the key stays in the link, so whoever has the link can open it without signing in; the full link is used if the short one can't be made. The four save buttons sit in one row
 - V14 | 2026-11-11 10:07 | New license terms: free to use in a browser for personal, work, school or club use, and the results you make are yours to share; copying, paid services built on it, and AI training need written permission. A License link sits at the bottom of the page
 - V13 | 2026-11-10 00:18 | Added link-preview images (1200×630) for the main page and the member self-rating page, so shared links show a picture in LINE, Facebook and other apps.
 - V12 | 2026-11-09 21:45 | A4 share images are now exported at 2x (4960×7016, 600 dpi A4) with JPEG quality 0.95, so text and lines stay sharp when zoomed or printed.

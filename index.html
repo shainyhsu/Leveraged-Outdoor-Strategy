@@ -309,6 +309,8 @@ a.topverdict[href] { cursor: pointer; border: 1px solid currentColor; }
 a.topverdict.amber[href] { color: var(--warn); } a.topverdict.red[href] { color: var(--stop); }
 a.topverdict[href] .tv-word { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .pop { border-top: 1px solid var(--line); background: var(--surface); }
+.row-btns.save4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.row-btns.save4 .btn { width: 100%; min-width: 0; padding-left: .4rem; padding-right: .4rem; white-space: normal; line-height: 1.25; }
 .pop-inner { max-width: 1200px; margin: 0 auto; padding: 12px max(16px, env(safe-area-inset-right, 0px)) 14px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 8px; }
 .pop-title { font-weight: 700; font-size: 15px; }
 @media (max-width: 560px) { .tv-word { display: none; } a.topverdict { padding: 2px; } }
@@ -365,13 +367,11 @@ details.radar-card > summary { align-items: flex-start; }
     <div class="pop-inner" id="pop-save" hidden>
       <p class="pop-title" data-en="Save this assessment">儲存這份評估</p>
       <p class="note" data-en="It already autosaves in this browser. To move to another device or keep a copy, save it as a link (send it to yourself) or as a small file.">已自動存在這台裝置的瀏覽器。要換裝置或留備份，可以存成一條連結（傳給自己），或下載一個小檔案。</p>
-      <div class="row-btns">
-        <button type="button" class="btn" data-act="save-share" data-en="Share save link">分享儲存連結</button>
-        <button type="button" class="btn ghost" data-act="save-copy" data-en="Copy save link">複製儲存連結</button>
-      </div>
-      <div class="row-btns">
-        <button type="button" class="btn ghost" data-act="save-file" data-en="Download file (.json)">下載評估檔（.json）</button>
-        <button type="button" class="btn ghost" data-act="open-file" data-en="Open file">開啟評估檔</button>
+      <div class="row-btns save4">
+        <button type="button" class="btn" data-act="save-share" data-en="Share link">分享連結</button>
+        <button type="button" class="btn ghost" data-act="save-copy" data-en="Copy link">複製連結</button>
+        <button type="button" class="btn ghost" data-act="save-file" data-en="Download file">下載檔案</button>
+        <button type="button" class="btn ghost" data-act="open-file" data-en="Open file">開啟檔案</button>
         <input type="file" id="openfile" accept=".json,application/json" hidden>
       </div>
       <p class="msg" id="save-msg" role="status"></p>
@@ -940,7 +940,7 @@ function buildSummary(st, res) {
   return out.join('\n');
 }
 
-/* ===== 儲存連結：狀態壓縮後放在網址 #s= ===== */
+/* ===== 儲存連結：狀態壓縮後放在網址 #s=（短連結 #k= 見下方） ===== */
 function b64urlFromBytes(bytes) {
   let bin = '';
   for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
@@ -966,6 +966,62 @@ async function unpackState(code) {
   } else if (kind === 'j') txt = new TextDecoder().decode(bytes);
   else throw new Error('bad');
   return sanitizeState(JSON.parse(txt));
+}
+
+/* ===== 短連結：在瀏覽器加密，只把密文存進 Google 表單；金鑰留在網址 # 後面，不會送出 ===== */
+const SK = {
+  form: 'https://docs.google.com/forms/d/e/1FAIpQLSe6mK5S_y6qt84UZ9xm9PBspIqZ0YdQI6U4ewn5NmxV6KyFLA/formResponse',
+  sheet: 'https://docs.google.com/spreadsheets/d/1FzgzKveIMY-fuJmFBwfyNeHgHMcdOhCx02N-McPFJZ8/gviz/tq?tqx=out:csv&gid=536355035&tq=',
+  id: 'entry.1365346943', d: 'entry.1799144279', chunk: 28000, max: 20
+};
+const canShort = () => !!(window.crypto && crypto.subtle && window.fetch);
+function skRid(n) { const a = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789', r = crypto.getRandomValues(new Uint8Array(n)); let s = ''; for (let i = 0; i < n; i++) s += a[r[i] % a.length]; return s; }
+const skKey = (raw, use) => crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [use]);
+async function skSeal(text) {
+  const key = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await skKey(key, 'encrypt'), new TextEncoder().encode(text));
+  const b = new Uint8Array(12 + ct.byteLength); b.set(iv); b.set(new Uint8Array(ct), 12);
+  return { key: b64urlFromBytes(key), blob: b64urlFromBytes(b) };
+}
+async function skUnseal(blob, key) {
+  const b = bytesFromB64url(blob), kb = bytesFromB64url(key);
+  if (kb.length !== 16 || b.length < 29) throw new Error('bad');
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b.subarray(0, 12) }, await skKey(kb, 'decrypt'), b.subarray(12));
+  return new TextDecoder().decode(pt);
+}
+function skCsv(t) {
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+    else if (c === '"') q = true; else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; } else if (c !== '\r') cell += c;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+async function skFetch(id) {
+  const r = await fetch(SK.sheet + encodeURIComponent("select B,C where B starts with '" + id + ".' order by B"), { cache: 'no-store' });
+  if (!r.ok) throw new Error('net');
+  const parts = {}; let n = 0;
+  skCsv(await r.text()).forEach(row => { const m = /^([A-Za-z0-9]+)\.(\d+)\.(\d+)$/.exec(row[0] || ''); if (m && m[1] === id) { parts[+m[2]] = row[1]; n = +m[3]; } });
+  if (!n) return null;
+  let out = ''; for (let i = 0; i < n; i++) { if (parts[i] === undefined) return null; out += parts[i]; }
+  return out;
+}
+async function skShort(code, base) {
+  const s = await skSeal(code), id = skRid(10), parts = [];
+  for (let i = 0; i < s.blob.length; i += SK.chunk) parts.push(s.blob.slice(i, i + SK.chunk));
+  if (parts.length > SK.max) throw new Error('big');
+  for (let i = 0; i < parts.length; i++) {
+    const f = new URLSearchParams(); f.append(SK.id, id + '.' + i + '.' + parts.length); f.append(SK.d, parts[i]);
+    await fetch(SK.form, { method: 'POST', mode: 'no-cors', body: f });
+  }
+  for (let t = 0; t < 10; t++) {   // give the link only once the stored copy reads back intact
+    await new Promise(ok => setTimeout(ok, t ? 1500 : 700));
+    if (await skFetch(id) === s.blob) return base + '#k=' + id + '.' + s.key;
+  }
+  throw new Error('verify');
 }
 
 
@@ -1709,8 +1765,15 @@ if (typeof module !== 'undefined' && module.exports) {
   }
   function saveMsg(t) { $('#save-msg').textContent = t; }
   function fileBase() { return L('上山籌碼評估_', 'leverage_') + ((st.trip.name || L('行程', 'trip')).replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : ''); }
-  function saveLink() {
-    return packState(st).then(code => location.origin + location.pathname + '#s=' + code);
+  let linkCache = { j: null, u: null, long: false };
+  async function saveLink() {   // short link when it can be stored; the full #s= link otherwise
+    const j = JSON.stringify(st);
+    if (linkCache.j === j) return linkCache;
+    const base = location.origin + location.pathname, code = await packState(st), long = base + '#s=' + code;
+    let u = long;
+    if (canShort()) { saveMsg(L('正在產生短連結…', 'Making a short link…')); try { u = await skShort(code, base); } catch (e) { u = long; } }
+    linkCache = { j, u, long: u === long && canShort() };
+    return linkCache;
   }
   function copyText(text, done, fail) {
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail);
@@ -1853,9 +1916,10 @@ if (typeof module !== 'undefined' && module.exports) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (act === 'save-share' || act === 'save-copy') {
       saveMsg(L('產生中…', 'Making…'));
-      saveLink().then(url => {
-        if (act === 'save-share' && navigator.share) navigator.share({ title: L('上山籌碼評估', 'Trip Leverage Check') + (st.trip.name ? '｜' + st.trip.name : ''), url }).then(() => saveMsg(L('已分享。打開這條連結就能載入這份評估。', 'Shared. Opening the link loads this assessment.')), () => saveMsg(''));
-        else copyText(url, () => saveMsg(L('已複製。打開這條連結就能載入這份評估。', 'Copied. Opening the link loads this assessment.')), () => saveMsg(L('無法複製，請改用分享', 'Could not copy; use Share')));
+      saveLink().then(({ u: url, long }) => {
+        const note = long ? L('（暫時無法產生短連結，這是完整連結）', ' (a short link could not be made right now, so this is the full link)') : '';
+        if (act === 'save-share' && navigator.share) navigator.share({ title: L('上山籌碼評估', 'Trip Leverage Check') + (st.trip.name ? '｜' + st.trip.name : ''), url }).then(() => saveMsg(L('已分享。打開這條連結就能載入這份評估。', 'Shared. Opening the link loads this assessment.') + note), err => saveMsg(err && err.name === 'NotAllowedError' ? L('短連結好了，請再按一次「分享連結」。', 'The short link is ready; tap Share link again.') : ''));
+        else copyText(url, () => saveMsg(L('已複製。打開這條連結就能載入這份評估。', 'Copied. Opening the link loads this assessment.') + note), () => { prompt(L('複製這條連結：', 'Copy this link:'), url); saveMsg(''); });
       }).catch(() => saveMsg(L('產生失敗', 'Failed')));
     } else if (act === 'save-file') {
       const blob = new Blob([JSON.stringify(st, null, 1)], { type: 'application/json' });
@@ -1883,6 +1947,13 @@ if (typeof module !== 'undefined' && module.exports) {
   pullForm(true);
   if (/^#s=/.test(location.hash)) {
     unpackState(location.hash.slice(3)).then(s2 => { ui.pendingLoad = s2; $('#loadbanner').hidden = false; }).catch(() => clearHash());
+  }
+  const mk = /^#k=([A-Za-z0-9]+)\.([A-Za-z0-9_\-]+)/.exec(location.hash);
+  if (mk) {
+    if (!canShort()) { alert(L('這個瀏覽器無法開啟短連結，請改用 Chrome、Safari 或 Edge。', 'This browser cannot open short links; try Chrome, Safari or Edge.')); clearHash(); }
+    else skFetch(mk[1]).then(blob => { if (!blob) throw new Error('gone'); return skUnseal(blob, mk[2]); }).then(unpackState)
+      .then(s2 => { ui.pendingLoad = s2; $('#loadbanner').hidden = false; })
+      .catch(e => { alert(e && (e.message === 'net' || e instanceof TypeError) ? L('連不上儲存處，請確認網路後重新整理。', 'Could not reach the storage. Check the connection and reload.') : L('這條短連結找不到資料或不完整，無法載入。', 'This short link has no data or is incomplete, so it could not be loaded.')); clearHash(); });
   }
 })();
 
