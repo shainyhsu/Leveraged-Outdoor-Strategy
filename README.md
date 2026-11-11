@@ -39,6 +39,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 ## Version history
 
+- V14 | 2026-11-11 10:07 | New license terms: free to use in a browser for personal, work, school or club use, and the results you make are yours to share; copying, paid services built on it, and AI training need written permission. A License link sits at the bottom of the page
 - V13 | 2026-11-10 00:18 | Added link-preview images (1200×630) for the main page and the member self-rating page, so shared links show a picture in LINE, Facebook and other apps.
 - V12 | 2026-11-09 21:45 | A4 share images are now exported at 2x (4960×7016, 600 dpi A4) with JPEG quality 0.95, so text and lines stay sharp when zoomed or printed.
 - V11 | 2026-11-09 21:00 | A4 share is now two balanced pages: page 1 summary with team roles and mitigations, page 2 details (route and conditions, member score table with primary and backup, checklists, weak points, member notes, overflow items, how to read); blocks are measured and spare space is spread between them.
@@ -55,4 +56,4 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 ## License
 
-All rights reserved. See [LICENSE](LICENSE). You may use the published page in your browser for personal use, but copying, reproducing, scraping, or using any part of this work for AI or machine-learning training is not permitted without the author's prior written permission.
+Copyright (c) 2026 Shainy Hsu. All rights reserved. See [LICENSE](LICENSE).

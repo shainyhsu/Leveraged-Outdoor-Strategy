@@ -1,21 +1,34 @@
 Copyright (c) 2026 Shainy Hsu (https://github.com/shainyhsu). All rights reserved.
 
-This repository and the website published from it, including all source code,
-markup, styles, scripts, text, data and design, are proprietary.
+1. What this covers
+This repository and the website published from it (together, "the Work"), including source code, markup, styles, scripts, text, sample data, calculation logic as implemented here, and design, are proprietary.
 
-You may use the published website for your own personal use through a web browser.
+2. What you may do
+a) Use the published website through a standard web browser, for personal use or as a tool in your own work, school, club, or group activities.
+b) Keep, print, and share the results you create with the website from your own input (for example images, PDF or JPG pages, GPX or JSON files, and text summaries).
+c) Link to the website.
+d) View and fork this repository on GitHub, only to the extent GitHub's Terms of Service require. A fork gives no other rights under this license.
 
-No other permission is granted. Without the prior written consent of the copyright
-holder, you may not copy, reproduce, modify, adapt, translate, create derivative
-works from, distribute, publish, sublicense, sell, host, mirror or frame any part of
-this work, whether in whole or in part, by hand or by automated means (including
-scrapers, bots and AI or machine-learning tools), and you may not use any part of it
-to train, fine-tune or evaluate AI or machine-learning models.
+3. What you may not do without prior written permission
+In whole or in part, by hand or by automated means (including scrapers, bots, and scripts):
+- Copy, reproduce, modify, adapt, translate, or make derivative works from the Work.
+- Distribute, publish, sublicense, sell, host, mirror, or frame the Work.
+- Include the Work, or results generated with it, in a product or service offered to others for a fee or as part of a commercial offering.
+- Use the website other than through a standard web browser operated by a person, including bulk or automated generation of results.
+- Extract the sample data (example routes, tracks, and records) for reuse.
+- Scrape or use the Work, or results generated with it, to train, fine-tune, evaluate, or improve artificial intelligence (AI) or machine-learning systems.
 
-Viewing the source code in a browser or on GitHub does not grant any right to reuse it.
+4. Third-party material
+Third-party libraries, data, and services used by the Work (such as open-source libraries, Ministry of the Interior terrain data, or market data feeds) remain under their own licenses and terms. This license does not claim ownership of them, or of published formulas and standards the Work cites.
 
-THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY ARISING FROM THE USE OF THE WORK.
+5. Estimates only
+Results are estimates. They do not replace your own judgment, official manuals, or approved data. For aviation use, the aircraft's AFM and approved procedures take precedence.
 
-For permission requests, contact the author via https://github.com/shainyhsu.
+6. Disclaimer
+TO THE EXTENT PERMITTED BY LAW, THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, AND THE COPYRIGHT HOLDER IS NOT LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM ITS USE.
+
+7. Governing law
+This license is governed by the laws of Taiwan (Republic of China).
+
+8. Contact
+For commercial licensing, custom development, or permission requests, contact the author via https://github.com/shainyhsu.
