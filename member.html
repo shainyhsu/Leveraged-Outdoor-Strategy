@@ -121,7 +121,7 @@ const FLAG_NOTE = {
   s8: { en: 'Medical history details', zh: '特殊病史說明', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
 };
 /* 回覆經 Apps Script 後端寫入不公開的試算表（apps-script/Code.gs） */
-const API = 'https://script.google.com/macros/s/AKfycbzCVMkYBCGdQ2sc99M3nf6Bz4KaDv7uZsQp7kUojvS1mNCHOM4DrtQA0Z80vYZ96z5g8w/exec';
+const API = 'https://script.google.com/macros/s/AKfycbxlqEShSEJUMfyNf-AD8BcQ4PcSvr0TKO9JVVOcoOb9M1-e0guv9uH4OAPRBdzkEOfo/exec';
 const qs = new URLSearchParams(location.search);
 const CODE = (qs.get('c') || '').trim().toUpperCase().slice(0, 12);
 let LANG = qs.get('lang') === 'en' ? 'en' : (localStorage.getItem('lang') === 'en' ? 'en' : 'zh');
