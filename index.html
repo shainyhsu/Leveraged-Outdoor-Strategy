@@ -1492,9 +1492,9 @@ if (typeof module !== 'undefined' && module.exports) {
     // 兩欄合成一區塊
     const pair = (a, b, bx) => ({ g: a.g + mv(b.g, bx, 0), h: Math.max(a.h, b.h) });
     // 依序擺放區塊，剩餘空間平均分到區塊之間
-    const place = (blocks, top, bottom) => {
+    const place = (blocks, top, bottom, minGap) => {
       const sum = blocks.reduce((s, b) => s + b.h, 0);
-      const gap = Math.max(56, Math.min(170, (bottom - top - sum) / Math.max(1, blocks.length)));
+      const gap = Math.max(minGap || 56, Math.min(170, (bottom - top - sum) / Math.max(1, blocks.length)));
       let y = top + gap * 0.5, out = '';
       blocks.forEach(b => { out += mv(b.g, M, y); y += b.h + gap; });
       return out;
@@ -1505,7 +1505,7 @@ if (typeof module !== 'undefined' && module.exports) {
     /* ===== 區塊 ===== */
     function secIssues(width, maxH, list, from, k) {
       k = k || 1; const F1 = Math.round(38 * k), F2 = Math.round(32 * k), H1 = Math.round(52 * k), H2 = Math.round(44 * k);
-      let g = head(from === 2 ? L('需要處理與提醒（續）', 'To fix and notes (cont.)') : from ? L('其他需要處理與提醒', 'More to fix and notes') : L('需要處理與提醒', 'To fix and notes')), y = HEAD + 78, shown = 0;
+      let g = from === 3 ? '' : head(from === 2 ? L('需要處理與提醒（續）', 'To fix and notes (cont.)') : from ? L('其他需要處理與提醒', 'More to fix and notes') : L('需要處理與提醒', 'To fix and notes')), y = HEAD + 78, shown = 0;
       if (!list.length) { g += T(0, y, L('沒有紅黃項目。出發前仍照檢核點執行。', 'No red or amber items. Still follow the checkpoints.'), 38, C.go); return { g, h: y + 20, shown: 0 }; }
       for (const it of list) {
         const l1 = wrap(it.text, F1, width - 50), l2 = wrap(it.fix, F2, width - 50);
@@ -1644,7 +1644,7 @@ if (typeof module !== 'undefined' && module.exports) {
       const list = res.memberRes.map(r => ({ m: r.m, nt: noteTexts(r.m) })).filter(x => x.nt.length);
       if (!list.length) return null;
       let out = null;
-      [[32, 48], [28, 41], [25, 36]].some(([fs, lh]) => {
+      [[32, 48], [28, 41], [25, 36], [23, 33]].some(([fs, lh]) => {
         let g = head(L('健康說明', 'Health details'), L('勾選項目的本人說明', 'what each person wrote')), y = HEAD + 80;
         list.forEach(x => {
           g += T(0, y, clip(x.m.name || L('未命名', 'Unnamed'), fs + 2, 380), fs + 2, C.ink, ' font-weight="700"');
@@ -1721,38 +1721,51 @@ if (typeof module !== 'undefined' && module.exports) {
     let g2 = T(M, 210, L('上山籌碼評估・詳細資料', 'Trip Leverage Check: details'), 76, C.ink, ' font-weight="700"');
     g2 += T(M, 290, (st.trip.name || L('未命名行程', 'Untitled trip')) + (st.trip.date ? bar + st.trip.date : ''), 42, C.muted);
     const P2TOP = 320;
-    const b2 = [secRoute()];
-    const fixed = () => b2.reduce((s, b) => s + b.h, 0);
-    const rest = res.issues.slice(iss.shown);
-    const tableRowsMax = Math.max(1, Math.floor((TOP_END - P2TOP - 900 - (rolesOn1 ? 0 : roles.h)) / 76) - 3);
-    const tbl = secTable(tableRowsMax); b2.push(tbl);
-    if (!rolesOn1) b2.push(roles);
-    b2.push(pair(secChecklists(CW2), secPremortem(CW2), CX2));
-    let healthCont = null;
-    { // 健康說明一定全文列出；第 2 頁放不下就整塊移到下一頁，優先於其他選擇性區塊
-      const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
-      const hb = secHealth(FW, left); if (hb && hb.h <= left) b2.push(hb); else if (hb) healthCont = secHealth(FW, 99999);
-    }
-    // 第 1 頁放不下的議題一定要印出；第 2 頁也放不下的接到第 3 頁
-    let rest2 = [];
-    if (rest.length) {
-      const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
-      let m = secIssues(FW, left, rest, 1);
-      if (m.shown < rest.length) { const mc = secIssues(FW, left, rest, 1, 0.8); if (mc.shown > m.shown) m = mc; }  // 縮小字級，盡量留在第 2 頁
-      if (m.shown) b2.push(m);
-      rest2 = rest.slice(m.shown);
-    }
-    const optional = [secNotes(), secHow()];
-    optional.forEach(b => {
-      const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
-      if (b === null) { const m = secIssues(FW, left, rest, 1); if (m.shown) b2.push(m); }
-      else if (b.h <= left) b2.push(b);
-    });
-    // 空間有餘時把隊員表行高加大，讓第 2 頁不留大片空白
-    const spare = TOP_END - P2TOP - b2.reduce((s, b) => s + b.h, 0) - 120 * b2.length;
-    const nRows = Math.min(res.memberRes.length, tableRowsMax) + 2;
-    if (spare > 0) { const ti = b2.indexOf(tbl); b2[ti] = secTable(tableRowsMax, Math.min(104, 76 + Math.floor(spare / nRows))); }
-    g2 += place(b2, P2TOP, TOP_END) + footer(2);
+    // 先用一般排版；若有東西要接到第 3 頁，改用緊湊排版（表格行高、間距、議題字級縮小）再試一次，能塞進第 2 頁就用緊湊版
+    const build2 = tight => {
+      const G = tight ? 28 : 56;
+      const b2 = [secRoute()];
+      const fixed = () => b2.reduce((s, b) => s + b.h, 0);
+      const rest = res.issues.slice(iss.shown);
+      const tableRowsMax = Math.max(1, Math.floor((TOP_END - P2TOP - 900 - (rolesOn1 ? 0 : roles.h)) / 76) - 3);
+      const tbl = secTable(tableRowsMax, tight ? 58 : 76); b2.push(tbl);
+      if (!rolesOn1) b2.push(roles);
+      b2.push(pair(secChecklists(CW2), secPremortem(CW2), CX2));
+      let healthCont = null;
+      { // 健康說明一定全文列出；第 2 頁放不下就整塊移到下一頁，優先於其他選擇性區塊
+        const left = TOP_END - P2TOP - fixed() - G * (b2.length + 1);
+        const hb = secHealth(FW, tight && rest.length ? left - Math.max(secIssues(CW2, 99999, rest.slice(0, Math.ceil(rest.length / 2)), 1, 0.8).h, secIssues(CW2, 99999, rest.slice(Math.ceil(rest.length / 2)), 3, 0.8).h) - G : left); if (hb && hb.h <= left) b2.push(hb); else if (hb) healthCont = secHealth(FW, 99999);
+      }
+      // 第 1 頁放不下的議題一定要印出；第 2 頁也放不下的接到第 3 頁
+      let rest2 = [];
+      if (rest.length) {
+        const left = TOP_END - P2TOP - fixed() - G * (b2.length + 1);
+        let m = secIssues(FW, left, rest, 1);
+        [0.8, 0.75].forEach(k => { if ((tight || k === 0.8) && m.shown < rest.length) { const mc = secIssues(FW, left, rest, 1, k); if (mc.shown > m.shown) m = mc; } });  // 縮小字級，盡量留在第 2 頁
+        if (tight && m.shown < rest.length) { // 緊湊版：議題分左右兩欄
+          const half = Math.ceil(rest.length / 2), A = secIssues(CW2, 99999, rest.slice(0, half), 1, 0.8), B = secIssues(CW2, 99999, rest.slice(half), 3, 0.8);
+          const two = pair(A, B, CX2);
+          if (two.h <= left) m = { g: two.g, h: two.h, shown: rest.length };
+        }
+        if (m.shown) b2.push(m);
+        rest2 = rest.slice(m.shown);
+      }
+      const optional = tight ? [] : [secNotes(), secHow()];
+      optional.forEach(b => {
+        const left = TOP_END - P2TOP - fixed() - G * (b2.length + 1);
+        if (b === null) { const m = secIssues(FW, left, rest, 1); if (m.shown) b2.push(m); }
+        else if (b.h <= left) b2.push(b);
+      });
+      // 空間有餘時把隊員表行高加大，讓第 2 頁不留大片空白
+      const spare = TOP_END - P2TOP - b2.reduce((s, b) => s + b.h, 0) - (tight ? 60 : 120) * b2.length;
+      const nRows = Math.min(res.memberRes.length, tableRowsMax) + 2;
+      if (spare > 0) { const ti = b2.indexOf(tbl); b2[ti] = secTable(tableRowsMax, Math.min(104, (tight ? 58 : 76) + Math.floor(spare / nRows))); }
+      return { b2, rest2, healthCont, G, tableRowsMax };
+    };
+    let P2 = build2(false);
+    if (P2.rest2.length || P2.healthCont) { const t = build2(true); if (!t.rest2.length && !t.healthCont) P2 = t; }
+    const { b2, rest2, healthCont, tableRowsMax } = P2;
+    g2 += place(b2, P2TOP, TOP_END, P2.G) + footer(2);
     const pages = [page1, wrapSvg(g2)];
     // 續頁：放不下的隊員列、健康說明、議題依序往後排，每頁都不超出版面
     const availP = TOP_END - P2TOP - 120, rowsPP = Math.max(1, Math.floor((availP - 260) / 76));
