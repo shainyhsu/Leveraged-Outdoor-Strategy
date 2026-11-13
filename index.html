@@ -659,6 +659,9 @@ const tplName = k => L(TEMPLATES[k].name, TEMPLATES[k].en);
 const condName = k => L(CONDS[k].name, CONDS[k].en);
 const flagName = k => L(FLAGS[k], FLAGS_EN[k]);
 /* 狀態以本人勾選為準；領隊勾選或取消會存在 lflags，重新抓取時保留 */
+/* 有本人回覆的隊員才有「本人 vs 領隊修正」；領隊本人與手動新增的隊員，勾選就是本人狀態 */
+const fromForm = m => !m.leader && SCORED.some(a => m.self && m.self[a] != null);
+function foldLflags(m) { if (m.lflags && !fromForm(m)) { Object.keys(m.lflags).forEach(k => { if (m.lflags[k]) m.flags[k] = true; else delete m.flags[k]; }); delete m.lflags; } }
 const flagOn = (m, k) => (m.lflags && k in m.lflags) ? !!m.lflags[k] : !!(m.flags && m.flags[k]);
 const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => FLAG_NOTE[k].req && m.flags && m.flags[k] && flagOn(m, k) && !String((m.notes && m.notes[k]) || '').trim());
 /* 計分的狀態數：今日狀態＋高山路線的高山症史＋分享連結帶來的匿名件數 fc */
@@ -790,6 +793,7 @@ function sanitizeState(raw) {
     st.members.push(m);
   });
   ensureLeader(st);
+  st.members.forEach(foldLflags);
   st.premortem = String(raw.premortem || '').slice(0, 600);
   return st;
 }
@@ -1382,7 +1386,7 @@ if (typeof module !== 'undefined' && module.exports) {
     let tag = '', clr = '';
     if (m.leader) clr = v != null ? L('清除', 'Clear') : '';
     else if (l0 != null && s0 != null) { tag = l0 !== s0 ? '<span class="linked fixtag">' + L('領隊修正（本人 ', 'leader-corrected (self ') + fmt(s0) + L('）', ')') + '</span>' : ''; clr = L('改回本人', 'Back to self'); }
-    else if (l0 != null) { tag = '<span class="linked fixtag">' + L('領隊填入', 'filled in by leader') + '</span>'; clr = L('清除', 'Clear'); }
+    else if (l0 != null) { tag = fromForm(m) ? '<span class="linked fixtag">' + L('領隊填入', 'filled in by leader') + '</span>' : ''; clr = L('清除', 'Clear'); }
     return '<div class="srow' + (v == null ? ' unset' : '') + '" id="row-' + m.id + '-' + a + '">' +
       '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + tag + '</span></div>' +
       '<input type="range" id="' + id + '" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-m="' + m.id + '" data-a="' + a + '">' +
@@ -2152,7 +2156,7 @@ if (typeof module !== 'undefined' && module.exports) {
     if (t.dataset.plan) { st.plan[t.dataset.plan] = t.checked; refresh(); return; }
     if (t.dataset.kit) { st.kit[t.dataset.kit] = t.checked; refresh(); return; }
     if (t.dataset.lever) { st.levers[t.dataset.lever] = t.checked; refresh(); return; }
-    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { const k = t.dataset.flag; m.lflags = m.lflags || {}; if (t.checked === !!(m.flags && m.flags[k])) delete m.lflags[k]; else m.lflags[k] = t.checked; if (!Object.keys(m.lflags).length) delete m.lflags; refresh({ members: true }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
+    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { const k = t.dataset.flag; if (!fromForm(m)) { if (t.checked) m.flags[k] = true; else delete m.flags[k]; foldLflags(m); refresh({ members: true }); if (t.checked && FLAG_NOTE[k]) { const ta = document.getElementById('fn-' + m.id + '-' + k); if (ta) ta.focus(); } return; } m.lflags = m.lflags || {}; if (t.checked === !!(m.flags && m.flags[k])) delete m.lflags[k]; else m.lflags[k] = t.checked; if (!Object.keys(m.lflags).length) delete m.lflags; refresh({ members: true }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
     if (t.id === 'openfile' && t.files && t.files[0]) {
       t.files[0].text().then(txt => {
         st = sanitizeState(JSON.parse(txt)); st.example = false;
