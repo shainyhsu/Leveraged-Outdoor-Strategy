@@ -1292,8 +1292,8 @@ if (typeof module !== 'undefined' && module.exports) {
     let req;
     const an = axAnch(a);
     if (an) req = L('需求 ', 'Need ') + Math.floor(Dp) + '｜' + an[Math.floor(Dp) - 1];
-    else if (a === 'plan') req = L('清單勾選 ' + res.planChecked + '／' + PLAN_ITEMS.length + ' 項，換算 ' + fmt(res.planScore) + ' 分', res.planChecked + ' of ' + PLAN_ITEMS.length + ' ticked = ' + fmt(res.planScore));
-    else req = L('清單勾選 ' + res.kitChecked + '／' + KIT_ITEMS.length + ' 項，換算 ' + fmt(res.kitScore) + ' 分', res.kitChecked + ' of ' + KIT_ITEMS.length + ' ticked = ' + fmt(res.kitScore));
+    else if (a === 'plan') req = L('整隊的行程規劃與備案做得夠不夠。清單勾選 ' + res.planChecked + '／' + PLAN_ITEMS.length + ' 項，換算 ' + fmt(res.planScore) + ' 分（全勾 5 分）', 'How complete the team\'s plan and backups are. ' + res.planChecked + ' of ' + PLAN_ITEMS.length + ' ticked = ' + fmt(res.planScore) + ' (all ticked = 5)');
+    else req = L('整隊的公用裝備帶得夠不夠。清單勾選 ' + res.kitChecked + '／' + KIT_ITEMS.length + ' 項，換算 ' + fmt(res.kitScore) + ' 分（全勾 5 分）', 'How complete the team kit is. ' + res.kitChecked + ' of ' + KIT_ITEMS.length + ' ticked = ' + fmt(res.kitScore) + ' (all ticked = 5)');
     return '<div class="drow"><div class="dmain"><span class="dname">' + esc(axF(a)) + '</span>' +
       '<span class="dnums"><span class="nw">' + L('需求', 'Need') + ' <b>' + fmt(Dp) + '</b></span>' +
       (li.used ? '<span class="nw dlev">' + L('設定 ', 'set ') + fmt(Dset) + L('，槓桿 −', ', mitigations −') + fmt(li.used) + '</span>' : '') +
