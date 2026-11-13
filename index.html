@@ -1086,7 +1086,7 @@ async function skShort(code, base) {
 
 
 /* ===== 隊員自評回覆：經 Apps Script 後端存取（apps-script/Code.gs），試算表不公開 ===== */
-const API = 'APPS_SCRIPT_URL';
+const API = 'https://script.google.com/macros/s/AKfycbzCVMkYBCGdQ2sc99M3nf6Bz4KaDv7uZsQp7kUojvS1mNCHOM4DrtQA0Z80vYZ96z5g8w/exec';
 const API_ON = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(API);
 function apiPost(o) {
   return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) })
