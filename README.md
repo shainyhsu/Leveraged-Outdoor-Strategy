@@ -43,6 +43,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V32 | 2026-11-14 07:45 | Wide screens: the intro line under the title uses the full page width instead of wrapping early
 - V31 | 2026-11-14 07:40 | Wide screens (1000 px and up) use two columns: steps on the left, verdict, radars and checklists pinned on the right and scrolling on their own
 - V30 | 2026-11-14 00:15 | Late-joiner waiver: the leader's copy keeps the care information as a record of what was disclosed for 1 year after the trip, then destroys it (no cut-off slip); help field renamed to how to help if unwell
 - V29 | 2026-11-14 00:02 | Leader's own card and hand-added members tick status directly instead of as leader corrections; late-joiner waiver prints a leader's copy with a cut-off care slip and a signer's copy, drops the empty route line, shows a same-day date once, and says personal information in the confidentiality clauses
