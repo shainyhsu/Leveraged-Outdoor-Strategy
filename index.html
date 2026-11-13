@@ -1591,7 +1591,7 @@ if (typeof module !== 'undefined' && module.exports) {
     ];
     const body = '<h1>' + L('臨時加入者｜自負責任同意書', 'Late joiner | Assumption of risk') + '</h1>' +
       '<p class="meta">' + L('行程名稱：', 'Trip: ') + blank(st.trip.name, 14) + '　' + L('日期：', 'Dates: ') + blank(dates, 10) + '</p>' +
-      '<p class="meta">' + L('路線：', 'Route: ') + blank('', 16) + '　' + L('領隊：', 'Leader: ') + blank(ldName, 8) + '</p>' +
+      '<p class="meta">' + L('領隊：', 'Leader: ') + blank(ldName, 8) + '</p>' +
       '<p>' + L('本人', 'I, ') + '<span class="ln" style="width:9em"></span>' + L('自願臨時加入本趟行程，聲明如下：', ', join this trip at short notice of my own free will and declare:') + '</p>' +
       '<ol>' + items.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
       '<p class="sig">' + L('本人簽名：', 'Signature: ') + '<span class="ln" style="width:11em"></span>　' + L('日期：', 'Date: ') + '<span class="ln" style="width:7em"></span></p>' +
