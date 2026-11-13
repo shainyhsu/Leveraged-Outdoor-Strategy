@@ -2,6 +2,7 @@
 
 Newest first. Each update of the page is one version. Times are Taiwan time (UTC+8).
 
+- V27 | 2026-11-13 23:12 | Member form opens with a consent statement (guardian consent for minors) and, once sent, shows the team's care list; period discomfort added to today's status, medical history no longer scored except altitude sickness on high-mountain routes; leader ratings replaced by leader fill-in or correction; trip end date with deletion on the 3rd day after; save and share links carry no health details; printable late-joiner waiver
 - V26 | 2026-11-13 22:08 | Member self-ratings now go through an Apps Script backend into a private sheet instead of a publicly readable Google Form sheet; only the device that made the trip link can read the replies back, and replies are deleted after 120 days
 - V25 | 2026-11-13 16:58 | Bigger, brighter open/close arrows: a solid blue round button on every section and member card. Trip needs, Ratings and each member card get a Collapse button at the bottom, so you do not have to scroll back up after filling them in. Blocks inside an open section are spaced apart again.
 - V24 | 2026-11-13 15:48 | Only the two radar charts start open; every other section starts collapsed and the page remembers what you open. A collapsed section shows its own icon, a status stripe on the left and solid red or amber badges, so it can be told apart at a glance. The verdict link and the jump bar open what they jump to; Collapse all keeps the radar charts open.
