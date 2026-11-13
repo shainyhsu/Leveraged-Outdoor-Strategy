@@ -2,6 +2,7 @@
 
 Newest first. Each update of the page is one version. Times are Taiwan time (UTC+8).
 
+- V22 | 2026-11-13 12:00 | Fixed the route need +/− buttons doing nothing after the template or conditions changed: each press now moves the need you see by 0.5.
 - V21 | 2026-11-13 11:50 | The Share section now shows a live preview of every A4 page. Everything is printed on the pages, nothing says "see the page": Health details always in full. When page 2 runs a little over, it tightens first (shorter rows and gaps, smaller text, extra items in two columns); only what still does not fit continues on extra pages.
 - V20 | 2026-11-13 11:27 | "Allergy history" now also needs a written details box when ticked.
 - V19 | 2026-11-13 11:05 | Ticking "Ill / injured" or "Other medical history" now opens a required details box, on the member form and on the leader page; a tick with no details is a red issue.

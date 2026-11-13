@@ -1975,11 +1975,12 @@ if (typeof module !== 'undefined' && module.exports) {
     const act = b.dataset.act, id = b.dataset.m;
     if (act === 'adj') {
       const a = b.dataset.a, d = parseFloat(b.dataset.d);
-      const next = (st.dAdj[a] || 0) + d;
-      let raw = TEMPLATES[st.template].d[a] + next;
-      Object.keys(CONDS).forEach(k => { if (st.conds[k] && CONDS[k].add[a]) raw += CONDS[k].add[a]; });
-      if (raw < 1 || raw > 5) return;
-      st.dAdj[a] = next;
+      // 以畫面上看到的需求為準：範本或條件改過後，舊的手動量可能超出 1–5，先夾回再加減，按一下就一定會變
+      let base = TEMPLATES[st.template].d[a];
+      Object.keys(CONDS).forEach(k => { if (st.conds[k] && CONDS[k].add[a]) base += CONDS[k].add[a]; });
+      const want = round5(clamp(round5(base + (st.dAdj[a] || 0)), 1, 5) + d);
+      if (want < 1 || want > 5) return;
+      st.dAdj[a] = round5(want - base);
       refresh();
     } else if (act === 'rater') {
       ui.rater[id] = b.dataset.r;
