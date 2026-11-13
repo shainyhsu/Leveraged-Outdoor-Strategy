@@ -41,7 +41,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
-- V21 | 2026-11-13 11:40 | The Share section now shows a live preview of both A4 pages, and page 2 always lists every Health details note in full, in a smaller font when space is tight.
+- V21 | 2026-11-13 11:50 | The Share section now shows a live preview of every A4 page. Everything is printed on the pages, nothing says "see the page": Health details always in full, and items or members that do not fit (after a smaller font) continue on extra pages.
 - V20 | 2026-11-13 11:27 | "Allergy history" now also needs a written details box when ticked.
 - V19 | 2026-11-13 11:05 | Ticking "Ill / injured" or "Other medical history" now opens a required details box, on the member form and on the leader page; a tick with no details is a red issue.
 - V18 | 2026-11-13 09:36 | Added a classic favicon.ico tab icon for older browsers and search tools.

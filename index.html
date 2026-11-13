@@ -1503,19 +1503,20 @@ if (typeof module !== 'undefined' && module.exports) {
     const c = res.final;
 
     /* ===== 區塊 ===== */
-    function secIssues(width, maxH, list, from) {
-      let g = head(from ? L('其他需要處理與提醒', 'More to fix and notes') : L('需要處理與提醒', 'To fix and notes')), y = HEAD + 78, shown = 0;
+    function secIssues(width, maxH, list, from, k) {
+      k = k || 1; const F1 = Math.round(38 * k), F2 = Math.round(32 * k), H1 = Math.round(52 * k), H2 = Math.round(44 * k);
+      let g = head(from === 2 ? L('需要處理與提醒（續）', 'To fix and notes (cont.)') : from ? L('其他需要處理與提醒', 'More to fix and notes') : L('需要處理與提醒', 'To fix and notes')), y = HEAD + 78, shown = 0;
       if (!list.length) { g += T(0, y, L('沒有紅黃項目。出發前仍照檢核點執行。', 'No red or amber items. Still follow the checkpoints.'), 38, C.go); return { g, h: y + 20, shown: 0 }; }
       for (const it of list) {
-        const l1 = wrap(it.text, 38, width - 50), l2 = wrap(it.fix, 32, width - 50);
-        const need = l1.length * 52 + l2.length * 44 + 28;
+        const l1 = wrap(it.text, F1, width - 50), l2 = wrap(it.fix, F2, width - 50);
+        const need = l1.length * H1 + l2.length * H2 + Math.round(28 * k);
         if (y + need > maxH - 50) break;
         g += dot(14, y - 13, it.level === 'red' ? C.stop : it.level === 'amber' ? C.warn : C.muted);
-        l1.forEach(t => { g += T(46, y, t, 38, C.ink); y += 52; });
-        l2.forEach(t => { g += T(46, y, t, 32, C.muted); y += 44; });
-        y += 28; shown++;
+        l1.forEach(t => { g += T(46, y, t, F1, C.ink); y += H1; });
+        l2.forEach(t => { g += T(46, y, t, F2, C.muted); y += H2; });
+        y += Math.round(28 * k); shown++;
       }
-      if (shown < list.length) { g += T(46, y, from ? L('…另有 ' + (list.length - shown) + ' 項，見網頁', '…' + (list.length - shown) + ' more on the page') : L('…另有 ' + (list.length - shown) + ' 項，見第 2 頁', '…' + (list.length - shown) + ' more on page 2'), 32, C.muted); y += 44; }
+      if (shown < list.length) { g += T(46, y, from ? L('…另有 ' + (list.length - shown) + ' 項，見下一頁', '…' + (list.length - shown) + ' more on the next page') : L('…另有 ' + (list.length - shown) + ' 項，見第 2 頁', '…' + (list.length - shown) + ' more on page 2'), 32, C.muted); y += 44; }
       return { g, h: y, shown };
     }
     function secMargins(width) {
@@ -1568,8 +1569,9 @@ if (typeof module !== 'undefined' && module.exports) {
         .forEach(t => wrap(t, 38, FW).forEach(l => { g += T(0, y, l, 38, C.ink); y += 56; }));
       return { g, h: y - 30 };
     }
-    function secTable(maxRows, RH) {
-      let g = head(L('隊員能力', 'Member scores'), L('個人軸依狀態上色；團隊軸標出主槓桿 P 與第二人 B', 'Individual axes by status; team axes mark primary P and backup B'));
+    function secTable(maxRows, RH, from) {
+      from = from || 0;
+      let g = head(from ? L('隊員能力（續）', 'Member scores (cont.)') : L('隊員能力', 'Member scores'), L('個人軸依狀態上色；團隊軸標出主槓桿 P 與第二人 B', 'Individual axes by status; team axes mark primary P and backup B'));
       let y = HEAD + 40;
       const NAMEW = 400, FLW = 120, cols = SCORED.length, CW = Math.floor((FW - NAMEW - FLW) / cols), x0 = NAMEW;
       RH = RH || 76; const ty = Math.round(RH / 2 + 13);
@@ -1595,7 +1597,7 @@ if (typeof module !== 'undefined' && module.exports) {
       };
       row(L('需求', 'Need'), SCORED.map(a => ({ t: fmt(res.Dp[a]), c: C.muted, b: true })), { bg: C.soft, lc: C.muted, bold: true });
       row(L('紅線', 'Hard minimum'), SCORED.map(a => ({ t: fmt(res.R[a]), c: C.stop, b: true })), { bg: C.soft, lc: C.stop, bold: true });
-      res.memberRes.slice(0, maxRows).forEach(r => {
+      res.memberRes.slice(from, from + maxRows).forEach(r => {
         const m = r.m, nm0 = m.name || L('未命名', 'Unnamed'), rl = m.leader ? L('領隊', 'leader') : (m.role || '');
         const label = nm0 + (rl && nm0.indexOf(rl) < 0 ? L('（' + rl + '）', ' (' + rl + ')') : '');
         row(label, SCORED.map(a => {
@@ -1605,7 +1607,7 @@ if (typeof module !== 'undefined' && module.exports) {
           return { t: e == null ? L('未評', '—') : fmt(e) + tag, c: e == null ? C.muted : tag ? C.accent : C.ink, b: !!tag, bg: tag ? '#e3eff0' : null };
         }), { lamp: r.color, flag: r.nFlags ? '+' + r.nFlags : '—' });
       });
-      if (res.memberRes.length > maxRows) { g += T(10, y + ty, L('…另有 ' + (res.memberRes.length - maxRows) + ' 人，見網頁', '…' + (res.memberRes.length - maxRows) + ' more on the page'), 32, C.muted); y += RH; }
+      if (res.memberRes.length > from + maxRows) { g += T(10, y + ty, L('…另有 ' + (res.memberRes.length - from - maxRows) + ' 人，見下一頁', '…' + (res.memberRes.length - from - maxRows) + ' more on the next page'), 32, C.muted); y += RH; }
       return { g, h: y };
     }
     function secChecklists(width) {
@@ -1667,7 +1669,7 @@ if (typeof module !== 'undefined' && module.exports) {
       const d = new Date();
       return '<line x1="' + M + '" y1="' + (H - 150) + '" x2="' + (W - M) + '" y2="' + (H - 150) + '" stroke="' + C.line + '" stroke-width="3"/>' +
         T(M, H - 90, L('上山籌碼評估', 'Trip Leverage Check') + bar + 'shainyhsu.github.io/Leveraged-Outdoor-Strategy', 32, C.muted) +
-        T(W - M, H - 90, L('第 ' + pg + ' 頁／共 2 頁　產生於 ', 'Page ' + pg + ' of 2   made ') + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), 32, C.muted, ' text-anchor="end"');
+        T(W - M, H - 90, L('第 ' + pg + ' 頁／共 @NP@ 頁　產生於 ', 'Page ' + pg + ' of @NP@   made ') + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), 32, C.muted, ' text-anchor="end"');
     };
     const style = '<style>text{font-family:' + FONT + '}' +
       '.ring{fill:none;stroke:' + C.line + ';stroke-width:1}.ring-outer{stroke:#9aa59e}.spoke{stroke:' + C.line + ';stroke-width:1}' +
@@ -1726,13 +1728,21 @@ if (typeof module !== 'undefined' && module.exports) {
     const tbl = secTable(tableRowsMax); b2.push(tbl);
     if (!rolesOn1) b2.push(roles);
     b2.push(pair(secChecklists(CW2), secPremortem(CW2), CX2));
-    const optional = [secNotes()];
-    if (rest.length) optional.push(null); // 佔位：其他議題
-    optional.push(secHow());
-    { // 健康說明一定全文列出，優先於其他選擇性區塊
+    let healthCont = null;
+    { // 健康說明一定全文列出；第 2 頁放不下就整塊移到下一頁，優先於其他選擇性區塊
       const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
-      const hb = secHealth(FW, left); if (hb) b2.push(hb);
+      const hb = secHealth(FW, left); if (hb && hb.h <= left) b2.push(hb); else if (hb) healthCont = secHealth(FW, 99999);
     }
+    // 第 1 頁放不下的議題一定要印出；第 2 頁也放不下的接到第 3 頁
+    let rest2 = [];
+    if (rest.length) {
+      const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
+      let m = secIssues(FW, left, rest, 1);
+      if (m.shown < rest.length) { const mc = secIssues(FW, left, rest, 1, 0.8); if (mc.shown > m.shown) m = mc; }  // 縮小字級，盡量留在第 2 頁
+      if (m.shown) b2.push(m);
+      rest2 = rest.slice(m.shown);
+    }
+    const optional = [secNotes(), secHow()];
     optional.forEach(b => {
       const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
       if (b === null) { const m = secIssues(FW, left, rest, 1); if (m.shown) b2.push(m); }
@@ -1743,7 +1753,26 @@ if (typeof module !== 'undefined' && module.exports) {
     const nRows = Math.min(res.memberRes.length, tableRowsMax) + 2;
     if (spare > 0) { const ti = b2.indexOf(tbl); b2[ti] = secTable(tableRowsMax, Math.min(104, 76 + Math.floor(spare / nRows))); }
     g2 += place(b2, P2TOP, TOP_END) + footer(2);
-    return [page1, wrapSvg(g2)];
+    const pages = [page1, wrapSvg(g2)];
+    // 續頁：放不下的隊員列、健康說明、議題依序往後排，每頁都不超出版面
+    const availP = TOP_END - P2TOP - 120, rowsPP = Math.max(1, Math.floor((availP - 260) / 76));
+    const cont = [];
+    for (let tf = tableRowsMax; tf < res.memberRes.length; tf += rowsPP) cont.push(secTable(Math.min(rowsPP, res.memberRes.length - tf), 76, tf));
+    if (healthCont) cont.push(healthCont);
+    let pend = rest2;
+    while (cont.length || pend.length) {
+      const b3 = []; let used = 0;
+      while (cont.length && (!b3.length || used + cont[0].h + 80 <= availP)) { const b = cont.shift(); b3.push(b); used += b.h + 80; }
+      if (!cont.length && pend.length) {
+        let m = secIssues(FW, availP - used, pend, 2);
+        if (!m.shown && !b3.length) m = secIssues(FW, 99999, pend.slice(0, 1), 2);
+        if (m.shown) { b3.push(m); pend = pend.slice(m.shown); }
+      }
+      let g3 = T(M, 210, L('上山籌碼評估・詳細資料（續）', 'Trip Leverage Check: details (cont.)'), 76, C.ink, ' font-weight="700"');
+      g3 += place(b3, P2TOP, TOP_END) + footer(pages.length + 1);
+      pages.push(wrapSvg(g3));
+    }
+    return pages.map(p => p.split('@NP@').join(String(pages.length)));
   }
   function svgToJpg(svg) {
     return new Promise((ok, bad) => {
@@ -1772,8 +1801,7 @@ if (typeof module !== 'undefined' && module.exports) {
   function shareA4() {
     const msg = $('#a4-msg');
     msg.textContent = L('產生中…', 'Making…');
-    const [p1, p2] = a4Pages();
-    Promise.all([svgToJpg(p1), svgToJpg(p2)]).then(blobs => {
+    Promise.all(a4Pages().map(svgToJpg)).then(blobs => {
       const base = L('上山籌碼評估_', 'leverage_') + ((st.trip.name || L('行程', 'trip')).replace(/[\\/:*?"<>|\s]+/g, '_')) + (st.trip.date ? '_' + st.trip.date : '');
       const files = blobs.map((b, i) => new File([b], base + '_' + (i + 1) + '.jpg', { type: 'image/jpeg' }));
       const download = () => {
@@ -1781,7 +1809,7 @@ if (typeof module !== 'undefined' && module.exports) {
           const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name;
           document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
         }, i * 600));
-        msg.textContent = L('已下載 2 張', 'Downloaded 2 images');
+        msg.textContent = L('已下載 ' + files.length + ' 張', 'Downloaded ' + files.length + ' images');
       };
       if (navigator.canShare && navigator.canShare({ files })) {
         navigator.share({ files, title: L('上山籌碼評估', 'Trip Leverage Check') }).then(() => { msg.textContent = L('已分享', 'Shared'); }, err => { if (err && err.name === 'AbortError') msg.textContent = ''; else download(); });
