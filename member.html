@@ -52,6 +52,9 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius
 .ck { display: flex; gap: 10px; align-items: center; padding: 6px 0; }
 .ck input { width: 20px; height: 20px; accent-color: var(--accent); }
 .err { color: var(--stop); font-size: 14px; margin: 6px 0 0; }
+.fnote { margin: 4px 0 10px 30px; }
+.fnote textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); resize: vertical; }
+.fnote.bad textarea { border-color: var(--stop); }
 button.go { width: 100%; font: inherit; font-weight: 700; font-size: 17px; padding: 13px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; }
 button.go:disabled { opacity: .6; }
 .done { text-align: center; padding: 30px 16px; }
@@ -112,7 +115,11 @@ const FLAGS = {
 };
 const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
 
-const ENTRY = { name: '4898134a', role: '09a69d78', fit: '233b0056', foot: '17e17bf0', care: '54b2152c', gear: '7c4501a0', exp: '18eed6dc', mind: '5d7f2ceb', nav: '03f0263e', wx: '184a62e9', aid: '722a31b9', crm: '1d417f44', pace: '06df79b1', flags: '6d4ec7b2', code: '5fe8a856' };
+const FLAG_NOTE = {
+  s2: { en: 'Illness / injury details', zh: '生病/受傷說明', ph: '什麼狀況、何時開始、目前用藥或處置', phEn: 'What it is, since when, current medication or treatment' },
+  s8: { en: 'Medical history details', zh: '特殊病史說明', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
+};
+const ENTRY = { n2: '4468e0a8', n8: '2ccd16b9', name: '4898134a', role: '09a69d78', fit: '233b0056', foot: '17e17bf0', care: '54b2152c', gear: '7c4501a0', exp: '18eed6dc', mind: '5d7f2ceb', nav: '03f0263e', wx: '184a62e9', aid: '722a31b9', crm: '1d417f44', pace: '06df79b1', flags: '6d4ec7b2', code: '5fe8a856' };
 const POST = 'https://docs.google.com/forms/d/e/1FAIpQLSfmhwnlAEK_BEw280NqN4rx0qN4WSSRlAH3VRQ9fBlRBbJq2g/formResponse';
 const ent = k => 'entry.' + parseInt(ENTRY[k], 16);
 const qs = new URLSearchParams(location.search);
@@ -123,7 +130,8 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 const fmt = v => (v % 1 ? v.toFixed(1) : String(v));
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem('member-self') || '{}'); } catch (e) {}
-const st = { name: saved.name || '', role: saved.role || '', v: {}, flags: {}, tried: false, sent: false };
+const st = { name: saved.name || '', role: saved.role || '', v: {}, flags: {}, notes: {}, tried: false, sent: false };
+const noteMissing = () => Object.keys(FLAG_NOTE).filter(k => st.flags[k] && !String(st.notes[k] || '').trim());
 SCORED.forEach(a => { if (saved.v && saved.v[a] != null) st.v[a] = saved.v[a]; });
 
 function ancHTML(a) {
@@ -138,6 +146,12 @@ function axisCard(a) {
     '<input type="range" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-a="' + a + '" aria-label="' + esc(LANG === 'en' ? AXES[a].fullEn : AXES[a].full) + '">' +
     '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
     '<ul class="anc" id="anc-' + a + '">' + ancHTML(a) + '</ul>' + (bad ? '<p class="err">' + L('請選一個分數', 'Please pick a score') + '</p>' : '') + '</div>';
+}
+function noteBox(k) {
+  const bad = st.tried && !String(st.notes[k] || '').trim();
+  return '<div class="fnote' + (bad ? ' bad' : '') + '" id="fnb-' + k + '"><label class="f" for="fn-' + k + '">' + esc(L(FLAG_NOTE[k].zh, FLAG_NOTE[k].en)) + L('（必填）', ' (required)') + '</label>' +
+    '<textarea id="fn-' + k + '" data-fnote="' + k + '" rows="3" maxlength="300" placeholder="' + esc(L(FLAG_NOTE[k].ph, FLAG_NOTE[k].phEn)) + '">' + esc(st.notes[k] || '') + '</textarea>' +
+    (bad ? '<p class="err">' + L('勾了這項就要寫說明', 'Details are required when this is ticked') + '</p>' : '') + '</div>';
 }
 function render() {
   document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant';
@@ -156,7 +170,7 @@ function render() {
     '<div class="card"><label class="f" for="role">' + L('角色（可留空）', 'Role (optional)') + '</label><input type="text" id="role" maxlength="30" placeholder="' + L('例：隊員、副領隊', 'e.g. member, co-leader') + '" value="' + esc(st.role) + '"></div>' +
     SCORED.map(axisCard).join('') +
     '<div class="card"><label class="f">' + L('今日狀態', 'Today\'s status') + '</label><p class="hint">' + L('出發前 48 小時內，有的請勾選（可不勾）', 'Within 48 hours of leaving; tick any that apply (optional)') + '</p>' +
-    Object.keys(FLAGS).map(k => '<label class="ck"><input type="checkbox" data-flag="' + k + '"' + (st.flags[k] ? ' checked' : '') + '><span>' + esc(LANG === 'en' ? FLAGS_EN[k] : FLAGS[k]) + '</span></label>').join('') + '</div>' +
+    Object.keys(FLAGS).map(k => '<label class="ck"><input type="checkbox" data-flag="' + k + '"' + (st.flags[k] ? ' checked' : '') + '><span>' + esc(LANG === 'en' ? FLAGS_EN[k] : FLAGS[k]) + '</span></label>' + (FLAG_NOTE[k] && st.flags[k] ? noteBox(k) : '')).join('') + '</div>' +
     '<button type="button" class="go" id="send">' + L('送出', 'Send') + '</button><p class="err" id="msg" role="status"></p>';
 }
 function setVal(inp) {
@@ -173,12 +187,22 @@ document.addEventListener('input', e => {
   if (t.matches('input[type="range"]')) setVal(t);
   else if (t.id === 'name') st.name = t.value;
   else if (t.id === 'role') st.role = t.value;
+  else if (t.dataset.fnote) { st.notes[t.dataset.fnote] = t.value; const b = document.getElementById('fnb-' + t.dataset.fnote); if (b && t.value.trim()) { b.classList.remove('bad'); const e2 = b.querySelector('.err'); if (e2) e2.remove(); } }
 });
 document.addEventListener('click', e => {
   const t = e.target;
   if (t.matches('input[type="range"]') && st.v[t.dataset.a] == null) setVal(t);
 });
-document.addEventListener('change', e => { const t = e.target; if (t.dataset.flag) st.flags[t.dataset.flag] = t.checked; });
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (!t.dataset.flag) return;
+  const k = t.dataset.flag;
+  st.flags[k] = t.checked;
+  if (FLAG_NOTE[k]) {
+    const y = window.scrollY; render(); window.scrollTo(0, y);
+    const ta = document.getElementById('fn-' + k); if (ta) ta.focus({ preventScroll: true });
+  }
+});
 document.addEventListener('click', e => {
   const t = e.target.closest('button');
   if (!t) return;
@@ -188,12 +212,13 @@ document.addEventListener('click', e => {
 });
 function send(btn) {
   st.tried = true;
-  const missing = SCORED.filter(a => st.v[a] == null);
-  if (!st.name.trim() || missing.length) {
+  const missing = SCORED.filter(a => st.v[a] == null), nm = noteMissing();
+  const nEmpty = missing.length + nm.length + (st.name.trim() ? 0 : 1);
+  if (nEmpty) {
     render();
-    const first = !st.name.trim() ? document.getElementById('name') : document.getElementById('c-' + missing[0]);
+    const first = !st.name.trim() ? document.getElementById('name') : missing.length ? document.getElementById('c-' + missing[0]) : document.getElementById('fnb-' + nm[0]);
     first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    document.getElementById('msg').textContent = L('還有 ' + (missing.length + (st.name.trim() ? 0 : 1)) + ' 項沒填', (missing.length + (st.name.trim() ? 0 : 1)) + ' item(s) still empty');
+    document.getElementById('msg').textContent = L('還有 ' + nEmpty + ' 項沒填', nEmpty + ' item(s) still empty');
     return;
   }
   const body = new URLSearchParams();
@@ -201,6 +226,7 @@ function send(btn) {
   if (st.role.trim()) body.append(ent('role'), st.role.trim().slice(0, 30));
   SCORED.forEach(a => body.append(ent(a), fmt(st.v[a])));
   Object.keys(FLAGS).forEach(k => { if (st.flags[k]) body.append(ent('flags'), FLAGS[k]); });
+  Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k]) body.append(ent(k === 's2' ? 'n2' : 'n8'), String(st.notes[k]).trim().slice(0, 300)); });
   body.append(ent('code'), CODE);
   btn.disabled = true; btn.textContent = L('送出中…', 'Sending…');
   fetch(POST, { method: 'POST', mode: 'no-cors', body: body }).then(() => {

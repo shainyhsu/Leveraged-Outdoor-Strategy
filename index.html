@@ -191,6 +191,10 @@ textarea { resize: vertical; line-height: 1.55; }
 .checks { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
 label.ck { display: flex; gap: 9px; align-items: flex-start; padding: 7px 10px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); font-size: 14px; cursor: pointer; }
 label.ck small { display: block; font-size: 12px; color: var(--muted); }
+.fnote { margin-top: 8px; }
+.fnote .ferr { display: none; font-size: 12px; color: var(--stop); }
+.fnote.bad textarea { border-color: var(--stop); }
+.fnote.bad .ferr { display: block; }
 input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px; margin: 2px 0 0; flex: none; }
 .tag-pair { font-style: normal; font-size: 11px; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 0 6px; margin-left: 6px; white-space: nowrap; }
 
@@ -549,6 +553,12 @@ const FLAGS = {
   s8: '特殊病史'
 };
 const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
+/* 勾選後必須寫說明；col 必須與 Google 表單題目相同 */
+const FLAG_NOTE = {
+  s2: { col: '生病/受傷說明', en: 'Illness / injury details', ph: '什麼狀況、何時開始、目前用藥或處置', phEn: 'What it is, since when, current medication or treatment' },
+  s8: { col: '特殊病史說明', en: 'Medical history details', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
+};
+const NOTE_MAX = 300;
 const PLAN_ITEMS = [
   { id: 'p1', text: '登山計畫書完成，入山／入園申請已核准', en: 'Trip plan written; entry permits approved' },
   { id: 'p2', text: '留守人掌握計畫、聯絡時程與報案時間', en: 'Emergency contact has the plan, check-in times and when to call rescue' },
@@ -600,6 +610,8 @@ const axAnch = a => L(AXES[a].anchors, AXES[a].anchorsEn);
 const tplName = k => L(TEMPLATES[k].name, TEMPLATES[k].en);
 const condName = k => L(CONDS[k].name, CONDS[k].en);
 const flagName = k => L(FLAGS[k], FLAGS_EN[k]);
+const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => m.flags && m.flags[k] && !String((m.notes && m.notes[k]) || '').trim());
+const noteTexts = m => Object.keys(FLAG_NOTE).filter(k => m.flags && m.flags[k] && String((m.notes && m.notes[k]) || '').trim()).map(k => flagName(k) + L('：', ': ') + m.notes[k].trim());
 const itemText = i => L(i.text, i.en);
 const lvName = x => L(x.name, x.en), lvDesc = x => L(x.desc, x.descEn), lvPre = x => L(x.prereqText, x.prereqEn), lvPair = x => L(x.pairText, x.pairEn);
 const COLOR_WORD = c => L({ green: '綠', amber: '黃', red: '紅' }[c], { green: 'G', amber: 'A', red: 'R' }[c]);
@@ -635,7 +647,7 @@ function anchorLines(a, v) {
 /* 領隊是 members[0]，leader:true；只有領隊評分、不能刪除 */
 function blankMember(name, role) {
   const id = 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const m = { id, name: name || L('新隊員', 'New member'), role: role || '', self: {}, lead: {}, flags: {} };
+  const m = { id, name: name || L('新隊員', 'New member'), role: role || '', self: {}, lead: {}, flags: {}, notes: {} };
   SCORED.forEach(a => { m.self[a] = null; m.lead[a] = null; });
   return m;
 }
@@ -718,6 +730,7 @@ function sanitizeState(raw) {
       if (rm.lead && isScore(rm.lead[a])) m.lead[a] = rm.lead[a];
     });
     Object.keys(FLAGS).forEach(k => { if (rm.flags && rm.flags[k]) m.flags[k] = true; });
+    Object.keys(FLAG_NOTE).forEach(k => { const t = rm.notes && rm.notes[k]; if (t) m.notes[k] = String(t).slice(0, NOTE_MAX); });
     if (raw.v !== 2 && rm.flags && rm.flags.s4) m.flags.s1 = true;  // 舊版「近期累積疲勞」併入睡眠/疲勞
     if (raw.v !== 2 && rm.flags) delete m.flags.s4;
     if (rm.hide) m.hide = true;
@@ -853,6 +866,7 @@ function compute(st) {
       push('amber', nm + q(axS(a)) + L('邊際：', 'marginal: ') + fmt(x.e) + L('／需求 ', ' / need ') + fmt(x.D), L('用槓桿補位，或接受並設檢核點', 'Cover with a mitigation, or accept and set checkpoints'), to);
     }
     if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': today\'s status, ') + r.nFlags + L(' 項，體能、技術、自我照護紅線上移 ', ' item(s); fitness, technical, self-care minimums up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
+    noteMissing(r.m).forEach(k => push('red', nm + L(' 勾了「' + flagName(k) + '」但沒寫說明', ': ticked "' + flagName(k) + '" with no details'), L('請本人重填表單，或在隊員卡片補上說明', 'Ask them to send the form again, or fill in the details on the member card'), to));
     r.disc.forEach(d => push('amber', nm + q(axS(d.a)) + L('本人 ', 'self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l), L('行前對話校準；計分取低分', 'Talk it through before the trip; the lower score counts'), to));
   });
   TEAM.forEach(a => {
@@ -1061,6 +1075,7 @@ function mergeFormRows(st, rows, code) {
   const head = rows[0].map(h => h.trim());
   const col = t => head.findIndex(h => h === t || h.indexOf(t) === 0);
   const iCode = col('行程代碼'), iName = col('姓名'), iRole = col('角色'), iFlag = col('今日狀態');
+  const iNote = {}; Object.keys(FLAG_NOTE).forEach(k => { iNote[k] = col(FLAG_NOTE[k].col); });
   const iAx = {}; SCORED.forEach(a => { iAx[a] = col(AXES[a].full); if (iAx[a] < 0 && a === 'foot') iAx[a] = col('踩踏與地形'); });
   const latest = new Map();
   rows.slice(1).forEach(r => {
@@ -1076,12 +1091,14 @@ function mergeFormRows(st, rows, code) {
     const fl = iFlag >= 0 ? String(r[iFlag] || '') : '';
     m.flags = {};
     Object.keys(FLAGS).forEach(k => { if (fl.indexOf(FLAGS[k]) >= 0) m.flags[k] = true; });
+    m.notes = {};
+    Object.keys(FLAG_NOTE).forEach(k => { const t = iNote[k] >= 0 ? String(r[iNote[k]] || '').trim() : ''; if (t) m.notes[k] = t.slice(0, NOTE_MAX); });
   });
   return { added, updated, n: latest.size };
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { AXES, IND, TEAM, TEAM_SKILL, SCORED, ALL, TEMPLATES, CONDS, FLAGS, PLAN_ITEMS, KIT_ITEMS, LEVERS,
+  module.exports = { AXES, IND, TEAM, TEAM_SKILL, SCORED, ALL, TEMPLATES, CONDS, FLAGS, FLAG_NOTE, PLAN_ITEMS, KIT_ITEMS, LEVERS,
     compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, packState, unpackState, mergeFormRows, parseCSV,
     effScore, anchorLines, fmt, fmtSigned, setLang: x => { LANG = x; } };
 }
@@ -1335,8 +1352,14 @@ if (typeof module !== 'undefined' && module.exports) {
       '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
       '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、技術、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, technical and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
       Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>').join('') +
-      '</div>';
+      '</div>' + Object.keys(FLAG_NOTE).filter(k => m.flags[k]).map(k => noteBox(m, k)).join('');
     return h + '</div></details>';
+  }
+  function noteBox(m, k) {
+    const t = (m.notes && m.notes[k]) || '', bad = !t.trim(), id = 'fn-' + m.id + '-' + k;
+    return '<label class="f fnote' + (bad ? ' bad' : '') + '" for="' + id + '" id="fnl-' + m.id + '-' + k + '">' + esc(L(FLAG_NOTE[k].col, FLAG_NOTE[k].en)) + L('（必填）', ' (required)') +
+      '<textarea id="' + id + '" rows="2" maxlength="' + NOTE_MAX + '" data-m="' + m.id + '" data-fnote="' + k + '" placeholder="' + esc(L(FLAG_NOTE[k].ph, FLAG_NOTE[k].phEn)) + '">' + esc(t) + '</textarea>' +
+      '<span class="ferr">' + L('勾了這項就要寫說明', 'Details are required when this is ticked') + '</span></label>';
   }
   function renderMembers() {
     const box = $('#members');
@@ -1603,7 +1626,8 @@ if (typeof module !== 'undefined' && module.exports) {
       res.memberRes.forEach(r => {
         const m = r.m, fl = Object.keys(FLAGS).filter(k => m.flags && m.flags[k]).map(flagName);
         const disc = r.disc.map(d => axS(d.a) + L(' 本人 ', ' self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l));
-        const txt = memberNotes(r) + (fl.length ? L('｜今日：', ' | today: ') + fl.join(L('、', ', ')) : '') + (disc.length ? L('｜落差：', ' | gaps: ') + disc.join(L('、', ', ')) : '');
+        const nt = noteTexts(m);
+        const txt = memberNotes(r) + (fl.length ? L('｜今日：', ' | today: ') + fl.join(L('、', ', ')) : '') + (nt.length ? L('｜說明：', ' | details: ') + nt.join(L('；', '; ')) : '') + (disc.length ? L('｜落差：', ' | gaps: ') + disc.join(L('、', ', ')) : '');
         g += dot(14, y - 13, COL[r.color], 11) + T(40, y, clip(m.name || L('未命名', 'Unnamed'), 34, 360), 34, C.ink, ' font-weight="700"');
         wrap(txt, 32, FW - 420).forEach(l => { g += T(420, y, l, 32, r.color === 'green' ? C.muted : C.ink); y += 48; });
         y += 12;
@@ -1807,6 +1831,16 @@ if (typeof module !== 'undefined' && module.exports) {
     if (t.id === 'trip-name') { st.trip.name = t.value.slice(0, 80); refresh(); return; }
     if (t.id === 'trip-date') { st.trip.date = t.value; refresh(); return; }
     if (t.id === 'premortem') { st.premortem = t.value.slice(0, 600); refresh(); return; }
+    if (t.dataset.fnote) {
+      const m = findM(t.dataset.m);
+      if (!m) return;
+      m.notes = m.notes || {};
+      m.notes[t.dataset.fnote] = t.value.slice(0, NOTE_MAX);
+      const lab = document.getElementById('fnl-' + m.id + '-' + t.dataset.fnote);
+      if (lab) lab.classList.toggle('bad', !t.value.trim());
+      refresh();
+      return;
+    }
     if (t.matches('input[data-field]')) {
       const m = findM(t.dataset.m);
       if (!m) return;
@@ -1836,7 +1870,7 @@ if (typeof module !== 'undefined' && module.exports) {
     if (t.dataset.plan) { st.plan[t.dataset.plan] = t.checked; refresh(); return; }
     if (t.dataset.kit) { st.kit[t.dataset.kit] = t.checked; refresh(); return; }
     if (t.dataset.lever) { st.levers[t.dataset.lever] = t.checked; refresh(); return; }
-    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { m.flags[t.dataset.flag] = t.checked; refresh(); } return; }
+    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { m.flags[t.dataset.flag] = t.checked; refresh({ members: !!FLAG_NOTE[t.dataset.flag] }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
     if (t.id === 'openfile' && t.files && t.files[0]) {
       t.files[0].text().then(txt => {
         st = sanitizeState(JSON.parse(txt)); st.example = false;
