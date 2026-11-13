@@ -659,6 +659,9 @@ const tplName = k => L(TEMPLATES[k].name, TEMPLATES[k].en);
 const condName = k => L(CONDS[k].name, CONDS[k].en);
 const flagName = k => L(FLAGS[k], FLAGS_EN[k]);
 /* 狀態以本人勾選為準；領隊勾選或取消會存在 lflags，重新抓取時保留 */
+/* 有本人回覆的隊員才有「本人 vs 領隊修正」；領隊本人與手動新增的隊員，勾選就是本人狀態 */
+const fromForm = m => !m.leader && SCORED.some(a => m.self && m.self[a] != null);
+function foldLflags(m) { if (m.lflags && !fromForm(m)) { Object.keys(m.lflags).forEach(k => { if (m.lflags[k]) m.flags[k] = true; else delete m.flags[k]; }); delete m.lflags; } }
 const flagOn = (m, k) => (m.lflags && k in m.lflags) ? !!m.lflags[k] : !!(m.flags && m.flags[k]);
 const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => FLAG_NOTE[k].req && m.flags && m.flags[k] && flagOn(m, k) && !String((m.notes && m.notes[k]) || '').trim());
 /* 計分的狀態數：今日狀態＋高山路線的高山症史＋分享連結帶來的匿名件數 fc */
@@ -790,6 +793,7 @@ function sanitizeState(raw) {
     st.members.push(m);
   });
   ensureLeader(st);
+  st.members.forEach(foldLflags);
   st.premortem = String(raw.premortem || '').slice(0, 600);
   return st;
 }
@@ -1382,7 +1386,7 @@ if (typeof module !== 'undefined' && module.exports) {
     let tag = '', clr = '';
     if (m.leader) clr = v != null ? L('清除', 'Clear') : '';
     else if (l0 != null && s0 != null) { tag = l0 !== s0 ? '<span class="linked fixtag">' + L('領隊修正（本人 ', 'leader-corrected (self ') + fmt(s0) + L('）', ')') + '</span>' : ''; clr = L('改回本人', 'Back to self'); }
-    else if (l0 != null) { tag = '<span class="linked fixtag">' + L('領隊填入', 'filled in by leader') + '</span>'; clr = L('清除', 'Clear'); }
+    else if (l0 != null) { tag = fromForm(m) ? '<span class="linked fixtag">' + L('領隊填入', 'filled in by leader') + '</span>' : ''; clr = L('清除', 'Clear'); }
     return '<div class="srow' + (v == null ? ' unset' : '') + '" id="row-' + m.id + '-' + a + '">' +
       '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + tag + '</span></div>' +
       '<input type="range" id="' + id + '" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-m="' + m.id + '" data-a="' + a + '">' +
@@ -1561,10 +1565,10 @@ if (typeof module !== 'undefined' && module.exports) {
   let regTimer = 0;
   function regSoon() { clearTimeout(regTimer); regTimer = setTimeout(() => pullForm(true), 900); }
 
-  /* 臨時加入者自負責任同意書：A4 列印，一式兩份，現場親筆簽名 */
+  /* 臨時加入者自負責任同意書：A4 兩頁。第 1 頁領隊收執（下方照應資訊沿虛線剪下，結束後第 3 天銷毀），第 2 頁本人收執 */
   function printWaiver() {
     const ld = st.members.find(m => m.leader), ldName = ld && !/^(領隊|leader)$/i.test(ld.name.trim()) ? ld.name : '';
-    const dates = [st.trip.date, st.trip.end].filter(Boolean).join(' – ');
+    const dates = Array.from(new Set([st.trip.date, st.trip.end].filter(Boolean))).join(' – ');
     const blank = (v, w) => v ? '<b>' + esc(v) + '</b>' : '<span class="ln" style="width:' + w + 'em"></span>';
     const items = LANG === 'en' ? [
       'I have not completed the pre-trip self-rating; the leader cannot assess my fitness, skills, gear or health in advance.',
@@ -1573,8 +1577,8 @@ if (typeof module !== 'undefined' && module.exports) {
       'I will follow the leader\'s instructions on pace, retreat and safety. If my condition affects the team\'s safety, the leader may have me descend or end the trip.',
       'Risks and losses arising from conditions I did not disclose, or disclosed falsely, are my own responsibility.',
       'This waiver does not release the leader from liability for intent or gross negligence.',
-      'Care information — emergency contact: ________ phone: ________; allergies or medical history: ________________; what teammates should do: ________________. Used for this trip only; the leader destroys it on the 3rd day after the trip ends.',
-      'Confidentiality: I will not forward or disclose other members\' information. Anyone who does is responsible for it.'
+      'Care information goes in the slip below the dashed line on the leader\'s copy. It is used for this trip only, and the leader cuts it off and destroys it on the 3rd day after the trip ends; the waiver itself is kept by both parties.',
+      'Confidentiality: I will not forward or disclose other members\' personal information. Anyone who does is responsible for it.'
     ] : [
       '本人未完成行前自評，領隊無法事前評估本人的體能、技術、裝備與健康狀況。',
       '領隊已說明本行程的路線、天數、海拔與主要風險，本人已了解。',
@@ -1582,22 +1586,27 @@ if (typeof module !== 'undefined' && module.exports) {
       '本人同意遵從領隊的行進、撤退與安全指示。本人狀況影響全隊安全時，領隊得要求本人下撤或終止行程。',
       '因本人未揭露或不實揭露自身狀況所生的風險與損害，由本人自行承擔。',
       '本同意書不免除領隊的故意或重大過失責任。',
-      '照應資訊——緊急聯絡人：＿＿＿＿　電話：＿＿＿＿＿＿；過敏或病史：＿＿＿＿＿＿＿＿；隊友該怎麼做：＿＿＿＿＿＿＿＿。以上資訊只供本趟照應使用，由領隊在行程結束後第 3 天銷毀。',
-      '保密承諾：本人不轉傳、不揭露其他隊員的資料。違反者自行負責。'
+      '照應資訊填在領隊收執聯下方虛線以下，只供本趟照應使用，由領隊在行程結束後第 3 天剪下銷毀；同意書本文由雙方各自保存。',
+      '保密承諾：本人不轉傳、不揭露其他隊員的個人資料。違反者自行負責。'
     ];
-    const one = '<section class="pg"><h1>' + L('臨時加入者｜自負責任同意書', 'Late joiner | Assumption of risk') + '</h1>' +
+    const body = '<h1>' + L('臨時加入者｜自負責任同意書', 'Late joiner | Assumption of risk') + '</h1>' +
       '<p class="meta">' + L('行程名稱：', 'Trip: ') + blank(st.trip.name, 14) + '　' + L('日期：', 'Dates: ') + blank(dates, 10) + '</p>' +
-      '<p class="meta">' + L('路線：', 'Route: ') + blank('', 16) + '　' + L('領隊：', 'Leader: ') + blank(ldName, 8) + '</p>' +
+      '<p class="meta">' + L('領隊：', 'Leader: ') + blank(ldName, 8) + '</p>' +
       '<p>' + L('本人', 'I, ') + '<span class="ln" style="width:9em"></span>' + L('自願臨時加入本趟行程，聲明如下：', ', join this trip at short notice of my own free will and declare:') + '</p>' +
       '<ol>' + items.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
       '<p class="sig">' + L('本人簽名：', 'Signature: ') + '<span class="ln" style="width:11em"></span>　' + L('日期：', 'Date: ') + '<span class="ln" style="width:7em"></span></p>' +
-      '<p class="sig">' + L('未滿 18 歲者——法定代理人簽名：', 'If under 18 — guardian signature: ') + '<span class="ln" style="width:9em"></span>　' + L('關係：', 'Relation: ') + '<span class="ln" style="width:4em"></span>　' + L('電話：', 'Phone: ') + '<span class="ln" style="width:7em"></span></p>' +
-      '<p class="foot">' + L('一式兩份，本人與領隊各執一份。', 'Two copies: one for the signer, one for the leader.') + '</p></section>';
+      '<p class="sig">' + L('未滿 18 歲者——法定代理人簽名：', 'If under 18 — guardian signature: ') + '<span class="ln" style="width:9em"></span>　' + L('關係：', 'Relation: ') + '<span class="ln" style="width:4em"></span>　' + L('電話：', 'Phone: ') + '<span class="ln" style="width:7em"></span></p>';
+    const slip = '<div class="cut">' + L('✂ 沿虛線剪下｜照應資訊（行程結束後第 3 天由領隊銷毀）', '✂ Cut along the dashed line | Care information (destroyed by the leader on the 3rd day after the trip)') + '</div>' +
+      '<p class="meta">' + L('姓名：', 'Name: ') + '<span class="ln" style="width:8em"></span>　' + L('緊急聯絡人：', 'Emergency contact: ') + '<span class="ln" style="width:7em"></span>　' + L('電話：', 'Phone: ') + '<span class="ln" style="width:8em"></span></p>' +
+      '<p class="meta">' + L('過敏或病史：', 'Allergies or medical history: ') + '<span class="ln" style="width:24em"></span></p>' +
+      '<p class="meta">' + L('隊友該怎麼做：', 'What teammates should do: ') + '<span class="ln" style="width:24em"></span></p>';
+    const one = '<section class="pg"><p class="copy">' + L('領隊收執', 'Leader\'s copy') + '</p>' + body + slip + '</section>' +
+      '<section class="pg"><p class="copy">' + L('本人收執', 'Signer\'s copy') + '</p>' + body + '</section>';
     const doc = '<!doctype html><html lang="' + (LANG === 'en' ? 'en' : 'zh-Hant') + '"><head><meta charset="utf-8"><title>' + L('臨時加入者自負責任同意書', 'Late joiner waiver') + '</title><style>' +
       '@page{size:A4;margin:16mm}body{font:12.5pt/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:#000;margin:0}' +
       '.pg{page-break-after:always}.pg:last-child{page-break-after:auto}h1{font-size:17pt;text-align:center;margin:0 0 10px}' +
       '.meta{margin:4px 0}ol{padding-left:1.4em;margin:8px 0}li{margin:5px 0}.ln{display:inline-block;border-bottom:1px solid #000;height:1.2em;vertical-align:bottom}' +
-      '.sig{margin:18px 0 0}.foot{margin-top:14px;font-size:10.5pt;color:#333}</style></head><body>' + one + one + '</body></html>';
+      '.sig{margin:16px 0 0}.copy{text-align:right;font-size:10pt;margin:0;color:#333}.cut{border-top:1.5px dashed #000;margin:22px 0 8px;padding-top:6px;font-size:10.5pt}</style></head><body>' + one + '</body></html>';
     const w = window.open('', '_blank');
     if (w) { w.document.open(); w.document.write(doc); w.document.close(); w.focus(); setTimeout(() => w.print(), 300); return; }
     const f = document.createElement('iframe');
@@ -2152,7 +2161,7 @@ if (typeof module !== 'undefined' && module.exports) {
     if (t.dataset.plan) { st.plan[t.dataset.plan] = t.checked; refresh(); return; }
     if (t.dataset.kit) { st.kit[t.dataset.kit] = t.checked; refresh(); return; }
     if (t.dataset.lever) { st.levers[t.dataset.lever] = t.checked; refresh(); return; }
-    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { const k = t.dataset.flag; m.lflags = m.lflags || {}; if (t.checked === !!(m.flags && m.flags[k])) delete m.lflags[k]; else m.lflags[k] = t.checked; if (!Object.keys(m.lflags).length) delete m.lflags; refresh({ members: true }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
+    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { const k = t.dataset.flag; if (!fromForm(m)) { if (t.checked) m.flags[k] = true; else delete m.flags[k]; foldLflags(m); refresh({ members: true }); if (t.checked && FLAG_NOTE[k]) { const ta = document.getElementById('fn-' + m.id + '-' + k); if (ta) ta.focus(); } return; } m.lflags = m.lflags || {}; if (t.checked === !!(m.flags && m.flags[k])) delete m.lflags[k]; else m.lflags[k] = t.checked; if (!Object.keys(m.lflags).length) delete m.lflags; refresh({ members: true }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
     if (t.id === 'openfile' && t.files && t.files[0]) {
       t.files[0].text().then(txt => {
         st = sanitizeState(JSON.parse(txt)); st.example = false;
