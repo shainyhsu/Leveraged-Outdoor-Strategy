@@ -2,6 +2,7 @@
 
 Newest first. Each update of the page is one version. Times are Taiwan time (UTC+8).
 
+- V24 | 2026-11-13 15:48 | Only the two radar charts start open; every other section starts collapsed and the page remembers what you open. A collapsed section shows its own icon, a status stripe on the left and solid red or amber badges, so it can be told apart at a glance. The verdict link and the jump bar open what they jump to; Collapse all keeps the radar charts open.
 - V23 | 2026-11-13 12:50 | Sections ① to ⑥ start collapsed (the page remembers what you opened), with Collapse all and Expand all buttons. A collapsed section shows its key facts in a colored badge: red needs fixing, amber is a heads-up, green is fine.
 - V22 | 2026-11-13 12:00 | Fixed the route need +/− buttons doing nothing after the template or conditions changed: each press now moves the need you see by 0.5. The Plan & backups and Team kit rows now say in one line what they measure.
 - V21 | 2026-11-13 11:50 | The Share section now shows a live preview of every A4 page. Everything is printed on the pages, nothing says "see the page": Health details always in full. When page 2 runs a little over, it tightens first (shorter rows and gaps, smaller text, extra items in two columns); only what still does not fit continues on extra pages.

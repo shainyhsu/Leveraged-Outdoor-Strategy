@@ -22,9 +22,9 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 ## Layout and display
 
 - **Two columns on wide screens** (1000 px and up): the five steps on the left, the verdict pinned on the right as you scroll. Phones get a single column with the verdict first.
-- **Top bar:** the verdict (amber or red jumps to the first flagged item), Save, New assessment, an English/Chinese switch and a light/dark toggle.
+- **Top bar:** the verdict (amber or red jumps to the first flagged item and opens the list), Save, New assessment, an English/Chinese switch and a light/dark toggle.
 - **Save** as a link (the whole assessment packed into the URL, so it opens on another device) or as a small .json file; it also autosaves in the browser.
-- Every section can be collapsed and starts open.
+- Only the two radar charts start open; every other section starts collapsed and remembers what you opened. A collapsed section shows its icon, a status stripe on the left and its key facts as badges (solid red needs fixing, solid amber is a heads-up, green is fine, grey is information). Collapse all keeps the two radar charts open.
 - **Light/dark toggle** in the top-right corner. Dark is the default; your choice is remembered in the browser.
 
 Time estimates pair well with the [Hiking Time Estimator](https://shainyhsu.github.io/class-hiking-calculator/).
@@ -41,6 +41,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V24 | 2026-11-13 15:48 | Only the two radar charts start open; every other section starts collapsed and the page remembers what you open. A collapsed section shows its own icon, a status stripe on the left and solid red or amber badges, so it can be told apart at a glance. The verdict link and the jump bar open what they jump to; Collapse all keeps the radar charts open.
 - V23 | 2026-11-13 12:50 | Sections ① to ⑥ start collapsed (the page remembers what you opened), with Collapse all and Expand all buttons. A collapsed section shows its key facts in a colored badge: red needs fixing, amber is a heads-up, green is fine.
 - V22 | 2026-11-13 12:00 | Fixed the route need +/− buttons doing nothing after the template or conditions changed: each press now moves the need you see by 0.5. The Plan & backups and Team kit rows now say in one line what they measure.
 - V21 | 2026-11-13 11:50 | The Share section now shows a live preview of every A4 page. Everything is printed on the pages, nothing says "see the page": Health details always in full. When page 2 runs a little over, it tightens first (shorter rows and gaps, smaller text, extra items in two columns); only what still does not fit continues on extra pages.
