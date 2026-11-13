@@ -1637,21 +1637,22 @@ if (typeof module !== 'undefined' && module.exports) {
       });
       return { g, h: y - 40 };
     }
-    /* 健康說明：勾選生病/過敏/病史時本人寫的說明；放不下時截斷並註明 */
+    /* 健康說明：勾選生病/過敏/病史時本人寫的說明；一律全文列出，空間不夠時縮小字級 */
     function secHealth(width, maxH) {
       const list = res.memberRes.map(r => ({ m: r.m, nt: noteTexts(r.m) })).filter(x => x.nt.length);
       if (!list.length) return null;
-      let g = head(L('健康說明', 'Health details'), L('勾選項目的本人說明', 'what each person wrote')), y = HEAD + 80, cut = false;
-      for (const x of list) {
-        const lines = []; x.nt.forEach(t => wrap(t, 32, width - 420).forEach(l => lines.push(l)));
-        if (y + 48 > maxH) { cut = true; break; }
-        g += T(0, y, clip(x.m.name || L('未命名', 'Unnamed'), 34, 380), 34, C.ink, ' font-weight="700"');
-        for (const l of lines) { if (y + 48 > maxH) { cut = true; break; } g += T(420, y, l, 32, C.ink); y += 48; }
-        if (cut) break;
-        y += 12;
-      }
-      if (cut) { g += T(420, y, L('…其餘說明請看網頁', '…see the page for the rest'), 30, C.muted); y += 46; }
-      return { g, h: y - 30 };
+      let out = null;
+      [[32, 48], [28, 41], [25, 36]].some(([fs, lh]) => {
+        let g = head(L('健康說明', 'Health details'), L('勾選項目的本人說明', 'what each person wrote')), y = HEAD + 80;
+        list.forEach(x => {
+          g += T(0, y, clip(x.m.name || L('未命名', 'Unnamed'), fs + 2, 380), fs + 2, C.ink, ' font-weight="700"');
+          x.nt.forEach(t => wrap(t, fs, width - 420).forEach(l => { g += T(420, y, l, fs, C.ink); y += lh; }));
+          y += 12;
+        });
+        out = { g, h: y - 30 };
+        return out.h <= maxH;
+      });
+      return out;
     }
     function secHow() {
       let g = head(L('怎麼讀', 'How to read')), y = HEAD + 76;
@@ -1728,9 +1729,9 @@ if (typeof module !== 'undefined' && module.exports) {
     const optional = [secNotes()];
     if (rest.length) optional.push(null); // 佔位：其他議題
     optional.push(secHow());
-    { // 健康說明優先於其他選擇性區塊，放不下就截斷
+    { // 健康說明一定全文列出，優先於其他選擇性區塊
       const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);
-      const hb = left > 200 ? secHealth(FW, left) : null; if (hb) b2.push(hb);
+      const hb = secHealth(FW, left); if (hb) b2.push(hb);
     }
     optional.forEach(b => {
       const left = TOP_END - P2TOP - fixed() - 56 * (b2.length + 1);

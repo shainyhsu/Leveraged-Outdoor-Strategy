@@ -2,7 +2,7 @@
 
 Newest first. Each update of the page is one version. Times are Taiwan time (UTC+8).
 
-- V21 | 2026-11-13 11:40 | The Share section now shows a live preview of both A4 pages, and page 2 has a Health details block that is cut short rather than pushed onto a third page.
+- V21 | 2026-11-13 11:40 | The Share section now shows a live preview of both A4 pages, and page 2 always lists every Health details note in full, in a smaller font when space is tight.
 - V20 | 2026-11-13 11:27 | "Allergy history" now also needs a written details box when ticked.
 - V19 | 2026-11-13 11:05 | Ticking "Ill / injured" or "Other medical history" now opens a required details box, on the member form and on the leader page; a tick with no details is a red issue.
 - V18 | 2026-11-13 09:36 | Added a classic favicon.ico tab icon for older browsers and search tools.
