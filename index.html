@@ -293,6 +293,13 @@ details.step.fold > summary { list-style: none; cursor: pointer; display: flex; 
 details.step.fold > summary::-webkit-details-marker { display: none; }
 details.step.fold > summary .chev { font-size: 22px; color: var(--muted); transition: transform .15s; }
 details.step.fold[open] > summary .chev { transform: rotate(90deg); }
+details.step.fold > summary h2 { flex: none; }
+.fhint { margin-left: auto; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--go-bg); color: var(--go); border: 1px solid var(--go); white-space: normal; text-align: right; line-height: 1.35; }
+.fhint.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+.fhint.stop { background: var(--stop-bg); color: var(--stop); border-color: var(--stop); }
+.fhint:empty, details.step.fold[open] .fhint { display: none; }
+details.step.fold:not([open]) { border-left: 4px solid var(--accent); }
+.foldall { display: flex; justify-content: flex-end; gap: 8px; margin: 4px 0 -4px; }
 .intake { display: grid; gap: 10px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 10px; background: var(--bg); }
 .intake .ilink { font-family: var(--font-num); font-size: 12px; word-break: break-all; color: var(--muted); }
 .mem-legend i { border-top-width: 3px; }
@@ -409,8 +416,9 @@ details.radar-card > summary { align-items: flex-start; }
     <section class="summary" id="summary" aria-label="判定"></section>
 
     <main class="steps">
-      <details class="step fold" id="s-demand" open>
-        <summary><h2><span class="num">①</span><span data-en="Trip needs">行程需求</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+      <div class="foldall"><button type="button" class="btn ghost" data-act="fold-all" data-v="0" data-en="Collapse all">全部收合</button><button type="button" class="btn ghost" data-act="fold-all" data-v="1" data-en="Expand all">全部展開</button></div>
+      <details class="step fold" id="s-demand">
+        <summary><h2><span class="num">①</span><span data-en="Trip needs">行程需求</span></h2><span class="fhint" id="fh-demand"></span><span class="chev" aria-hidden="true">›</span></summary>
         <p class="lead" data-en="Pick the closest template, then tick conditions. Hard minimum = need minus the minimum gap; mitigations only lower the need, never the hard minimum. Use − / + to fine-tune an axis.">先選最接近的範本，再勾條件。紅線＝需求減紅線距離；槓桿只會降需求，紅線不動。個別軸可以用 −／＋ 微調。</p>
         <div class="fields">
           <label class="f" for="trip-name"><span data-en="Trip name">行程名稱</span><input type="text" id="trip-name" maxlength="80" placeholder="例：嘉明湖攻頂日" data-en-ph="e.g. Jiaming Lake summit day"></label>
@@ -423,16 +431,16 @@ details.radar-card > summary { align-items: flex-start; }
         <div class="dlist" id="dlist"></div>
       </details>
 
-      <details class="step fold" id="s-members" open>
-        <summary><h2><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+      <details class="step fold" id="s-members">
+        <summary><h2><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="fhint" id="fh-members"></span><span class="chev" aria-hidden="true">›</span></summary>
         <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「新增隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
         <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
         <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">新增隊員（手動輸入）</button></div>
       </details>
 
-      <details class="step fold" id="s-lists" open>
-        <summary><h2><span class="num">③</span><span data-en="Plan & team kit">計畫與團隊裝備</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+      <details class="step fold" id="s-lists">
+        <summary><h2><span class="num">③</span><span data-en="Plan & team kit">計畫與團隊裝備</span></h2><span class="fhint" id="fh-lists"></span><span class="chev" aria-hidden="true">›</span></summary>
         <p class="lead" data-en="These two axes check whether the whole team is ready; the share of ticks converts to 1–5. Items tagged “backup” are backups in themselves.">這兩軸看整隊有沒有準備好，勾選比例換算成 1 到 5 分。標「成雙」的項目本身就是備援。</p>
         <div class="subhead"><h3 data-en="Plan & backups">計畫與備案</h3><span class="subscore" id="plan-score"></span></div>
         <div class="checks" id="plan-list"></div>
@@ -441,20 +449,20 @@ details.radar-card > summary { align-items: flex-start; }
         <div class="checks" id="kit-list"></div>
       </details>
 
-      <details class="step fold" id="s-levers" open>
-        <summary><h2><span class="num">④</span><span data-en="Mitigations">槓桿</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+      <details class="step fold" id="s-levers">
+        <summary><h2><span class="num">④</span><span data-en="Mitigations">槓桿</span></h2><span class="fhint" id="fh-levers"></span><span class="chev" aria-hidden="true">›</span></summary>
         <p class="lead" data-en="Each mitigation lowers its axes' need by 0.5, at most 1.0 per axis, and never below the hard minimum. A mitigation whose precondition isn't met doesn't count; one that works without a second person or spare is flagged “no backup”.">每項槓桿讓指定軸的需求降 0.5，同一軸最多降 1.0，而且不低於紅線。前提沒達到就不計入；成立但沒有第二人或備品，會列為「未成雙」。</p>
         <div class="levers" id="levers"></div>
       </details>
 
-      <details class="step fold" id="s-weak" open>
-        <summary><h2><span class="num">⑤</span><span data-en="Weak points">評估脆弱點</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+      <details class="step fold" id="s-weak">
+        <summary><h2><span class="num">⑤</span><span data-en="Weak points">評估脆弱點</span></h2><span class="fhint" id="fh-weak"></span><span class="chev" aria-hidden="true">›</span></summary>
         <p class="lead" data-en="The verdict comes from needs, hard minimums and mitigations, with no manual override. Write down this trip's weakest link here: if the trip goes wrong, where is it most likely to break, and how will you shore it up before leaving?">判定由程式依需求、紅線與槓桿自動產生，不由領隊覆核。這裡寫下這趟最脆弱的環節：假設行程出問題，最可能卡在哪裡，出發前怎麼補強。</p>
         <label class="f" for="premortem"><span data-en="Weak points and fixes">脆弱點與補強</span><textarea id="premortem" rows="3" maxlength="600" placeholder="例：凌晨出發睡眠不足，回程天黑前到不了檢核點；天氣判讀只有一人可靠。" data-en-ph="e.g. Short sleep before a pre-dawn start; may miss the checkpoint before dark; only one person reads weather reliably."></textarea></label>
       </details>
 
-      <details class="step fold" id="s-share" open>
-        <summary><h2><span class="num">⑥</span><span data-en="Share">分享</span></h2><span class="chev" aria-hidden="true">›</span></summary>
+      <details class="step fold" id="s-share">
+        <summary><h2><span class="num">⑥</span><span data-en="Share">分享</span></h2><span class="fhint" id="fh-share"></span><span class="chev" aria-hidden="true">›</span></summary>
         <p class="lead" data-en="Make a high-resolution A4 image (JPG) with the verdict, individual readiness, team skills, items to fix and margins, ready for a group chat or printing.">產生一張 A4 高解析圖（JPG），內容是判定、個人底盤、團隊能力、需要處理與提醒、餘裕，可直接傳到群組或列印。</p>
         <div class="row-btns"><button type="button" class="btn" data-act="a4" data-en="Share A4 image (JPG)">分享 A4 圖（JPG）</button><span class="msg" id="a4-msg" role="status"></span></div>
         <div class="a4prev" id="a4prev"></div>
@@ -1832,6 +1840,31 @@ if (typeof module !== 'undefined' && module.exports) {
 
 
   /* ---------- 重新計算與繪製 ---------- */
+  // 每個單元收合後，在標題列顯示一行重點（紅＝要處理，黃＝提醒，綠＝沒問題）
+  const FOLD_KEY = 'lev-fold';
+  function foldInit() {
+    let saved = {}; try { saved = JSON.parse(localStorage.getItem(FOLD_KEY) || '{}'); } catch (e) {}
+    document.querySelectorAll('details.step.fold').forEach(d => {
+      if (saved[d.id]) d.open = true;
+      d.addEventListener('toggle', () => { let o = {}; try { o = JSON.parse(localStorage.getItem(FOLD_KEY) || '{}'); } catch (e) {} o[d.id] = d.open; try { localStorage.setItem(FOLD_KEY, JSON.stringify(o)); } catch (e) {} });
+    });
+  }
+  function setHint(id, text, lv) { const el = document.getElementById('fh-' + id); if (!el) return; el.textContent = text; el.className = 'fhint' + (lv ? ' ' + lv : ''); }
+  function updateFoldHints() {
+    const conds = Object.keys(st.conds).filter(k => st.conds[k]).length;
+    const below = ALL.filter(a => res.Dp[a] > res.R[a]).length;
+    setHint('demand', tplName(st.template) + L('・條件 ' + conds + ' 項', ' · ' + conds + ' conditions'), '');
+    const c = res.counts, n = st.members.length;
+    setHint('members', n ? L(n + ' 人・綠 ' + c.green + '・黃 ' + c.amber + '・紅 ' + c.red, n + ' people · green ' + c.green + ', amber ' + c.amber + ', red ' + c.red) : L('還沒有隊員', 'No members yet'), !n || c.red ? 'stop' : c.amber ? 'warn' : '');
+    const lv = a => (res.team[a].main < res.R[a] ? 'stop' : res.team[a].main < res.Dp[a] ? 'warn' : '');
+    const worst = [lv('plan'), lv('kit')].includes('stop') ? 'stop' : [lv('plan'), lv('kit')].includes('warn') ? 'warn' : '';
+    setHint('lists', L('計畫 ' + res.planChecked + '／' + PLAN_ITEMS.length + '・裝備 ' + res.kitChecked + '／' + KIT_ITEMS.length, 'Plan ' + res.planChecked + '/' + PLAN_ITEMS.length + ' · Kit ' + res.kitChecked + '/' + KIT_ITEMS.length), worst);
+    const on = res.levers.filter(x => x.on).length, ok = res.levers.filter(x => x.applied).length;
+    setHint('levers', L('已勾 ' + on + '・成立 ' + ok, on + ' ticked · ' + ok + ' count'), on > ok ? 'warn' : '');
+    const pm = (st.premortem || '').trim();
+    setHint('weak', pm ? (pm.length > 24 ? pm.slice(0, 24) + '…' : pm) : L('尚未填寫', 'Not filled in'), pm ? '' : 'warn');
+    setHint('share', L('A4 圖、文字摘要、存檔連結', 'A4 pictures, text summary, save link'), '');
+  }
   function refresh(opts) {
     opts = opts || {};
     const activeId = document.activeElement && document.activeElement.id;
@@ -1843,6 +1876,7 @@ if (typeof module !== 'undefined' && module.exports) {
     if (opts.members) renderMembers(); else updateMembersDynamic();
     schedulePreview();
     updateListHeads();
+    updateFoldHints();
     updateReview();
     if (activeId && document.activeElement && document.activeElement.id !== activeId) {
       const el = document.getElementById(activeId);
@@ -1973,6 +2007,7 @@ if (typeof module !== 'undefined' && module.exports) {
     if (!b) return;
     if (b.closest('summary')) e.preventDefault();
     const act = b.dataset.act, id = b.dataset.m;
+    if (act === 'fold-all') { const v = b.dataset.v === '1'; document.querySelectorAll('details.step.fold').forEach(d => { d.open = v; }); return; }
     if (act === 'adj') {
       const a = b.dataset.a, d = parseFloat(b.dataset.d);
       // 以畫面上看到的需求為準：範本或條件改過後，舊的手動量可能超出 1–5，先夾回再加減，按一下就一定會變
@@ -2059,6 +2094,7 @@ if (typeof module !== 'undefined' && module.exports) {
   });
 
   $('#calc-link').href = CALC_URL;
+  foldInit();
   renderAll();
   pullForm(true);
   if (/^#s=/.test(location.hash)) {

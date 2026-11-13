@@ -41,6 +41,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V23 | 2026-11-13 12:50 | Sections ① to ⑥ start collapsed (the page remembers what you opened), with Collapse all and Expand all buttons. A collapsed section shows its key facts in a colored badge: red needs fixing, amber is a heads-up, green is fine.
 - V22 | 2026-11-13 12:00 | Fixed the route need +/− buttons doing nothing after the template or conditions changed: each press now moves the need you see by 0.5. The Plan & backups and Team kit rows now say in one line what they measure.
 - V21 | 2026-11-13 11:50 | The Share section now shows a live preview of every A4 page. Everything is printed on the pages, nothing says "see the page": Health details always in full. When page 2 runs a little over, it tightens first (shorter rows and gaps, smaller text, extra items in two columns); only what still does not fit continues on extra pages.
 - V20 | 2026-11-13 11:27 | "Allergy history" now also needs a written details box when ticked.
