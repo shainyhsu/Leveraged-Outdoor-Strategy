@@ -15,7 +15,7 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 ## Workflow
 
 1. Leader sets trip demand (pick a template, then fine-tune)
-2. The leader shares a Google Form link; each member rates themselves there, and the page pulls the responses in by a trip code the link fills in (or the leader enters members by hand)
+2. The leader shares the member form link; each member rates themselves there, and the page pulls the replies in by a trip code the link fills in (or the leader enters members by hand)
 3. The leader rates themselves (leader rating only) and reviews each member; a member's leader rating follows their self rating until the leader changes it. Then check plan/team gear and leverage items
 4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
@@ -35,7 +35,7 @@ Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profilin
 
 ## Tech
 
-Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-assessments go to the leader's Google Form responses sheet. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-ratings go through a Google Apps Script backend (apps-script/Code.gs) into a private sheet. Only the device that made the trip link holds the leader key that reads them back; replies are deleted after 120 days. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
 
 ## Version history
 

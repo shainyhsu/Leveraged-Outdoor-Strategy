@@ -120,9 +120,8 @@ const FLAG_NOTE = {
   s6: { en: 'Allergy details', zh: '過敏史說明', ph: '對什麼過敏、反應多嚴重、隨身藥物（如腎上腺素筆）', phEn: 'What you react to, how badly, medication you carry (e.g. EpiPen)' },
   s8: { en: 'Medical history details', zh: '特殊病史說明', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
 };
-const ENTRY = { n2: '4468e0a8', n6: '50f4e703', n8: '2ccd16b9', name: '4898134a', role: '09a69d78', fit: '233b0056', foot: '17e17bf0', care: '54b2152c', gear: '7c4501a0', exp: '18eed6dc', mind: '5d7f2ceb', nav: '03f0263e', wx: '184a62e9', aid: '722a31b9', crm: '1d417f44', pace: '06df79b1', flags: '6d4ec7b2', code: '5fe8a856' };
-const POST = 'https://docs.google.com/forms/d/e/1FAIpQLSfmhwnlAEK_BEw280NqN4rx0qN4WSSRlAH3VRQ9fBlRBbJq2g/formResponse';
-const ent = k => 'entry.' + parseInt(ENTRY[k], 16);
+/* 回覆經 Apps Script 後端寫入不公開的試算表（apps-script/Code.gs） */
+const API = 'APPS_SCRIPT_URL';
 const qs = new URLSearchParams(location.search);
 const CODE = (qs.get('c') || '').trim().toUpperCase().slice(0, 12);
 let LANG = qs.get('lang') === 'en' ? 'en' : (localStorage.getItem('lang') === 'en' ? 'en' : 'zh');
@@ -222,20 +221,22 @@ function send(btn) {
     document.getElementById('msg').textContent = L('還有 ' + nEmpty + ' 項沒填', nEmpty + ' item(s) still empty');
     return;
   }
-  const body = new URLSearchParams();
-  body.append(ent('name'), st.name.trim().slice(0, 30));
-  if (st.role.trim()) body.append(ent('role'), st.role.trim().slice(0, 30));
-  SCORED.forEach(a => body.append(ent(a), fmt(st.v[a])));
-  Object.keys(FLAGS).forEach(k => { if (st.flags[k]) body.append(ent('flags'), FLAGS[k]); });
-  Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k]) body.append(ent('n' + k.slice(1)), String(st.notes[k]).trim().slice(0, 300)); });
-  body.append(ent('code'), CODE);
+  const flags = Object.keys(FLAGS).filter(k => st.flags[k]);
+  const notes = {}; Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k]) notes[k] = String(st.notes[k]).trim().slice(0, 300); });
+  const body = JSON.stringify({ a: 'submit', code: CODE, name: st.name.trim().slice(0, 30), role: st.role.trim().slice(0, 30), v: st.v, flags, notes });
   btn.disabled = true; btn.textContent = L('送出中…', 'Sending…');
-  fetch(POST, { method: 'POST', mode: 'no-cors', body: body }).then(() => {
+  const ERR = {
+    'unknown-code': L('這條連結已失效，請向領隊要新的連結', 'This link is no longer valid; ask your leader for a new one'),
+    busy: L('送出的人太多，請過幾分鐘再按一次', 'Too many sends right now; wait a few minutes and tap again'),
+    full: L('這趟的回覆已達上限，請聯絡領隊', 'This trip has reached its reply limit; contact your leader')
+  };
+  fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }).then(r => r.json()).then(r => {
+    if (!r.ok) { const e = new Error(r.err); e.shown = ERR[r.err]; throw e; }
     try { localStorage.setItem('member-self', JSON.stringify({ name: st.name.trim(), role: st.role.trim(), v: st.v })); } catch (x) {}
     st.sent = true; render(); window.scrollTo(0, 0);
-  }).catch(() => {
+  }).catch(e => {
     btn.disabled = false; btn.textContent = L('送出', 'Send');
-    document.getElementById('msg').textContent = L('送出失敗，請檢查網路再按一次', 'Could not send; check your connection and tap again');
+    document.getElementById('msg').textContent = e.shown || L('送出失敗，請檢查網路再按一次', 'Could not send; check your connection and tap again');
   });
 }
 render();

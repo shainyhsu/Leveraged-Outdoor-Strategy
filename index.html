@@ -584,7 +584,7 @@ const CONDS = {
   c4: { name: '無手機訊號', en: 'No phone signal', add: { aid: 0.5, plan: 0.5 } },
   c5: { name: '天氣不穩（鋒面、午後雷雨）', en: 'Unstable weather (fronts, afternoon storms)', add: { wx: 0.5, plan: 0.5 } }
 };
-/* 中文標籤必須與 Google 表單「今日狀態」選項文字相同 */
+/* 今日狀態：鍵值與 member.html、apps-script/Code.gs 相同 */
 const FLAGS = {
   s1: '睡眠 <5 小時/疲勞',
   s2: '生病/受傷',
@@ -594,7 +594,7 @@ const FLAGS = {
   s8: '特殊病史'
 };
 const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
-/* 勾選後必須寫說明；col 必須與 Google 表單題目相同 */
+/* 勾選後必須寫說明；col 是領隊頁顯示的欄名 */
 const FLAG_NOTE = {
   s2: { col: '生病/受傷說明', en: 'Illness / injury details', ph: '什麼狀況、何時開始、目前用藥或處置', phEn: 'What it is, since when, current medication or treatment' },
   s6: { col: '過敏史說明', en: 'Allergy details', ph: '對什麼過敏、反應多嚴重、隨身藥物（如腎上腺素筆）', phEn: 'What you react to, how badly, medication you carry (e.g. EpiPen)' },
@@ -1085,12 +1085,17 @@ async function skShort(code, base) {
 }
 
 
-/* ===== Google 表單彙整 ===== */
-const FORM = {
-  view: 'https://docs.google.com/forms/d/e/1FAIpQLSfmhwnlAEK_BEw280NqN4rx0qN4WSSRlAH3VRQ9fBlRBbJq2g/viewform',
-  codeEntry: 'entry.' + parseInt('5fe8a856', 16),
-  sheetId: '1k4vJ0GDphzLMJ8kGAgYe783IDb14mRMBJB8B0oQeyR8'   // 表單回覆試算表（知道連結者可檢視）
-};
+/* ===== 隊員自評回覆：經 Apps Script 後端存取（apps-script/Code.gs），試算表不公開 ===== */
+const API = 'APPS_SCRIPT_URL';
+const API_ON = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(API);
+function apiPost(o) {
+  return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+}
+async function sha256hex(t) {
+  const b = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)));
+  return Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+}
 function newTripCode() {
   const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = '';
   c += A[Math.floor(Math.random() * 24)];  // 首字一定是英文字母，避免試算表把代碼當數字
@@ -1098,50 +1103,28 @@ function newTripCode() {
   return c;
 }
 function formLink(code) { return 'https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/member.html?c=' + encodeURIComponent(code) + (LANG === 'en' ? '&lang=en' : ''); }
-function parseCSV(text) {
-  const rows = []; let row = [], f = '', q = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (q) { if (ch === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += ch; }
-    else if (ch === '"') q = true;
-    else if (ch === ',') { row.push(f); f = ''; }
-    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
-    else f += ch;
-  }
-  if (f !== '' || row.length) { row.push(f); rows.push(row); }
-  return rows.filter(r => r.some(x => x.trim() !== ''));
-}
-/* 依行程代碼彙整表單回覆：同名以最後一筆為準，只寫入本人評分與今日狀態 */
-function mergeFormRows(st, rows, code) {
-  if (!rows.length) return { added: 0, updated: 0, n: 0 };
-  const head = rows[0].map(h => h.trim());
-  const col = t => head.findIndex(h => h === t || h.indexOf(t) === 0);
-  const iCode = col('行程代碼'), iName = col('姓名'), iRole = col('角色'), iFlag = col('今日狀態');
-  const iNote = {}; Object.keys(FLAG_NOTE).forEach(k => { iNote[k] = col(FLAG_NOTE[k].col); });
-  const iAx = {}; SCORED.forEach(a => { iAx[a] = col(AXES[a].full); if (iAx[a] < 0 && a === 'foot') iAx[a] = col('踩踏與地形'); });
-  const latest = new Map();
-  rows.slice(1).forEach(r => {
-    if (iCode < 0 || String(r[iCode] || '').trim().toUpperCase() !== code) return;
-    const name = String(r[iName] || '').trim().slice(0, 30);
-    if (name) latest.set(name, r);
-  });
-  let added = 0, updated = 0;
-  latest.forEach((r, name) => {
+/* 彙整後端回覆（每人最新一筆）：只寫入本人評分與今日狀態 */
+function mergeReplies(st, replies) {
+  let added = 0, updated = 0, n = 0;
+  (Array.isArray(replies) ? replies : []).forEach(r => {
+    const name = String((r && r.name) || '').trim().slice(0, 30);
+    if (!name) return;
+    n++;
     let m = st.members.find(x => !x.leader && x.name.trim() === name);
-    if (!m) { m = blankMember(name, String((iRole >= 0 && r[iRole]) || '').trim().slice(0, 30)); st.members.push(m); added++; } else updated++;
-    SCORED.forEach(a => { const v = parseFloat(r[iAx[a]]); if (isScore(v)) m.self[a] = v; });
-    const fl = iFlag >= 0 ? String(r[iFlag] || '') : '';
+    if (!m) { m = blankMember(name, String(r.role || '').trim().slice(0, 30)); st.members.push(m); added++; } else updated++;
+    SCORED.forEach(a => { const v = Number(r.v && r.v[a]); if (isScore(v)) m.self[a] = v; });
+    const fl = Array.isArray(r.flags) ? r.flags : [];
     m.flags = {};
-    Object.keys(FLAGS).forEach(k => { if (fl.indexOf(FLAGS[k]) >= 0) m.flags[k] = true; });
+    Object.keys(FLAGS).forEach(k => { if (fl.indexOf(k) >= 0) m.flags[k] = true; });
     m.notes = {};
-    Object.keys(FLAG_NOTE).forEach(k => { const t = iNote[k] >= 0 ? String(r[iNote[k]] || '').trim() : ''; if (t) m.notes[k] = t.slice(0, NOTE_MAX); });
+    Object.keys(FLAG_NOTE).forEach(k => { const t = String((r.notes && r.notes[k]) || '').trim(); if (t) m.notes[k] = t.slice(0, NOTE_MAX); });
   });
-  return { added, updated, n: latest.size };
+  return { added, updated, n };
 }
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { AXES, IND, TEAM, TEAM_SKILL, SCORED, ALL, TEMPLATES, CONDS, FLAGS, FLAG_NOTE, PLAN_ITEMS, KIT_ITEMS, LEVERS,
-    compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, packState, unpackState, mergeFormRows, parseCSV,
+    compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, packState, unpackState, mergeReplies,
     effScore, anchorLines, fmt, fmtSigned, setLang: x => { LANG = x; } };
 }
 
@@ -1511,17 +1494,38 @@ if (typeof module !== 'undefined' && module.exports) {
       '<div class="row-btns"><button type="button" class="btn" data-act="form-share">' + L('分享表單連結', 'Share form link') + '</button><button type="button" class="btn ghost" data-act="form-copy">' + L('複製連結', 'Copy link') + '</button>' +
       '<button type="button" class="btn ghost" data-act="form-pull">' + L('抓取表單回覆', 'Pull replies') + '</button><span class="msg" id="form-msg" role="status">' + esc(ui.formMsg || '') + '</span></div>';
   }
-  function pullForm(silent) {
+  /* 領隊金鑰只存在這台裝置（localStorage），不放進分享連結 */
+  const KEY_LS = 'chouma-leader-keys';
+  function keyFor(code) { try { return (JSON.parse(localStorage.getItem(KEY_LS) || '{}') || {})[code] || ''; } catch (e) { return ''; } }
+  function keySet(code, k) { try { const o = JSON.parse(localStorage.getItem(KEY_LS) || '{}') || {}; o[code] = k; localStorage.setItem(KEY_LS, JSON.stringify(o)); } catch (e) { /* 無法儲存：本次仍可用 */ } }
+  /* 登記行程代碼：回傳金鑰；代碼已被別人登記時回傳空字串 */
+  async function ensureTrip(code, force) {
+    let k = keyFor(code);
+    if (k && !force) return k;
+    if (!k) { k = skRid(24); }
+    const r = await apiPost({ a: 'create', code, keyHash: await sha256hex(k) });
+    if (r.ok) { keySet(code, k); return k; }
+    if (r.err === 'taken') return '';
+    throw new Error(r.err || 'create');
+  }
+  async function pullForm(silent) {
     const msg = () => { const el = $('#form-msg'); if (el) el.textContent = ui.formMsg; };
-    if (!FORM.sheetId) { if (!silent) { ui.formMsg = L('回覆試算表尚未設定', 'No response sheet set'); msg(); } return; }
-    if (!silent) { ui.formMsg = L('抓取中…', 'Pulling…'); msg(); }
-    const url = 'https://docs.google.com/spreadsheets/d/' + FORM.sheetId + '/gviz/tq?tqx=out:csv&_=' + Date.now();
-    fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
-      const r = mergeFormRows(st, parseCSV(t), st.trip.code);
-      if (r.n) { st.example = false; ui.formMsg = L('已彙整 ' + r.n + ' 位（新增 ' + r.added + '、更新 ' + r.updated + '）', 'Merged ' + r.n + ' (' + r.added + ' new, ' + r.updated + ' updated)'); refresh({ members: true }); }
-      else ui.formMsg = L('這條連結還沒有回覆', 'No replies on this link yet');
-      msg();
-    }).catch(() => { ui.formMsg = L('抓取失敗，請稍後再試', 'Pull failed; try again later'); msg(); });
+    const say = t => { ui.formMsg = t; msg(); };
+    if (!API_ON) { if (!silent) say(L('回覆後端尚未設定', 'Reply backend not set')); return; }
+    const code = st.trip.code;
+    if (!code) return;
+    if (!silent) say(L('抓取中…', 'Pulling…'));
+    try {
+      let k = await ensureTrip(code);
+      if (!k) { say(L('這條連結無法在此裝置讀取回覆，請按「換一條新連結」', 'Replies to this link cannot be read on this device; tap "Make a new link"')); return; }
+      let r = await apiPost({ a: 'pull', code, key: k });
+      if (!r.ok && r.err === 'denied') { k = await ensureTrip(code, true); if (k) r = await apiPost({ a: 'pull', code, key: k }); }
+      if (!r.ok) throw new Error(r.err);
+      if (code !== st.trip.code) return;
+      const m = mergeReplies(st, r.replies);
+      if (m.n) { st.example = false; say(L('已彙整 ' + m.n + ' 位（新增 ' + m.added + '、更新 ' + m.updated + '）', 'Merged ' + m.n + ' (' + m.added + ' new, ' + m.updated + ' updated)')); refresh({ members: true }); }
+      else if (!silent) say(L('這條連結還沒有回覆', 'No replies on this link yet'));
+    } catch (e) { if (!silent) say(L('抓取失敗，請稍後再試', 'Pull failed; try again later')); }
   }
 
   /* ---------- ⑤ 評估脆弱點、⑥ 分享 ---------- */
@@ -2135,7 +2139,7 @@ if (typeof module !== 'undefined' && module.exports) {
       st.members = st.members.filter(m => m.id !== id || m.leader);
       ui.delAsk = null; refresh({ members: true });
     } else if (act === 'newcode') {
-      st.trip.code = newTripCode(); ui.formMsg = L('已換新連結，舊連結的回覆不再彙整', 'New link made; replies to the old link are no longer pulled'); saveState(); renderIntake();
+      st.trip.code = newTripCode(); ui.formMsg = L('已換新連結，舊連結的回覆不再彙整', 'New link made; replies to the old link are no longer pulled'); saveState(); renderIntake(); pullForm(true);
     } else if (act === 'form-copy' || act === 'form-share') {
       const link = formLink(st.trip.code), el = $('#form-msg');
       const done = t => { ui.formMsg = t; if (el) el.textContent = t; };
