@@ -588,22 +588,24 @@ const CONDS = {
 /* 狀態：鍵值與 member.html、apps-script/Code.gs 相同。今日狀態計分；病史不計分，高山症史只在高山路線計分 */
 const FLAGS = {
   s1: '睡眠 <5 小時/疲勞',
-  s2: '生病/受傷',
+  s2: '目前生病或受傷（會影響這趟行動）',
   s4: '消化狀態',
   s9: '生理期不適',
   s6: '過敏史',
   s7: '高山症史',
-  s8: '特殊病史'
+  s8: '病史、近期手術或傷病（已恢復）'
 };
-const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s9: 'Period discomfort', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
+const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Currently ill or injured (affects this trip)', s4: 'Digestion', s9: 'Period discomfort', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Medical history, recent surgery or injury (recovered)' };
 const TODAY_FLAGS = ['s1', 's2', 's4', 's9'], HIST_FLAGS = ['s6', 's7', 's8'];
 /* 勾選後的說明：req 為必填；col 是領隊頁顯示的欄名 */
 const FLAG_NOTE = {
   s2: { col: '狀況與隊友該怎麼做', en: 'What it is and what teammates should do', ph: '什麼狀況、目前怎麼處理、隊友要注意或協助什麼', phEn: 'What it is, how you are handling it, what teammates should watch for or help with', req: true },
   s9: { col: '需要的照應（選填）', en: 'Help you would like (optional)', ph: '例：需要多休息、請幫忙分擔重量、我有帶止痛藥', phEn: 'e.g. more rest stops, help with weight, I carry painkillers', req: false },
   s6: { col: '過敏：隊友該怎麼做', en: 'Allergy: what teammates should do', ph: '對什麼過敏、發作時的樣子、藥放在哪裡、隊友該怎麼做（例：腎上腺素筆打大腿外側）', phEn: 'What you react to, what it looks like, where your medication is, what teammates should do (e.g. EpiPen into the outer thigh)', req: true },
-  s8: { col: '病史：隊友該怎麼做', en: 'Medical history: what teammates should do', ph: '隊友需要知道的狀況、藥放在哪裡、發作時隊友該怎麼做', phEn: 'What teammates need to know, where your medication is, what they should do if it flares up', req: true }
+  s8: { col: '病史或近期手術：隊友該怎麼做', en: 'History or recent surgery: what teammates should do', ph: '例：11/1 闌尾炎手術，已恢復；背包腰帶別勒在傷口上，腹痛就告訴領隊', phEn: 'e.g. appendix surgery on Nov 1, recovered; keep the hip belt off the scar, tell the leader if the belly hurts', req: true }
 };
+/* 不用勾選的選填說明，不計分 */
+const GEN_NOTE = { col: '其他想讓隊友知道的事', en: 'Anything else teammates should know', ph: '勾選項目涵蓋不到的情況都可以寫在這裡', phEn: 'Anything the boxes above do not cover' };
 const NOTE_MAX = 300;
 const PLAN_ITEMS = [
   { id: 'p1', text: '登山計畫書完成，入山／入園申請已核准', en: 'Trip plan written; entry permits approved' },
@@ -656,16 +658,19 @@ const axAnch = a => L(AXES[a].anchors, AXES[a].anchorsEn);
 const tplName = k => L(TEMPLATES[k].name, TEMPLATES[k].en);
 const condName = k => L(CONDS[k].name, CONDS[k].en);
 const flagName = k => L(FLAGS[k], FLAGS_EN[k]);
-const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => FLAG_NOTE[k].req && m.flags && m.flags[k] && !String((m.notes && m.notes[k]) || '').trim());
+/* 狀態以本人勾選為準；領隊勾選或取消會存在 lflags，重新抓取時保留 */
+const flagOn = (m, k) => (m.lflags && k in m.lflags) ? !!m.lflags[k] : !!(m.flags && m.flags[k]);
+const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => FLAG_NOTE[k].req && m.flags && m.flags[k] && flagOn(m, k) && !String((m.notes && m.notes[k]) || '').trim());
 /* 計分的狀態數：今日狀態＋高山路線的高山症史＋分享連結帶來的匿名件數 fc */
-const scoredFlags = (m, tpl) => TODAY_FLAGS.filter(k => m.flags && m.flags[k]).length + (m.flags && m.flags.s7 && TEMPLATES[tpl] && TEMPLATES[tpl].high ? 1 : 0) + (m.fc || 0);
-const noteTexts = m => Object.keys(FLAG_NOTE).filter(k => m.flags && m.flags[k] && String((m.notes && m.notes[k]) || '').trim()).map(k => flagName(k) + L('：', ': ') + m.notes[k].trim());
+const scoredFlags = (m, tpl) => TODAY_FLAGS.filter(k => flagOn(m, k)).length + (flagOn(m, 's7') && TEMPLATES[tpl] && TEMPLATES[tpl].high ? 1 : 0) + (m.fc || 0);
+const noteTexts = m => Object.keys(FLAG_NOTE).filter(k => flagOn(m, k) && String((m.notes && m.notes[k]) || '').trim()).map(k => flagName(k) + L('：', ': ') + m.notes[k].trim())
+  .concat(String((m.notes && m.notes.s0) || '').trim() ? [L(GEN_NOTE.col, GEN_NOTE.en) + L('：', ': ') + m.notes.s0.trim()] : []);
 const itemText = i => L(i.text, i.en);
 const lvName = x => L(x.name, x.en), lvDesc = x => L(x.desc, x.descEn), lvPre = x => L(x.prereqText, x.prereqEn), lvPair = x => L(x.pairText, x.pairEn);
 const COLOR_WORD = c => L({ green: '綠', amber: '黃', red: '紅' }[c], { green: 'G', amber: 'A', red: 'R' }[c]);
 const COLOR_LONG = c => L({ green: '綠', amber: '黃', red: '紅' }[c], { green: 'Green', amber: 'Amber', red: 'Red' }[c]);
-const VERDICT = c => L({ green: '可出發', amber: '可出發，先處理標示項目', red: '不出發，或改計畫後重評' }[c],
-  { green: 'Go', amber: 'Go after fixing flagged items', red: 'No go, or change the plan and reassess' }[c]);
+const VERDICT = c => L({ green: '可出發', amber: '可出發，先確認標示項目', red: '不出發，或改計畫後重評' }[c],
+  { green: 'Go', amber: 'Go, after checking the flagged items', red: 'No go, or change the plan and reassess' }[c]);
 const SEP = () => L('、', ', ');
 
 const round5 = x => Math.round(x * 2) / 2;
@@ -775,7 +780,8 @@ function sanitizeState(raw) {
       if (rm.lead && isScore(rm.lead[a])) m.lead[a] = rm.lead[a];
     });
     Object.keys(FLAGS).forEach(k => { if (rm.flags && rm.flags[k]) m.flags[k] = true; });
-    Object.keys(FLAG_NOTE).forEach(k => { const t = rm.notes && rm.notes[k]; if (t) m.notes[k] = String(t).slice(0, NOTE_MAX); });
+    Object.keys(FLAG_NOTE).concat(['s0']).forEach(k => { const t = rm.notes && rm.notes[k]; if (t) m.notes[k] = String(t).slice(0, NOTE_MAX); });
+    if (rm.lflags && typeof rm.lflags === 'object') Object.keys(FLAGS).forEach(k => { if (k in rm.lflags) (m.lflags = m.lflags || {})[k] = !!rm.lflags[k]; });
     if (Number.isInteger(rm.fc) && rm.fc > 0 && rm.fc <= 5) m.fc = rm.fc;
     if (rm.minor) { m.minor = true; m.guardian = String(rm.guardian || '').slice(0, 30); m.guardianRel = String(rm.guardianRel || '').slice(0, 20); }
     if (raw.v !== 2 && rm.flags && rm.flags.s4) m.flags.s1 = true;  // 舊版「近期累積疲勞」併入睡眠/疲勞
@@ -1014,7 +1020,7 @@ function shareCopy(st) {
   const c = JSON.parse(JSON.stringify(st));
   c.members.forEach(m => {
     const n = scoredFlags(m, st.template);
-    m.flags = {}; m.notes = {}; delete m.minor; delete m.guardian; delete m.guardianRel;
+    m.flags = {}; m.notes = {}; delete m.lflags; delete m.minor; delete m.guardian; delete m.guardianRel;
     if (n) m.fc = Math.min(5, n); else delete m.fc;
   });
   return c;
@@ -1124,8 +1130,13 @@ function mergeReplies(st, replies) {
     const fl = Array.isArray(r.flags) ? r.flags : [];
     m.flags = {};
     Object.keys(FLAGS).forEach(k => { if (fl.indexOf(k) >= 0) m.flags[k] = true; });
+    const old = m.notes || {};
     m.notes = {};
-    Object.keys(FLAG_NOTE).forEach(k => { const t = String((r.notes && r.notes[k]) || '').trim(); if (t) m.notes[k] = t.slice(0, NOTE_MAX); });
+    Object.keys(FLAG_NOTE).concat(['s0']).forEach(k => {
+      const t = String((r.notes && r.notes[k]) || '').trim();
+      if (t) m.notes[k] = t.slice(0, NOTE_MAX);
+      else if (m.lflags && m.lflags[k] && old[k]) m.notes[k] = old[k];   // 領隊勾的狀態，保留領隊寫的說明
+    });
     delete m.minor; delete m.guardian; delete m.guardianRel; delete m.fc;
     if (r.minor) { m.minor = true; m.guardian = String(r.guardian || '').slice(0, 30); m.guardianRel = String(r.guardianRel || '').slice(0, 20); }
   });
@@ -1380,7 +1391,13 @@ if (typeof module !== 'undefined' && module.exports) {
       (clr ? '<button type="button" class="linkbtn" id="clr-' + m.id + '-' + a + '" data-act="clear" data-m="' + m.id + '" data-a="' + a + '">' + clr + '</button>' : '') + '</div>' +
       '<div class="sanchor" id="anc-' + m.id + '-' + a + '">' + anchorLines(a, v).map(esc).join('<br>') + '</div></div>';
   }
-  const flagBox = (m, k) => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>';
+  const flagBox = (m, k) => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (flagOn(m, k) ? ' checked' : '') + '><span>' + esc(flagName(k)) +
+    (m.lflags && k in m.lflags ? '<span class="linked fixtag">' + L('領隊修正（本人' + (m.flags && m.flags[k] ? '有勾' : '未勾') + '）', 'leader-corrected (self ' + (m.flags && m.flags[k] ? 'ticked' : 'not ticked') + ')') + '</span>' : '') + '</span></label>';
+  function genNoteBox(m) {
+    const id = 'fn-' + m.id + '-s0';
+    return '<label class="f fnote" for="' + id + '">' + esc(L(GEN_NOTE.col, GEN_NOTE.en)) + L('（選填，不計分）', ' (optional, not scored)') +
+      '<textarea id="' + id + '" rows="2" maxlength="' + NOTE_MAX + '" data-m="' + m.id + '" data-fnote="s0" placeholder="' + esc(L(GEN_NOTE.ph, GEN_NOTE.phEn)) + '">' + esc((m.notes && m.notes.s0) || '') + '</textarea></label>';
+  }
   function delCtl(m) {
     if (m.leader) return '';
     if (ui.delAsk === m.id) return '<span class="mdel-ask">' + L('刪除？', 'Delete?') + '<button type="button" class="btn danger" id="dy-' + m.id + '" data-act="del-yes" data-m="' + m.id + '">' + L('確認刪除', 'Delete') + '</button><button type="button" class="btn ghost" id="dn-' + m.id + '" data-act="del-no">' + L('取消', 'Cancel') + '</button></span>';
@@ -1399,15 +1416,15 @@ if (typeof module !== 'undefined' && module.exports) {
     h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Individual readiness | everyone must clear the hard minimum') + '</p>' + IND.map(a => sliderRow(m, a)).join('') +
       '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a)).join('') +
       '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、技術、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, technical and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
-      TODAY_FLAGS.map(k => flagBox(m, k)).join('') + '</div>' + TODAY_FLAGS.filter(k => FLAG_NOTE[k] && m.flags[k]).map(k => noteBox(m, k)).join('') +
+      TODAY_FLAGS.map(k => flagBox(m, k)).join('') + '</div>' + TODAY_FLAGS.filter(k => FLAG_NOTE[k] && flagOn(m, k)).map(k => noteBox(m, k)).join('') +
       '<p class="gtitle">' + L('病史｜不計分；高山症史只在高山路線計分', 'History | not scored; altitude sickness counts on high routes only') + '</p><div class="checks">' +
-      HIST_FLAGS.map(k => flagBox(m, k)).join('') + '</div>' + HIST_FLAGS.filter(k => FLAG_NOTE[k] && m.flags[k]).map(k => noteBox(m, k)).join('') +
+      HIST_FLAGS.map(k => flagBox(m, k)).join('') + '</div>' + HIST_FLAGS.filter(k => FLAG_NOTE[k] && flagOn(m, k)).map(k => noteBox(m, k)).join('') + genNoteBox(m) +
       (m.fc ? '<p class="hint">' + L('分享連結帶來 ' + m.fc + ' 項計分狀態（內容不隨連結傳送）', m.fc + ' scored status item(s) came with the shared link (details are not shared)') + '</p>' : '');
     h += '<button type="button" class="foldend sm" data-act="fold-up" data-t="card-' + m.id + '"><span class="chev up" aria-hidden="true"></span><span>' + L('收合這位隊員', 'Collapse this member') + '</span></button>';
     return h + '</div></details>';
   }
   function noteBox(m, k) {
-    const t = (m.notes && m.notes[k]) || '', req = FLAG_NOTE[k].req, bad = req && !t.trim(), id = 'fn-' + m.id + '-' + k;
+    const t = (m.notes && m.notes[k]) || '', req = FLAG_NOTE[k].req && !!(m.flags && m.flags[k]), bad = req && !t.trim(), id = 'fn-' + m.id + '-' + k;
     return '<label class="f fnote' + (bad ? ' bad' : '') + '" for="' + id + '" id="fnl-' + m.id + '-' + k + '">' + esc(L(FLAG_NOTE[k].col, FLAG_NOTE[k].en)) + (req ? L('（必填）', ' (required)') : '') +
       '<textarea id="' + id + '" rows="2" maxlength="' + NOTE_MAX + '" data-m="' + m.id + '" data-fnote="' + k + '" placeholder="' + esc(L(FLAG_NOTE[k].ph, FLAG_NOTE[k].phEn)) + '">' + esc(t) + '</textarea>' +
       '<span class="ferr">' + L('勾了這項就要寫說明', 'Details are required when this is ticked') + '</span></label>';
@@ -1758,7 +1775,7 @@ if (typeof module !== 'undefined' && module.exports) {
     function secNotes() {
       let g = head(L('隊員重點', 'Member notes')), y = HEAD + 80;
       res.memberRes.forEach(r => {
-        const m = r.m, fl = Object.keys(FLAGS).filter(k => m.flags && m.flags[k]).map(flagName);
+        const m = r.m, fl = Object.keys(FLAGS).filter(k => flagOn(m, k)).map(flagName);
         const txt = memberNotes(r) + (fl.length ? L('｜狀態：', ' | status: ') + fl.join(L('、', ', ')) : '');
         g += dot(14, y - 13, COL[r.color], 11) + T(40, y, clip(m.name || L('未命名', 'Unnamed'), 34, 360), 34, C.ink, ' font-weight="700"');
         wrap(txt, 32, FW - 420).forEach(l => { g += T(420, y, l, 32, r.color === 'green' ? C.muted : C.ink); y += 48; });
@@ -2102,7 +2119,7 @@ if (typeof module !== 'undefined' && module.exports) {
       m.notes = m.notes || {};
       m.notes[t.dataset.fnote] = t.value.slice(0, NOTE_MAX);
       const lab = document.getElementById('fnl-' + m.id + '-' + t.dataset.fnote);
-      if (lab) lab.classList.toggle('bad', !t.value.trim());
+      if (lab) lab.classList.toggle('bad', noteMissing(m).indexOf(t.dataset.fnote) >= 0);
       refresh();
       return;
     }
@@ -2135,7 +2152,7 @@ if (typeof module !== 'undefined' && module.exports) {
     if (t.dataset.plan) { st.plan[t.dataset.plan] = t.checked; refresh(); return; }
     if (t.dataset.kit) { st.kit[t.dataset.kit] = t.checked; refresh(); return; }
     if (t.dataset.lever) { st.levers[t.dataset.lever] = t.checked; refresh(); return; }
-    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { m.flags[t.dataset.flag] = t.checked; refresh({ members: !!FLAG_NOTE[t.dataset.flag] }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
+    if (t.dataset.flag) { const m = findM(t.dataset.m); if (m) { const k = t.dataset.flag; m.lflags = m.lflags || {}; if (t.checked === !!(m.flags && m.flags[k])) delete m.lflags[k]; else m.lflags[k] = t.checked; if (!Object.keys(m.lflags).length) delete m.lflags; refresh({ members: true }); if (t.checked && FLAG_NOTE[t.dataset.flag]) { const ta = document.getElementById('fn-' + m.id + '-' + t.dataset.flag); if (ta) ta.focus(); } } return; }
     if (t.id === 'openfile' && t.files && t.files[0]) {
       t.files[0].text().then(txt => {
         st = sanitizeState(JSON.parse(txt)); st.example = false;

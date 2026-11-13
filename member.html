@@ -127,21 +127,22 @@ const TEAM_SKILL = ['nav', 'wx', 'aid', 'crm', 'pace'];
 const SCORED = IND.concat(TEAM_SKILL);
 const FLAGS = {
   s1: '睡眠 <5 小時/疲勞',
-  s2: '生病/受傷',
+  s2: '目前生病或受傷（會影響這趟行動）',
   s4: '消化狀態',
   s9: '生理期不適',
   s6: '過敏史',
   s7: '高山症史',
-  s8: '特殊病史'
+  s8: '病史、近期手術或傷病（已恢復）'
 };
-const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s9: 'Period discomfort', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
+const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Currently ill or injured (affects this trip)', s4: 'Digestion', s9: 'Period discomfort', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Medical history, recent surgery or injury (recovered)' };
 const TODAY_FLAGS = ['s1', 's2', 's4', 's9'], HIST_FLAGS = ['s6', 's7', 's8'];
 const FLAG_NOTE = {
   s2: { zh: '狀況與隊友該怎麼做', en: 'What it is and what teammates should do', ph: '什麼狀況、目前怎麼處理、隊友要注意或協助什麼', phEn: 'What it is, how you are handling it, what teammates should watch for or help with', req: true },
   s9: { zh: '需要的照應', en: 'Help you would like', ph: '例：需要多休息、請幫忙分擔重量、我有帶止痛藥', phEn: 'e.g. more rest stops, help with weight, I carry painkillers', req: false },
   s6: { zh: '過敏：隊友該怎麼做', en: 'Allergy: what teammates should do', ph: '對什麼過敏、發作時的樣子、藥放在哪裡、隊友該怎麼做（例：腎上腺素筆打大腿外側）', phEn: 'What you react to, what it looks like, where your medication is, what teammates should do (e.g. EpiPen into the outer thigh)', req: true },
-  s8: { zh: '病史：隊友該怎麼做', en: 'Medical history: what teammates should do', ph: '隊友需要知道的狀況、藥放在哪裡、發作時隊友該怎麼做', phEn: 'What teammates need to know, where your medication is, what they should do if it flares up', req: true }
+  s8: { zh: '病史或近期手術：隊友該怎麼做', en: 'History or recent surgery: what teammates should do', ph: '例：11/1 闌尾炎手術，已恢復；背包腰帶別勒在傷口上，腹痛就告訴領隊', phEn: 'e.g. appendix surgery on Nov 1, recovered; keep the hip belt off the scar, tell the leader if the belly hurts', req: true }
 };
+const GEN_NOTE = { zh: '其他想讓隊友知道的事', en: 'Anything else teammates should know', ph: '勾選項目涵蓋不到的情況都可以寫在這裡', phEn: 'Anything the boxes above do not cover' };
 /* 回覆經 Apps Script 後端寫入不公開的試算表（apps-script/Code.gs） */
 const API = 'https://script.google.com/macros/s/AKfycbxlqEShSEJUMfyNf-AD8BcQ4PcSvr0TKO9JVVOcoOb9M1-e0guv9uH4OAPRBdzkEOfo/exec';
 const qs = new URLSearchParams(location.search);
@@ -225,7 +226,8 @@ function teamHTML() {
     const fl = Array.isArray(m.flags) ? m.flags : [];
     const chips = TODAY_FLAGS.filter(k => fl.indexOf(k) >= 0).map(k => '<span class="chip today">' + esc(flagName(k)) + '</span>')
       .concat(HIST_FLAGS.filter(k => fl.indexOf(k) >= 0).map(k => '<span class="chip">' + esc(flagName(k)) + '</span>')).join('');
-    const notes = Object.keys(FLAG_NOTE).filter(k => m.notes && m.notes[k]).map(k => '<p class="mnote"><b>' + esc(L(FLAG_NOTE[k].zh, FLAG_NOTE[k].en)) + L('：', ': ') + '</b>' + esc(m.notes[k]) + '</p>').join('');
+    const notes = Object.keys(FLAG_NOTE).filter(k => m.notes && m.notes[k]).map(k => '<p class="mnote"><b>' + esc(L(FLAG_NOTE[k].zh, FLAG_NOTE[k].en)) + L('：', ': ') + '</b>' + esc(m.notes[k]) + '</p>').join('') +
+      (m.notes && m.notes.s0 ? '<p class="mnote"><b>' + esc(L(GEN_NOTE.zh, GEN_NOTE.en)) + L('：', ': ') + '</b>' + esc(m.notes.s0) + '</p>' : '');
     const grid = SCORED.map(a => '<span>' + esc(LANG === 'en' ? AXES[a].shortEn : AXES[a].short) + ' <b>' + (m.v && m.v[a] != null ? fmt(m.v[a]) : '—') + '</b></span>').join('');
     return '<div class="mcard"><span class="mname">' + esc(m.name) + '</span>' + (m.role ? '<span class="mrole">' + esc(m.role) + '</span>' : '') +
       (chips ? '<div class="chips">' + chips + '</div>' : '') + notes + '<div class="sgrid">' + grid + '</div></div>';
@@ -253,6 +255,8 @@ function render() {
     TODAY_FLAGS.map(flagRow).join('') +
     '<p class="gtitle">' + L('病史', 'Medical history') + '</p><p class="hint">' + L('有的請勾選；過敏史、特殊病史要寫「隊友該怎麼做」', 'Tick any that apply; for allergy or medical history, say what teammates should do') + '</p>' +
     HIST_FLAGS.map(flagRow).join('') + '</div>' +
+    '<div class="card"><label class="f" for="fn-s0">' + esc(L(GEN_NOTE.zh, GEN_NOTE.en)) + L('（選填，不計分）', ' (optional, not scored)') + '</label>' +
+    '<textarea id="fn-s0" data-fnote="s0" rows="3" maxlength="300" style="width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text)" placeholder="' + esc(L(GEN_NOTE.ph, GEN_NOTE.phEn)) + '">' + esc(st.notes.s0 || '') + '</textarea></div>' +
     '<button type="button" class="go" id="send">' + L('同意並送出', 'Agree and send') + '</button><p class="err" id="msg" role="status"></p>';
 }
 function setVal(inp) {
@@ -323,6 +327,7 @@ function send(btn) {
   }
   const flags = Object.keys(FLAGS).filter(k => st.flags[k]);
   const notes = {}; Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k] && String(st.notes[k] || '').trim()) notes[k] = String(st.notes[k]).trim().slice(0, 300); });
+  if (String(st.notes.s0 || '').trim()) notes.s0 = String(st.notes.s0).trim().slice(0, 300);
   const body = { a: 'submit', code: CODE, name: st.name.trim().slice(0, 30), role: st.role.trim().slice(0, 30), v: st.v, flags, notes, consent: true,
     minor: st.minor, guardian: st.minor ? st.guardian.trim().slice(0, 30) : '', guardianRel: st.minor ? st.guardianRel.trim().slice(0, 20) : '' };
   btn.disabled = true; btn.textContent = L('送出中…', 'Sending…');
