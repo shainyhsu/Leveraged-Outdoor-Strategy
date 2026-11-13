@@ -15,7 +15,7 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 ## Workflow
 
 1. Leader sets trip demand (pick a template, then fine-tune)
-2. The leader shares a Google Form link; each member rates themselves there, and the page pulls the responses in by a trip code the link fills in (or the leader enters members by hand)
+2. The leader shares the member form link; each member rates themselves there, and the page pulls the replies in by a trip code the link fills in (or the leader enters members by hand)
 3. The leader rates themselves (leader rating only) and reviews each member; a member's leader rating follows their self rating until the leader changes it. Then check plan/team gear and leverage items
 4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
@@ -35,12 +35,13 @@ Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profilin
 
 ## Tech
 
-Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-assessments go to the leader's Google Form responses sheet. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-ratings go through a Google Apps Script backend (apps-script/Code.gs) into a private sheet. Only the device that made the trip link holds the leader key that reads them back; replies are deleted after 120 days. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
 
 ## Version history
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V26 | 2026-11-13 22:08 | Member self-ratings now go through an Apps Script backend into a private sheet instead of a publicly readable Google Form sheet; only the device that made the trip link can read the replies back, and replies are deleted after 120 days
 - V25 | 2026-11-13 16:58 | Bigger, brighter open/close arrows: a solid blue round button on every section and member card. Trip needs, Ratings and each member card get a Collapse button at the bottom, so you do not have to scroll back up after filling them in. Blocks inside an open section are spaced apart again.
 - V24 | 2026-11-13 15:48 | Only the two radar charts start open; every other section starts collapsed and the page remembers what you open. A collapsed section shows its own icon, a status stripe on the left and solid red or amber badges, so it can be told apart at a glance. The verdict link and the jump bar open what they jump to; Collapse all keeps the radar charts open.
 - V23 | 2026-11-13 12:50 | Sections ① to ⑥ start collapsed (the page remembers what you opened), with Collapse all and Expand all buttons. A collapsed section shows its key facts in a colored badge: red needs fixing, amber is a heads-up, green is fine.
