@@ -10,7 +10,7 @@
  * 動作一律 POST，內容為 JSON（Content-Type: text/plain，避免 CORS 預檢）：
  *   create { a, code, keyHash, name, start, end }   領隊登記或更新行程（先登記者擁有；end 必填）
  *   info   { a, code }                               隊員頁取行程名稱與日期（不含個資）
- *   submit { a, code, name, role, v, flags, notes, consent, minor, guardian, guardianRel }
+ *   submit { a, code, name, role, v, flags, notes(含不需勾選的 s0), consent, minor, guardian, guardianRel }
  *                                                    隊員送出；須勾同意；回傳本人讀取全隊用的 token
  *   pull   { a, code, key }                          領隊以金鑰取回該行程每人最新一筆（含法定代理人）
  *   team   { a, code, token }                        已送出的隊員取回全隊照應清單
@@ -30,9 +30,9 @@ var MAX_PER_TRIP = 200;
 var LIMITS = { submitTrip: 30, submitAll: 300, create: 60, pullTrip: 120, teamTrip: 240, info: 600 };  // 每 10 分鐘
 var T_RESP = 'replies', T_TRIPS = 'trips2';
 var H_RESP = ['time', 'code', 'name', 'role'].concat(SCORED, ['flags'], NOTES.map(function (k) { return 'note_' + k; }),
-  ['minor', 'guardian', 'guardianRel', 'tokenHash']);
+  ['minor', 'guardian', 'guardianRel', 'tokenHash', 'note_s0']);   // 新欄位一律加在最後，舊資料列才對得上
 var H_TRIPS = ['code', 'keyHash', 'created', 'name', 'start', 'end'];
-var C_FLAGS = 4 + SCORED.length, C_NOTE = C_FLAGS + 1, C_MINOR = C_NOTE + NOTES.length, C_TOKEN = C_MINOR + 3;
+var C_FLAGS = 4 + SCORED.length, C_NOTE = C_FLAGS + 1, C_MINOR = C_NOTE + NOTES.length, C_TOKEN = C_MINOR + 3, C_GEN = C_TOKEN + 1;
 
 function doPost(e) {
   var req;
@@ -51,6 +51,7 @@ function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setM
 function sheet(name, head) {
   var ss = SpreadsheetApp.getActiveSpreadsheet(), sh = ss.getSheetByName(name);
   if (!sh) { sh = ss.insertSheet(name); sh.appendRow(head); sh.setFrozenRows(1); }
+  else if (sh.getLastColumn() < head.length) sh.getRange(1, 1, 1, head.length).setValues([head]);   // 新增欄位時補表頭
   return sh;
 }
 function rows(sh) { var n = sh.getLastRow(); return n < 2 ? [] : sh.getRange(2, 1, n - 1, sh.getLastColumn()).getValues(); }
@@ -140,7 +141,7 @@ function submit(req) {
     var row = [new Date(), code, cell(name), cell(role)]
       .concat(SCORED.map(function (a) { return v[a]; }), [flags.join(',')],
         NOTES.map(function (k) { return flags.indexOf(k) >= 0 ? cell(str(notes[k], 300)) : ''; }),
-        [minor ? 'Y' : '', minor ? cell(guardian) : '', minor ? cell(guardianRel) : '', sha256(token)]);
+        [minor ? 'Y' : '', minor ? cell(guardian) : '', minor ? cell(guardianRel) : '', sha256(token), cell(str(notes.s0, 300))]);
     sh.appendRow(row);
     return { ok: true, token: token };
   } finally { lock.releaseLock(); }
@@ -155,6 +156,7 @@ function latest(code, withGuardian) {
     var rec = { t: new Date(r[0]).getTime(), name: name, role: uncell(r[3]), v: {}, flags: String(r[C_FLAGS] || '').split(',').filter(String), notes: {} };
     SCORED.forEach(function (a, i) { rec.v[a] = Number(r[4 + i]); });
     NOTES.forEach(function (k, i) { var t = uncell(r[C_NOTE + i]); if (t) rec.notes[k] = t; });
+    var g = uncell(r[C_GEN]); if (g) rec.notes.s0 = g;
     if (withGuardian && r[C_MINOR] === 'Y') { rec.minor = true; rec.guardian = uncell(r[C_MINOR + 1]); rec.guardianRel = uncell(r[C_MINOR + 2]); }
     if (!last[name] || last[name].t <= rec.t) last[name] = rec;
   });
