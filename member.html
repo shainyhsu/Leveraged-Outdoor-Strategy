@@ -117,9 +117,10 @@ const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digest
 
 const FLAG_NOTE = {
   s2: { en: 'Illness / injury details', zh: '生病/受傷說明', ph: '什麼狀況、何時開始、目前用藥或處置', phEn: 'What it is, since when, current medication or treatment' },
+  s6: { en: 'Allergy details', zh: '過敏史說明', ph: '對什麼過敏、反應多嚴重、隨身藥物（如腎上腺素筆）', phEn: 'What you react to, how badly, medication you carry (e.g. EpiPen)' },
   s8: { en: 'Medical history details', zh: '特殊病史說明', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
 };
-const ENTRY = { n2: '4468e0a8', n8: '2ccd16b9', name: '4898134a', role: '09a69d78', fit: '233b0056', foot: '17e17bf0', care: '54b2152c', gear: '7c4501a0', exp: '18eed6dc', mind: '5d7f2ceb', nav: '03f0263e', wx: '184a62e9', aid: '722a31b9', crm: '1d417f44', pace: '06df79b1', flags: '6d4ec7b2', code: '5fe8a856' };
+const ENTRY = { n2: '4468e0a8', n6: '50f4e703', n8: '2ccd16b9', name: '4898134a', role: '09a69d78', fit: '233b0056', foot: '17e17bf0', care: '54b2152c', gear: '7c4501a0', exp: '18eed6dc', mind: '5d7f2ceb', nav: '03f0263e', wx: '184a62e9', aid: '722a31b9', crm: '1d417f44', pace: '06df79b1', flags: '6d4ec7b2', code: '5fe8a856' };
 const POST = 'https://docs.google.com/forms/d/e/1FAIpQLSfmhwnlAEK_BEw280NqN4rx0qN4WSSRlAH3VRQ9fBlRBbJq2g/formResponse';
 const ent = k => 'entry.' + parseInt(ENTRY[k], 16);
 const qs = new URLSearchParams(location.search);
@@ -226,7 +227,7 @@ function send(btn) {
   if (st.role.trim()) body.append(ent('role'), st.role.trim().slice(0, 30));
   SCORED.forEach(a => body.append(ent(a), fmt(st.v[a])));
   Object.keys(FLAGS).forEach(k => { if (st.flags[k]) body.append(ent('flags'), FLAGS[k]); });
-  Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k]) body.append(ent(k === 's2' ? 'n2' : 'n8'), String(st.notes[k]).trim().slice(0, 300)); });
+  Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k]) body.append(ent('n' + k.slice(1)), String(st.notes[k]).trim().slice(0, 300)); });
   body.append(ent('code'), CODE);
   btn.disabled = true; btn.textContent = L('送出中…', 'Sending…');
   fetch(POST, { method: 'POST', mode: 'no-cors', body: body }).then(() => {

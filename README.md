@@ -41,6 +41,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V20 | 2026-11-13 11:27 | "Allergy history" now also needs a written details box when ticked.
 - V19 | 2026-11-13 11:05 | Ticking "Ill / injured" or "Other medical history" now opens a required details box, on the member form and on the leader page; a tick with no details is a red issue.
 - V18 | 2026-11-13 09:36 | Added a classic favicon.ico tab icon for older browsers and search tools.
 - V17 | 2026-11-13 09:20 | Added a tab icon and an "All tools" link in the footer; the verdict area has a heading for screen readers and the file box has a label.
