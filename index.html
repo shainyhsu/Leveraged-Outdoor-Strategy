@@ -45,6 +45,7 @@
   --warn: #9E6C08; --warn-bg: #F6E9C6;
   --stop: #B3312A; --stop-bg: #F5D9D5;
   --chip-ink: #FFFFFF;
+  --chev-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5.5l6.5 6.5L9 18.5'/%3E%3C/svg%3E");
   --demand: #61706A; --demand-fill: rgba(97, 112, 106, .17);
   --font-display: "LXGW WenKai TC", "Kaiti TC", "BiauKai", "DFKai-SB", serif;
   --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
@@ -220,8 +221,21 @@ details.member > summary { list-style: none; cursor: pointer; padding: 10px 12px
 details.member > summary::-webkit-details-marker { display: none; }
 .mname { font-weight: 700; font-size: 15px; }
 .mrole { font-size: 12.5px; color: var(--muted); }
-.chev { margin-left: auto; font-size: 20px; line-height: 1; color: var(--muted); transition: transform .2s; }
+/* 收合／展開箭頭：高山藍實心圓鈕，收合朝右、展開朝下；hover 只在有滑鼠的裝置加一圈淡框 */
+.chev { flex: none; margin-left: auto; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 0; line-height: 0; display: inline-flex; align-items: center; justify-content: center; transition: transform .2s, box-shadow .15s; }
+.chev::before { content: ""; width: 18px; height: 18px; background: currentColor; -webkit-mask: var(--chev-svg) center / contain no-repeat; mask: var(--chev-svg) center / contain no-repeat; }
+.chev.up { transform: rotate(-90deg); }
 details[open] > summary .chev { transform: rotate(90deg); }
+@media (hover: hover) { summary:hover .chev, .foldend:hover .chev { box-shadow: 0 0 0 3px var(--accent-soft); } }
+details.member > summary .chev, .ovpick > summary .chev, .sumbox > summary .chev { width: 28px; height: 28px; }
+details.member > summary .chev::before, .ovpick > summary .chev::before, .sumbox > summary .chev::before { width: 16px; height: 16px; }
+/* 長版頁底部的收合鈕：填到最下面不用捲回頂端 */
+.foldend { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--accent); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.foldend .chev { margin-left: 0; }
+@media (hover: hover) { .foldend:hover { border-color: var(--accent); } }
+.foldend.sm { font-size: 13px; padding: 6px 10px; }
+.foldend.sm .chev { width: 28px; height: 28px; }
+.foldend.sm .chev::before { width: 16px; height: 16px; }
 .mhint { flex-basis: 100%; font-size: 12.5px; color: var(--muted); }
 .mbody { padding: 2px 12px 14px; display: grid; gap: 10px; }
 .raterbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
@@ -322,8 +336,6 @@ a.topverdict[href] .tv-word { color: inherit; text-decoration: underline; text-u
 @media (max-width: 400px) { .brand-t { display: none; } }
 .method > summary, details.panel > summary, details.radar-card > summary, details.sumbox > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; }
 .method > summary::-webkit-details-marker, details.panel > summary::-webkit-details-marker, details.radar-card > summary::-webkit-details-marker, details.sumbox > summary::-webkit-details-marker { display: none; }
-details > summary .chev { font-size: 20px; line-height: 1; color: var(--muted); transition: transform .15s; flex: none; }
-details[open] > summary > .chev { transform: rotate(90deg); }
 details.panel > summary h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
 details.panel[open], details.radar-card[open] { gap: 8px; }
 details.panel:not([open]), details.radar-card:not([open]) { gap: 0; }
@@ -358,7 +370,10 @@ details.fold > summary::-webkit-details-marker { display: none; }
 details.fold > summary > .ftitle { flex: 0 1 auto; min-width: 0; }
 details.radar-card.fold[open] > summary > .ftitle { flex: 1 1 0; }
 details.fold > summary > .chev { margin-left: auto; }
-details.step.fold > summary .chev { font-size: 22px; }
+details.step.fold > summary > .chev { width: 36px; height: 36px; }
+/* 新版瀏覽器把 details 內容包在 ::details-content，外層 grid 的間距到不了裡面，展開後各區塊會黏在一起；在這層補回 */
+details.step[open]::details-content { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+details.step.fold > summary > .chev::before { width: 20px; height: 20px; }
 .ficon { flex: none; width: 34px; height: 34px; border-radius: 9px; background: rgba(128, 144, 136, .16); color: var(--contour); display: inline-flex; align-items: center; justify-content: center; }
 .ficon svg { width: 20px; height: 20px; display: block; }
 .fhint { flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 4px 6px; }
@@ -442,6 +457,7 @@ details.fold:not([open]) .tcount, details.radar-card.fold:not([open]) .rc-sub { 
         <p class="gtitle" data-en="Conditions | each tick raises related needs by 0.5">條件｜勾選後相關軸需求 +0.5</p>
         <div class="checks" id="conds"></div>
         <div class="dlist" id="dlist"></div>
+        <button type="button" class="foldend" data-act="fold-up" data-t="s-demand"><span class="chev up" aria-hidden="true"></span><span data-en="Collapse ① Trip needs">收合 ① 行程需求</span></button>
       </details>
 
       <details class="step fold" id="s-members">
@@ -450,6 +466,7 @@ details.fold:not([open]) .tcount, details.radar-card.fold:not([open]) .rc-sub { 
         <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
         <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">新增隊員（手動輸入）</button></div>
+        <button type="button" class="foldend" data-act="fold-up" data-t="s-members"><span class="chev up" aria-hidden="true"></span><span data-en="Collapse ② Ratings">收合 ② 隊員評分</span></button>
       </details>
 
       <details class="step fold" id="s-lists">
@@ -1401,6 +1418,7 @@ if (typeof module !== 'undefined' && module.exports) {
       '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、技術、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, technical and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
       Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>').join('') +
       '</div>' + Object.keys(FLAG_NOTE).filter(k => m.flags[k]).map(k => noteBox(m, k)).join('');
+    h += '<button type="button" class="foldend sm" data-act="fold-up" data-t="card-' + m.id + '"><span class="chev up" aria-hidden="true"></span><span>' + L('收合這位隊員', 'Collapse this member') + '</span></button>';
     return h + '</div></details>';
   }
   function noteBox(m, k) {
@@ -2080,6 +2098,11 @@ if (typeof module !== 'undefined' && module.exports) {
     if (!b) return;
     if (b.closest('summary')) e.preventDefault();
     const act = b.dataset.act, id = b.dataset.m;
+    if (act === 'fold-up') {   // 底部收合：收起來後把標題列拉回畫面、焦點放回標題列
+      const d = document.getElementById(b.dataset.t);
+      if (d) { d.open = false; if (d.dataset.m) ui.open[d.dataset.m] = false; d.scrollIntoView({ block: 'nearest' }); const sm = d.querySelector('summary'); if (sm) sm.focus({ preventScroll: true }); }
+      return;
+    }
     if (act === 'fold-all') { const v = b.dataset.v === '1'; document.querySelectorAll('details.fold').forEach(d => { if (v || !FOLD_OPEN_DEFAULT.includes(d.id)) d.open = v; }); return; }   // 全部收合時兩張雷達圖照舊
     if (act === 'adj') {
       const a = b.dataset.a, d = parseFloat(b.dataset.d);
