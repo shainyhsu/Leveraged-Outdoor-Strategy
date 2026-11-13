@@ -43,6 +43,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V28 | 2026-11-13 23:43 | Recovered conditions and recent surgery go under medical history and are not scored; ill or injured now means affecting this trip; new optional note for anything else teammates should know; leader can tick or untick a member's status as a correction that survives re-pulls; amber verdict reworded to check, not fix, the flagged items
 - V27 | 2026-11-13 23:12 | Member form opens with a consent statement (guardian consent for minors) and, once sent, shows the team's care list; period discomfort added to today's status, medical history no longer scored except altitude sickness on high-mountain routes; leader ratings replaced by leader fill-in or correction; trip end date with deletion on the 3rd day after; save and share links carry no health details; printable late-joiner waiver
 - V26 | 2026-11-13 22:08 | Member self-ratings now go through an Apps Script backend into a private sheet instead of a publicly readable Google Form sheet; only the device that made the trip link can read the replies back, and replies are deleted after 120 days
 - V25 | 2026-11-13 16:58 | Bigger, brighter open/close arrows: a solid blue round button on every section and member card. Trip needs, Ratings and each member card get a Collapse button at the bottom, so you do not have to scroll back up after filling them in. Blocks inside an open section are spaced apart again.
