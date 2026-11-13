@@ -10,13 +10,15 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 - **Red lines are non-negotiable:** minimum thresholds; leverage only reduces demand, never the red line
 - **Strength covers weakness:** each leverage item can lower demand on a given axis (capped per axis)
 - **Leverage must come in pairs:** backup person or redundant gear
-- Self-rating plus leader rating; two or more “marginal” axes → strongly consider not going
+- Self-ratings, which the leader can fill in or correct; two or more “marginal” axes → strongly consider not going
+- Members tick a consent statement before sending; everyone who has sent sees the team's care list (scores, today's status, medical history and what teammates should do) on the same page; data is deleted on the 3rd day after the trip's end date
+- Today's status (sleep/fatigue, ill/injured, digestion, period discomfort) is scored; medical history is not, except altitude sickness history on high-mountain routes
 
 ## Workflow
 
 1. Leader sets trip demand (pick a template, then fine-tune)
 2. The leader shares the member form link; each member rates themselves there, and the page pulls the replies in by a trip code the link fills in (or the leader enters members by hand)
-3. The leader rates themselves (leader rating only) and reviews each member; a member's leader rating follows their self rating until the leader changes it. Then check plan/team gear and leverage items
+3. The leader rates themselves and reviews each member, filling in blanks or correcting scores (shown as leader-corrected). Late joiners who skipped the form sign a printed assumption-of-risk waiver on site. Then check plan/team gear and leverage items
 4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
 ## Layout and display
@@ -35,7 +37,7 @@ Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profilin
 
 ## Tech
 
-Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-ratings go through a Google Apps Script backend (apps-script/Code.gs) into a private sheet. Only the device that made the trip link holds the leader key that reads them back; replies are deleted after 120 days. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-ratings go through a Google Apps Script backend (apps-script/Code.gs) into a private sheet. Only the device that made the trip link holds the leader key that reads all replies back; members who have sent see the team's care list; everything is deleted on the 3rd day after the trip's end date. Save and share links carry no health details. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
 
 ## Version history
 

@@ -8,7 +8,7 @@
 <title>上山籌碼評估｜隊員自評</title>
 <meta property="og:type" content="website">
 <meta property="og:title" content="上山籌碼評估｜隊員自評">
-<meta property="og:description" content="拉滑桿評估自己的能力與今日狀態，送出後由領隊彙整。">
+<meta property="og:description" content="拉滑桿評估自己的能力與今日狀態；同意聲明後送出，全隊互相照應。">
 <meta property="og:url" content="https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/member.html">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/og-member.png">
@@ -60,6 +60,26 @@ button.go:disabled { opacity: .6; }
 .done { text-align: center; padding: 30px 16px; }
 .done h2 { margin: 0 0 8px; color: var(--accent); }
 .hint { font-size: 13px; color: var(--muted); }
+.consent ol { margin: 8px 0 10px; padding-left: 1.3em; font-size: 14px; }
+.consent li { margin: 4px 0; }
+.consent .trip { font-weight: 600; margin: 0 0 6px; }
+.sub { margin: 4px 0 8px 30px; display: grid; gap: 8px; }
+.gtitle { font-weight: 600; margin: 10px 0 2px; }
+.team h2 { font-size: 18px; margin: 0 0 4px; }
+.mcard { border-top: 1px solid var(--border); padding: 10px 0 4px; }
+.mcard:first-of-type { border-top: 0; }
+.mname { font-weight: 700; }
+.mrole { color: var(--muted); font-size: 13px; margin-left: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.chip { font-size: 12.5px; border: 1px solid var(--border); border-radius: 999px; padding: 1px 9px; }
+.chip.today { border-color: var(--stop); color: var(--stop); }
+.mnote { font-size: 14px; margin: 4px 0; }
+.mnote b { color: var(--muted); font-weight: 600; }
+.sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 2px 10px; font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+.sgrid span b { color: var(--text); font-variant-numeric: tabular-nums; }
+.row2 { display: flex; gap: 10px; }
+.row2 button { flex: 1; }
+button.ghost { width: 100%; font: inherit; font-size: 15px; padding: 11px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); }
 </style>
 </head>
 <body>
@@ -109,30 +129,36 @@ const FLAGS = {
   s1: '睡眠 <5 小時/疲勞',
   s2: '生病/受傷',
   s4: '消化狀態',
+  s9: '生理期不適',
   s6: '過敏史',
   s7: '高山症史',
   s8: '特殊病史'
 };
-const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
-
+const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s9: 'Period discomfort', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
+const TODAY_FLAGS = ['s1', 's2', 's4', 's9'], HIST_FLAGS = ['s6', 's7', 's8'];
 const FLAG_NOTE = {
-  s2: { en: 'Illness / injury details', zh: '生病/受傷說明', ph: '什麼狀況、何時開始、目前用藥或處置', phEn: 'What it is, since when, current medication or treatment' },
-  s6: { en: 'Allergy details', zh: '過敏史說明', ph: '對什麼過敏、反應多嚴重、隨身藥物（如腎上腺素筆）', phEn: 'What you react to, how badly, medication you carry (e.g. EpiPen)' },
-  s8: { en: 'Medical history details', zh: '特殊病史說明', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
+  s2: { zh: '狀況與隊友該怎麼做', en: 'What it is and what teammates should do', ph: '什麼狀況、目前怎麼處理、隊友要注意或協助什麼', phEn: 'What it is, how you are handling it, what teammates should watch for or help with', req: true },
+  s9: { zh: '需要的照應', en: 'Help you would like', ph: '例：需要多休息、請幫忙分擔重量、我有帶止痛藥', phEn: 'e.g. more rest stops, help with weight, I carry painkillers', req: false },
+  s6: { zh: '過敏：隊友該怎麼做', en: 'Allergy: what teammates should do', ph: '對什麼過敏、發作時的樣子、藥放在哪裡、隊友該怎麼做（例：腎上腺素筆打大腿外側）', phEn: 'What you react to, what it looks like, where your medication is, what teammates should do (e.g. EpiPen into the outer thigh)', req: true },
+  s8: { zh: '病史：隊友該怎麼做', en: 'Medical history: what teammates should do', ph: '隊友需要知道的狀況、藥放在哪裡、發作時隊友該怎麼做', phEn: 'What teammates need to know, where your medication is, what they should do if it flares up', req: true }
 };
 /* 回覆經 Apps Script 後端寫入不公開的試算表（apps-script/Code.gs） */
 const API = 'https://script.google.com/macros/s/AKfycbxlqEShSEJUMfyNf-AD8BcQ4PcSvr0TKO9JVVOcoOb9M1-e0guv9uH4OAPRBdzkEOfo/exec';
 const qs = new URLSearchParams(location.search);
 const CODE = (qs.get('c') || '').trim().toUpperCase().slice(0, 12);
-let LANG = qs.get('lang') === 'en' ? 'en' : (localStorage.getItem('lang') === 'en' ? 'en' : 'zh');
+const ls = { get: k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 無法儲存 */ } } };
+let LANG = qs.get('lang') === 'en' ? 'en' : (function () { try { return localStorage.getItem('lang') === 'en' ? 'en' : 'zh'; } catch (e) { return 'zh'; } })();
 const L = (zh, en) => LANG === 'en' ? en : zh;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const fmt = v => (v % 1 ? v.toFixed(1) : String(v));
-let saved = {};
-try { saved = JSON.parse(localStorage.getItem('member-self') || '{}'); } catch (e) {}
-const st = { name: saved.name || '', role: saved.role || '', v: {}, flags: {}, notes: {}, tried: false, sent: false };
-const noteMissing = () => Object.keys(FLAG_NOTE).filter(k => st.flags[k] && !String(st.notes[k] || '').trim());
+const flagName = k => LANG === 'en' ? FLAGS_EN[k] : FLAGS[k];
+const saved = ls.get('member-self') || {};
+const tokens = ls.get('member-tokens') || {};
+const st = { name: saved.name || '', role: saved.role || '', v: {}, flags: {}, notes: {}, consent: false, minor: false, guardian: '', guardianRel: '',
+  tried: false, view: tokens[CODE] ? 'team' : 'form', trip: null, tripErr: '', team: null, teamErr: '' };
+const noteMissing = () => Object.keys(FLAG_NOTE).filter(k => FLAG_NOTE[k].req && st.flags[k] && !String(st.notes[k] || '').trim());
 SCORED.forEach(a => { if (saved.v && saved.v[a] != null) st.v[a] = saved.v[a]; });
+const post = o => fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) }).then(r => r.json());
 
 function ancHTML(a) {
   const ax = AXES[a], list = LANG === 'en' ? ax.anchorsEn : ax.anchors, v = st.v[a];
@@ -148,30 +174,86 @@ function axisCard(a) {
     '<ul class="anc" id="anc-' + a + '">' + ancHTML(a) + '</ul>' + (bad ? '<p class="err">' + L('請選一個分數', 'Please pick a score') + '</p>' : '') + '</div>';
 }
 function noteBox(k) {
-  const bad = st.tried && !String(st.notes[k] || '').trim();
-  return '<div class="fnote' + (bad ? ' bad' : '') + '" id="fnb-' + k + '"><label class="f" for="fn-' + k + '">' + esc(L(FLAG_NOTE[k].zh, FLAG_NOTE[k].en)) + L('（必填）', ' (required)') + '</label>' +
+  const req = FLAG_NOTE[k].req, bad = req && st.tried && !String(st.notes[k] || '').trim();
+  return '<div class="fnote' + (bad ? ' bad' : '') + '" id="fnb-' + k + '"><label class="f" for="fn-' + k + '">' + esc(L(FLAG_NOTE[k].zh, FLAG_NOTE[k].en)) + (req ? L('（必填）', ' (required)') : L('（選填）', ' (optional)')) + '</label>' +
     '<textarea id="fn-' + k + '" data-fnote="' + k + '" rows="3" maxlength="300" placeholder="' + esc(L(FLAG_NOTE[k].ph, FLAG_NOTE[k].phEn)) + '">' + esc(st.notes[k] || '') + '</textarea>' +
     (bad ? '<p class="err">' + L('勾了這項就要寫說明', 'Details are required when this is ticked') + '</p>' : '') + '</div>';
+}
+const flagRow = k => '<label class="ck"><input type="checkbox" data-flag="' + k + '"' + (st.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>' + (FLAG_NOTE[k] && st.flags[k] ? noteBox(k) : '');
+function tripLine() {
+  const t = st.trip;
+  if (!t) return st.tripErr ? L('（行程資料讀取失敗）', '(Could not load the trip details)') : L('讀取中…', 'Loading…');
+  return esc(t.name || L('未命名行程', 'Untitled trip')) + (t.start || t.end ? '｜' + esc([t.start, t.end].filter(Boolean).join(' – ')) : '');
+}
+function consentCard() {
+  const bad = st.tried && !st.consent, gbad = st.tried && st.minor && (!st.guardian.trim() || !st.guardianRel.trim());
+  const items = LANG === 'en' ? [
+    'Purpose: this form collects your self-ratings, today\'s status, medical history and "what teammates should do". It is used only for this trip, so the leader and all members can look out for each other.',
+    'Who can see it: this trip\'s leader, and members of this trip who have sent this form. It is not made public.',
+    'Storage and deletion: data is kept in a private sheet managed by the leader and deleted automatically on the 3rd day after the trip\'s end date.',
+    'Filling in: if you tick allergy or medical history, "what teammates should do" is required. Period discomfort and other details are optional.',
+    'Truthfulness: what I fill in is true. Risks from hiding something or filling it in falsely are my own responsibility.',
+    'Confidentiality: I will not forward, screenshot or copy other members\' information, or disclose it in any way to anyone outside this team. Anyone who does bears the civil and criminal liability.',
+    'Deletion request: before the trip ends I may ask the leader to delete my data at any time. After deletion, the leader may decide whether I join, based on what care is needed.',
+    'Minors: if under 18, a parent or legal guardian must read and tick their consent.'
+  ] : [
+    '目的：本表蒐集你的能力自評、今日狀態、病史，以及「隊友該怎麼做」。這些資料只用於本趟行程，讓領隊與全體隊員互相照應。',
+    '誰看得到：本趟領隊，以及已送出本表的本趟隊員。不對外公開。',
+    '保存與刪除：資料存放在領隊管理、不公開的試算表，行程結束日後第 3 天自動刪除。',
+    '填寫方式：勾選過敏史或特殊病史時，「隊友該怎麼做」必填。「生理期不適」與其他說明可以不填。',
+    '真實性：我填寫的內容真實。因隱瞞或不實填寫造成的風險，由我本人負責。',
+    '保密承諾：我承諾不轉傳、截圖、複製其他隊員的資料，也不以任何方式向本隊以外的人揭露。違反者自行負擔民事與刑事責任。',
+    '刪除請求：行程結束前，我可以隨時請領隊刪除我的資料。刪除後，領隊可以依照應需要，決定我是否同行。',
+    '未成年：未滿 18 歲者，須由法定代理人閱讀並勾選同意。'
+  ];
+  return '<div class="card consent' + (bad || gbad ? ' bad' : '') + '" id="consent"><h2 style="font-size:17px;margin:0 0 6px">' + L('照應資訊使用同意聲明', 'Consent to use care information') + '</h2>' +
+    '<p class="trip">' + L('行程：', 'Trip: ') + tripLine() + '</p><ol>' + items.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
+    '<label class="ck"><input type="checkbox" id="consent-ck"' + (st.consent ? ' checked' : '') + '><span>' + L('我已閱讀並同意以上內容（不勾選無法送出）', 'I have read and agree to the above (required to send)') + '</span></label>' +
+    (bad ? '<p class="err">' + L('請勾選同意', 'Please tick to agree') + '</p>' : '') +
+    '<label class="ck"><input type="checkbox" id="minor-ck"' + (st.minor ? ' checked' : '') + '><span>' + L('我未滿 18 歲，法定代理人已閱讀並同意', 'I am under 18; my parent or guardian has read and agrees') + '</span></label>' +
+    (st.minor ? '<div class="sub"><label class="f" for="g-name">' + L('法定代理人姓名', 'Guardian name') + '<input type="text" id="g-name" maxlength="30" value="' + esc(st.guardian) + '"></label>' +
+      '<label class="f" for="g-rel">' + L('關係', 'Relation') + '<input type="text" id="g-rel" maxlength="20" placeholder="' + L('例：母親', 'e.g. mother') + '" value="' + esc(st.guardianRel) + '"></label>' +
+      (gbad ? '<p class="err">' + L('請填法定代理人姓名與關係', 'Please enter the guardian\'s name and relation') + '</p>' : '') + '</div>' : '') + '</div>';
+}
+function teamHTML() {
+  const head = '<div class="card team"><h2>' + L('全隊照應清單', 'Team care list') + '</h2><p class="hint">' + tripLine() + '</p>' +
+    '<p class="hint">' + L('只給本隊看。請勿轉傳、截圖或複製；資料在結束日後第 3 天自動刪除。', 'For this team only. Do not forward, screenshot or copy; data is deleted on the 3rd day after the end date.') + '</p>';
+  if (st.teamErr) return head + '<p class="err">' + esc(st.teamErr) + '</p></div>';
+  if (!st.team) return head + '<p class="hint">' + L('讀取中…', 'Loading…') + '</p></div>';
+  const list = st.team.slice().sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
+  return head + list.map(m => {
+    const fl = Array.isArray(m.flags) ? m.flags : [];
+    const chips = TODAY_FLAGS.filter(k => fl.indexOf(k) >= 0).map(k => '<span class="chip today">' + esc(flagName(k)) + '</span>')
+      .concat(HIST_FLAGS.filter(k => fl.indexOf(k) >= 0).map(k => '<span class="chip">' + esc(flagName(k)) + '</span>')).join('');
+    const notes = Object.keys(FLAG_NOTE).filter(k => m.notes && m.notes[k]).map(k => '<p class="mnote"><b>' + esc(L(FLAG_NOTE[k].zh, FLAG_NOTE[k].en)) + L('：', ': ') + '</b>' + esc(m.notes[k]) + '</p>').join('');
+    const grid = SCORED.map(a => '<span>' + esc(LANG === 'en' ? AXES[a].shortEn : AXES[a].short) + ' <b>' + (m.v && m.v[a] != null ? fmt(m.v[a]) : '—') + '</b></span>').join('');
+    return '<div class="mcard"><span class="mname">' + esc(m.name) + '</span>' + (m.role ? '<span class="mrole">' + esc(m.role) + '</span>' : '') +
+      (chips ? '<div class="chips">' + chips + '</div>' : '') + notes + '<div class="sgrid">' + grid + '</div></div>';
+  }).join('') + '</div>';
 }
 function render() {
   document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-Hant';
   document.title = L('上山籌碼評估｜隊員自評', 'Trip Leverage Check | Member self-rating');
   const app = document.getElementById('app');
   const head = '<header><h1>' + L('隊員自評', 'Member self-rating') + '</h1><button type="button" class="langbtn" id="lang">' + L('EN', '中文') + '</button></header>';
+  const dead = L('這條連結已失效，請向領隊要新的連結。', 'This link is no longer valid. Ask your leader for a new one.');
   if (!CODE) { app.innerHTML = head + '<div class="card"><p>' + L('這條連結少了行程代碼。請向領隊要完整的連結再開啟。', 'This link is missing the trip code. Ask your leader for the full link.') + '</p></div>'; return; }
-  if (st.sent) {
-    app.innerHTML = head + '<div class="card done"><h2>' + L('已送出', 'Sent') + '</h2><p>' + L('謝謝！領隊那邊會依姓名彙整。要修改就再填一次，以最新一次為準。', 'Thanks! Your leader will see it under your name. To change anything, send again; the latest one counts.') + '</p><button type="button" class="go" id="again">' + L('再填一次', 'Edit and send again') + '</button></div>';
+  if (st.tripErr === 'unknown-code') { app.innerHTML = head + '<div class="card"><p>' + dead + '</p></div>'; return; }
+  if (st.view === 'team') {
+    app.innerHTML = head + '<div class="card done"><h2>' + L('已送出', 'Sent') + '</h2><p>' + L('要修改就再填一次，以最新一次為準。', 'To change anything, send again; the latest one counts.') + '</p><button type="button" class="ghost" id="again">' + L('再填一次', 'Edit and send again') + '</button></div>' + teamHTML();
     return;
   }
   const nameBad = st.tried && !st.name.trim();
-  app.innerHTML = head +
+  app.innerHTML = head + consentCard() +
     '<div class="card"><p class="intro">' + L('依過去 12 個月的實際表現評分，不是目標。每項都要選，介於兩級之間選 .5。上下滑動頁面不會改到分數，左右拖動圓點才會。', 'Rate what you actually did in the past 12 months, not your goal. Every item needs a score; pick .5 when between two. Scrolling up and down won\'t change a score; drag the dot sideways.') + '</p></div>' +
     '<div class="card' + (nameBad ? ' bad' : '') + '"><label class="f" for="name">' + L('姓名', 'Name') + '</label><input type="text" id="name" maxlength="30" autocomplete="name" value="' + esc(st.name) + '"><p class="hint">' + L('同一趟請用同一個名字；重填會以最新一次為準', 'Use the same name for this trip; the latest reply counts') + '</p>' + (nameBad ? '<p class="err">' + L('請填姓名', 'Please enter your name') + '</p>' : '') + '</div>' +
     '<div class="card"><label class="f" for="role">' + L('角色（可留空）', 'Role (optional)') + '</label><input type="text" id="role" maxlength="30" placeholder="' + L('例：隊員、副領隊', 'e.g. member, co-leader') + '" value="' + esc(st.role) + '"></div>' +
     SCORED.map(axisCard).join('') +
     '<div class="card"><label class="f">' + L('今日狀態', 'Today\'s status') + '</label><p class="hint">' + L('出發前 48 小時內，有的請勾選（可不勾）', 'Within 48 hours of leaving; tick any that apply (optional)') + '</p>' +
-    Object.keys(FLAGS).map(k => '<label class="ck"><input type="checkbox" data-flag="' + k + '"' + (st.flags[k] ? ' checked' : '') + '><span>' + esc(LANG === 'en' ? FLAGS_EN[k] : FLAGS[k]) + '</span></label>' + (FLAG_NOTE[k] && st.flags[k] ? noteBox(k) : '')).join('') + '</div>' +
-    '<button type="button" class="go" id="send">' + L('送出', 'Send') + '</button><p class="err" id="msg" role="status"></p>';
+    TODAY_FLAGS.map(flagRow).join('') +
+    '<p class="gtitle">' + L('病史', 'Medical history') + '</p><p class="hint">' + L('有的請勾選；過敏史、特殊病史要寫「隊友該怎麼做」', 'Tick any that apply; for allergy or medical history, say what teammates should do') + '</p>' +
+    HIST_FLAGS.map(flagRow).join('') + '</div>' +
+    '<button type="button" class="go" id="send">' + L('同意並送出', 'Agree and send') + '</button><p class="err" id="msg" role="status"></p>';
 }
 function setVal(inp) {
   const a = inp.dataset.a, v = parseFloat(inp.value);
@@ -182,11 +264,14 @@ function setVal(inp) {
   document.getElementById('v-' + a).textContent = fmt(v);
   document.getElementById('anc-' + a).innerHTML = ancHTML(a);
 }
+const keep = fn => { const y = window.scrollY; fn(); render(); window.scrollTo(0, y); };
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.matches('input[type="range"]')) setVal(t);
   else if (t.id === 'name') st.name = t.value;
   else if (t.id === 'role') st.role = t.value;
+  else if (t.id === 'g-name') st.guardian = t.value;
+  else if (t.id === 'g-rel') st.guardianRel = t.value;
   else if (t.dataset.fnote) { st.notes[t.dataset.fnote] = t.value; const b = document.getElementById('fnb-' + t.dataset.fnote); if (b && t.value.trim()) { b.classList.remove('bad'); const e2 = b.querySelector('.err'); if (e2) e2.remove(); } }
 });
 document.addEventListener('click', e => {
@@ -195,11 +280,13 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
+  if (t.id === 'consent-ck') { keep(() => { st.consent = t.checked; }); return; }
+  if (t.id === 'minor-ck') { keep(() => { st.minor = t.checked; }); if (t.checked) { const g = document.getElementById('g-name'); if (g) g.focus({ preventScroll: true }); } return; }
   if (!t.dataset.flag) return;
   const k = t.dataset.flag;
   st.flags[k] = t.checked;
   if (FLAG_NOTE[k]) {
-    const y = window.scrollY; render(); window.scrollTo(0, y);
+    keep(() => {});
     const ta = document.getElementById('fn-' + k); if (ta) ta.focus({ preventScroll: true });
   }
 });
@@ -207,39 +294,63 @@ document.addEventListener('click', e => {
   const t = e.target.closest('button');
   if (!t) return;
   if (t.id === 'lang') { LANG = LANG === 'en' ? 'zh' : 'en'; try { localStorage.setItem('lang', LANG); } catch (x) {} render(); }
-  else if (t.id === 'again') { st.sent = false; render(); }
+  else if (t.id === 'again') { st.view = 'form'; st.tried = false; render(); window.scrollTo(0, 0); }
   else if (t.id === 'send') send(t);
 });
+function loadTeam() {
+  const tk = tokens[CODE];
+  if (!tk) return;
+  st.teamErr = '';
+  post({ a: 'team', code: CODE, token: tk }).then(r => {
+    if (r.ok) { st.team = r.replies || []; if (!st.trip) st.trip = { name: r.name, start: r.start, end: r.end }; }
+    else if (r.err === 'unknown-code') { st.tripErr = 'unknown-code'; }
+    else if (r.err === 'denied') { delete tokens[CODE]; ls.set('member-tokens', tokens); st.view = 'form'; }
+    else st.teamErr = L('讀取失敗，請稍後重新整理', 'Could not load; refresh later');
+    render();
+  }).catch(() => { st.teamErr = L('讀取失敗，請檢查網路後重新整理', 'Could not load; check your connection and refresh'); render(); });
+}
 function send(btn) {
   st.tried = true;
   const missing = SCORED.filter(a => st.v[a] == null), nm = noteMissing();
-  const nEmpty = missing.length + nm.length + (st.name.trim() ? 0 : 1);
+  const gMiss = st.minor && (!st.guardian.trim() || !st.guardianRel.trim());
+  const nEmpty = missing.length + nm.length + (st.name.trim() ? 0 : 1) + (st.consent ? 0 : 1) + (gMiss ? 1 : 0);
   if (nEmpty) {
     render();
-    const first = !st.name.trim() ? document.getElementById('name') : missing.length ? document.getElementById('c-' + missing[0]) : document.getElementById('fnb-' + nm[0]);
+    const first = (!st.consent || gMiss) ? document.getElementById('consent') : !st.name.trim() ? document.getElementById('name') : missing.length ? document.getElementById('c-' + missing[0]) : document.getElementById('fnb-' + nm[0]);
     first.scrollIntoView({ behavior: 'smooth', block: 'center' });
     document.getElementById('msg').textContent = L('還有 ' + nEmpty + ' 項沒填', nEmpty + ' item(s) still empty');
     return;
   }
   const flags = Object.keys(FLAGS).filter(k => st.flags[k]);
-  const notes = {}; Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k]) notes[k] = String(st.notes[k]).trim().slice(0, 300); });
-  const body = JSON.stringify({ a: 'submit', code: CODE, name: st.name.trim().slice(0, 30), role: st.role.trim().slice(0, 30), v: st.v, flags, notes });
+  const notes = {}; Object.keys(FLAG_NOTE).forEach(k => { if (st.flags[k] && String(st.notes[k] || '').trim()) notes[k] = String(st.notes[k]).trim().slice(0, 300); });
+  const body = { a: 'submit', code: CODE, name: st.name.trim().slice(0, 30), role: st.role.trim().slice(0, 30), v: st.v, flags, notes, consent: true,
+    minor: st.minor, guardian: st.minor ? st.guardian.trim().slice(0, 30) : '', guardianRel: st.minor ? st.guardianRel.trim().slice(0, 20) : '' };
   btn.disabled = true; btn.textContent = L('送出中…', 'Sending…');
   const ERR = {
     'unknown-code': L('這條連結已失效，請向領隊要新的連結', 'This link is no longer valid; ask your leader for a new one'),
     busy: L('送出的人太多，請過幾分鐘再按一次', 'Too many sends right now; wait a few minutes and tap again'),
     full: L('這趟的回覆已達上限，請聯絡領隊', 'This trip has reached its reply limit; contact your leader')
   };
-  fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }).then(r => r.json()).then(r => {
+  post(body).then(r => {
     if (!r.ok) { const e = new Error(r.err); e.shown = ERR[r.err]; throw e; }
-    try { localStorage.setItem('member-self', JSON.stringify({ name: st.name.trim(), role: st.role.trim(), v: st.v })); } catch (x) {}
-    st.sent = true; render(); window.scrollTo(0, 0);
+    ls.set('member-self', { name: st.name.trim(), role: st.role.trim(), v: st.v });
+    tokens[CODE] = r.token; ls.set('member-tokens', tokens);
+    st.view = 'team'; st.team = null; render(); window.scrollTo(0, 0); loadTeam();
   }).catch(e => {
-    btn.disabled = false; btn.textContent = L('送出', 'Send');
+    btn.disabled = false; btn.textContent = L('同意並送出', 'Agree and send');
     document.getElementById('msg').textContent = e.shown || L('送出失敗，請檢查網路再按一次', 'Could not send; check your connection and tap again');
   });
 }
 render();
+if (CODE) {
+  post({ a: 'info', code: CODE }).then(r => {
+    if (r.ok) st.trip = { name: r.name, start: r.start, end: r.end };
+    else if (r.err === 'unknown-code') st.tripErr = 'unknown-code';
+    else st.tripErr = 'fail';
+    if (st.view === 'form' || st.tripErr === 'unknown-code') keep(() => {});
+  }).catch(() => { st.tripErr = 'fail'; if (st.view === 'form') keep(() => {}); });
+  if (st.view === 'team') loadTeam();
+}
 </script>
 </body>
 </html>
