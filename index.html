@@ -433,7 +433,7 @@ details.fold:not([open]) .tcount, details.radar-card.fold:not([open]) .rc-sub { 
     <p class="eyebrow" data-en="LEVERAGE CHECK FOR TRIP LEADERS">籌碼（LEVERAGE）評估表</p>
     <h1 data-en="How much leverage do we have on this trip?">這次上山，我們有多少籌碼？</h1>
     <p class="slogan" data-en="Strengths cover weaknesses, &lt;span&gt;hard minimums are not negotiable&lt;/span&gt;, every mitigation needs a backup.">強項撐弱項，<span>紅線不商量</span>，槓桿要成雙。</p>
-    <p class="flow" data-en="The leader sets the route's needs and sends members the form link. Their self-ratings flow in by name (or the leader enters them). The leader rates, ticks the checklists and mitigations, and the page decides green, amber or red. Scores run 1 to 5 in steps of 0.5.">領隊設定路線需求，把表單連結傳給隊員自評，回覆依姓名自動彙整（也可由領隊手動輸入）；領隊評分、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
+    <p class="flow" data-en="The leader sets the route's needs and sends members the form link. Their self-ratings flow in by name (or the leader enters them). The leader fills in or corrects scores, ticks the checklists and mitigations, and the page decides green, amber or red. Scores run 1 to 5 in steps of 0.5.">領隊設定路線需求，把表單連結傳給隊員自評，回覆依姓名自動彙整（也可由領隊手動輸入）；領隊填入或修正分數、勾清單與槓桿，程式自動判定綠黃紅。分數 1 到 5，每格 0.5。</p>
     <div class="banner" id="loadbanner" hidden><span data-en="This link carries a saved assessment.">這個連結帶有一份儲存的評估。</span><button type="button" class="btn" data-act="load-yes" data-en="Load it (replaces current data)">載入（取代目前資料）</button><button type="button" class="btn ghost" data-act="load-no" data-en="Ignore">忽略</button></div>
     <div class="banner" id="banner" hidden><span data-en="This is example data: five sample members on a winter high-mountain summit day.">目前是範例資料：五位範例隊員、冬季高山長日攻頂。</span><button type="button" class="btn" data-act="clear-example" data-en="Clear example and start">清空範例，開始新評估</button></div>
     <nav class="jump" aria-label="快速移動"><a href="#summary" data-en="Verdict">判定</a><a href="#s-demand" data-en="① Needs">① 需求</a><a href="#s-members" data-en="② Ratings">② 評分</a><a href="#s-lists" data-en="③ Checklists">③ 清單</a><a href="#s-levers" data-en="④ Mitigations">④ 槓桿</a><a href="#s-weak" data-en="⑤ Weak points">⑤ 脆弱點</a><a href="#s-share" data-en="⑥ Share">⑥ 分享</a></nav>
@@ -450,7 +450,8 @@ details.fold:not([open]) .tcount, details.radar-card.fold:not([open]) .rc-sub { 
         <p class="lead" data-en="Pick the closest template, then tick conditions. Hard minimum = need minus the minimum gap; mitigations only lower the need, never the hard minimum. Use − / + to fine-tune an axis.">先選最接近的範本，再勾條件。紅線＝需求減紅線距離；槓桿只會降需求，紅線不動。個別軸可以用 −／＋ 微調。</p>
         <div class="fields">
           <label class="f" for="trip-name"><span data-en="Trip name">行程名稱</span><input type="text" id="trip-name" maxlength="80" placeholder="例：嘉明湖攻頂日" data-en-ph="e.g. Jiaming Lake summit day"></label>
-          <label class="f" for="trip-date"><span data-en="Date">日期</span><input type="date" id="trip-date"></label>
+          <label class="f" for="trip-date"><span data-en="Start date">出發日期</span><input type="date" id="trip-date"></label>
+          <label class="f" for="trip-end"><span data-en="End date (member data deleted 3 days later)">結束日期（隊員資料在 3 天後刪除）</span><input type="date" id="trip-end"></label>
           <label class="f" for="tpl"><span data-en="Template">需求範本</span><select id="tpl"></select></label>
           <label class="f" for="gap"><span data-en="Minimum gap (need minus)">紅線距離（需求減幾分）</span><select id="gap"><option value="0.5" data-en="0.5 (strict)">0.5（嚴）</option><option value="1" data-en="1.0 (standard)">1.0（標準）</option><option value="1.5" data-en="1.5 (loose)">1.5（寬）</option></select></label>
         </div>
@@ -462,7 +463,7 @@ details.fold:not([open]) .tcount, details.radar-card.fold:not([open]) .rc-sub { 
 
       <details class="step fold" id="s-members">
         <summary><span class="ficon" data-icon="members" aria-hidden="true"></span><h2 class="ftitle"><span class="num">②</span><span data-en="Ratings">隊員評分</span></h2><span class="fhint" id="fh-members"></span><span class="chev" aria-hidden="true">›</span></summary>
-        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. The leader's own card has leader ratings only. For members, the leader rating follows the self rating until you change it. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「新增隊員」手動輸入。領隊本人只有領隊評分。隊員的領隊評分預設跟著本人評分，單獨改過就不再連動。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
+        <p class="lead" data-en="Send members the form link. Their replies become member cards by name; you can also add members by hand. Scores are the member's own; drag a slider to fill in a blank or correct one, and it shows as leader-corrected. Slider colors: red = below hard minimum, amber = marginal, green = meets need.">把表單連結傳給隊員，回覆會依姓名彙整成隊員卡；也可以按「新增隊員」手動輸入。分數以本人自評為準；空白或需要修正時直接拉滑桿，會標示「領隊修正」。滑桿底色：紅＝低於紅線，黃＝邊際，綠＝達需求。</p>
         <div class="intake" id="intake"></div>
         <div class="members" id="members"></div>
         <div class="row-btns"><button type="button" class="btn ghost" data-act="add" data-en="Add member (manual)">新增隊員（手動輸入）</button></div>
@@ -505,9 +506,9 @@ details.fold:not([open]) .tcount, details.radar-card.fold:not([open]) .rc-sub { 
 
       <details class="method fold" id="s-method">
         <summary><span class="ficon" data-icon="method" aria-hidden="true"></span><span class="ftitle" data-en="Method and sources">方法與依據</span><span class="fhint" id="fh-method"></span><span class="chev" aria-hidden="true">›</span></summary>
-        <ul data-en="&lt;li&gt;&lt;b&gt;Two overlaid charts&lt;/b&gt;: leverage (ability) against need (route and conditions). Same idea as the Adventure Experience Paradigm (competence vs risk) and FEMA THIRA/SPR (target vs current).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Anchored scores, self and leader&lt;/b&gt;: the self-profile of performance profiling (Butler &amp;amp; Hardy 1992). Self-ratings run high, so when both exist the lower one counts.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hard minimums are not negotiable&lt;/b&gt;: the minimum cut-off of hybrid selection models. Hard minimum = need minus the gap; mitigations only lower the need.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Strengths cover weaknesses&lt;/b&gt;: Munter's reduction method lowers need through behaviour, plus JD-R resource buffering. Each mitigation lowers 0.5, at most 1.0 per axis.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Two or more marginal means no go&lt;/b&gt;: the rule from the FAA personal minimums checklist.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Today's status raises the hard minimum&lt;/b&gt;: the FAA personal minimums worksheet raises the bar when ill or tired.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Every mitigation needs a backup&lt;/b&gt;: bus factor and redundancy from resilience engineering. Team axes check whether a second person clears the hard minimum; checklist axes look at backed-up items.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Missing data counts as the hard minimum; everyone rates&lt;/b&gt;: the GAR model (US Coast Guard; used for trips by The Mountaineers Tacoma branch).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Program verdict, no leader override&lt;/b&gt;: the verdict only looks at needs, hard minimums and mitigations, to avoid talking yourself into it under pressure and the normalization of deviance.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Weak points&lt;/b&gt;: assume the trip went wrong, then work back to the weakest link and shore it up (pre-mortem, Klein 2007).&lt;/li&gt;">
+        <ul data-en="&lt;li&gt;&lt;b&gt;Two overlaid charts&lt;/b&gt;: leverage (ability) against need (route and conditions). Same idea as the Adventure Experience Paradigm (competence vs risk) and FEMA THIRA/SPR (target vs current).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Anchored self-ratings, leader can correct&lt;/b&gt;: the self-profile of performance profiling (Butler &amp;amp; Hardy 1992). Self-ratings run high, so the leader fills in blanks or corrects a score, and the corrected one counts.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hard minimums are not negotiable&lt;/b&gt;: the minimum cut-off of hybrid selection models. Hard minimum = need minus the gap; mitigations only lower the need.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Strengths cover weaknesses&lt;/b&gt;: Munter's reduction method lowers need through behaviour, plus JD-R resource buffering. Each mitigation lowers 0.5, at most 1.0 per axis.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Two or more marginal means no go&lt;/b&gt;: the rule from the FAA personal minimums checklist.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Today's status raises the hard minimum&lt;/b&gt;: the FAA personal minimums worksheet raises the bar when ill or tired.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Every mitigation needs a backup&lt;/b&gt;: bus factor and redundancy from resilience engineering. Team axes check whether a second person clears the hard minimum; checklist axes look at backed-up items.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Missing data counts as the hard minimum; everyone rates&lt;/b&gt;: the GAR model (US Coast Guard; used for trips by The Mountaineers Tacoma branch).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Program verdict, no leader override&lt;/b&gt;: the verdict only looks at needs, hard minimums and mitigations, to avoid talking yourself into it under pressure and the normalization of deviance.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Weak points&lt;/b&gt;: assume the trip went wrong, then work back to the weakest link and shore it up (pre-mortem, Klein 2007).&lt;/li&gt;">
           <li><b>兩張圖疊圖</b>：籌碼（能力）對需求（路線與條件）。同 Adventure Experience Paradigm 的能力對風險，也同 FEMA THIRA／SPR 的目標對現況。</li>
-          <li><b>錨點評分、本人與領隊各評</b>：Performance profiling（Butler &amp; Hardy 1992）的自評剖面；自評容易偏高，所以兩者都評時取低分。</li>
+          <li><b>錨點評分、本人自評、領隊可修正</b>：Performance profiling（Butler &amp; Hardy 1992）的自評剖面；自評容易偏高，領隊可填入空白或修正，修正過的以領隊為準。</li>
           <li><b>紅線不商量</b>：人員甄選 hybrid 模型的最低門檻。紅線＝需求減紅線距離，槓桿只降需求。</li>
           <li><b>強項撐弱項</b>：Munter 減險法用行為降低需求的做法，加上 JD-R 資源緩衝。每項槓桿降 0.5，同一軸最多 1.0。</li>
           <li><b>兩項以上邊際就不出發</b>：FAA 個人最低標準檢查表的規則。</li>
@@ -573,8 +574,8 @@ const STATE_AXES = ['fit', 'foot', 'care'];
 const TEMPLATES = {
   T1: { name: '郊山單日', en: 'Low-hill day hike', d: { fit: 2, foot: 2, care: 2, gear: 2, exp: 1, mind: 2, nav: 2, wx: 2, aid: 2, crm: 2, pace: 2, plan: 2, kit: 2 } },
   T2: { name: '中級山（路跡不明顯）', en: 'Mid-mountain (faint trail)', d: { fit: 3, foot: 3.5, care: 3, gear: 3, exp: 2.5, mind: 3, nav: 4, wx: 3, aid: 3, crm: 3, pace: 3, plan: 3.5, kit: 3 } },
-  T3: { name: '高山多日重裝', en: 'High mountain, multi-day, heavy pack', d: { fit: 4, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3, wx: 3.5, aid: 3.5, crm: 3.5, pace: 3.5, plan: 3.5, kit: 3.5 } },
-  T4: { name: '高山長日攻頂（凌晨出發）', en: 'High-mountain long summit day (pre-dawn start)', d: { fit: 4.5, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3.5, wx: 4, aid: 3.5, crm: 3.5, pace: 4, plan: 4, kit: 3.5 } }
+  T3: { name: '高山多日重裝', en: 'High mountain, multi-day, heavy pack', high: true, d: { fit: 4, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3, wx: 3.5, aid: 3.5, crm: 3.5, pace: 3.5, plan: 3.5, kit: 3.5 } },
+  T4: { name: '高山長日攻頂（凌晨出發）', en: 'High-mountain long summit day (pre-dawn start)', high: true, d: { fit: 4.5, foot: 3, care: 3.5, gear: 3.5, exp: 2.5, mind: 3, nav: 3.5, wx: 4, aid: 3.5, crm: 3.5, pace: 4, plan: 4, kit: 3.5 } }
 };
 const CONDS = {
   c1: { name: '冬季低溫、可能結冰', en: 'Winter cold, possible ice', add: { gear: 0.5, care: 0.5, foot: 0.5, wx: 0.5 } },
@@ -584,21 +585,24 @@ const CONDS = {
   c4: { name: '無手機訊號', en: 'No phone signal', add: { aid: 0.5, plan: 0.5 } },
   c5: { name: '天氣不穩（鋒面、午後雷雨）', en: 'Unstable weather (fronts, afternoon storms)', add: { wx: 0.5, plan: 0.5 } }
 };
-/* 今日狀態：鍵值與 member.html、apps-script/Code.gs 相同 */
+/* 狀態：鍵值與 member.html、apps-script/Code.gs 相同。今日狀態計分；病史不計分，高山症史只在高山路線計分 */
 const FLAGS = {
   s1: '睡眠 <5 小時/疲勞',
   s2: '生病/受傷',
   s4: '消化狀態',
+  s9: '生理期不適',
   s6: '過敏史',
   s7: '高山症史',
   s8: '特殊病史'
 };
-const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
-/* 勾選後必須寫說明；col 是領隊頁顯示的欄名 */
+const FLAGS_EN = { s1: 'Sleep <5 h / fatigued', s2: 'Ill / injured', s4: 'Digestion', s9: 'Period discomfort', s6: 'Allergy history', s7: 'Altitude sickness history', s8: 'Other medical history' };
+const TODAY_FLAGS = ['s1', 's2', 's4', 's9'], HIST_FLAGS = ['s6', 's7', 's8'];
+/* 勾選後的說明：req 為必填；col 是領隊頁顯示的欄名 */
 const FLAG_NOTE = {
-  s2: { col: '生病/受傷說明', en: 'Illness / injury details', ph: '什麼狀況、何時開始、目前用藥或處置', phEn: 'What it is, since when, current medication or treatment' },
-  s6: { col: '過敏史說明', en: 'Allergy details', ph: '對什麼過敏、反應多嚴重、隨身藥物（如腎上腺素筆）', phEn: 'What you react to, how badly, medication you carry (e.g. EpiPen)' },
-  s8: { col: '特殊病史說明', en: 'Medical history details', ph: '病名、平時用藥、發作時隊友該怎麼做', phEn: 'Condition, usual medication, what teammates should do if it flares up' }
+  s2: { col: '狀況與隊友該怎麼做', en: 'What it is and what teammates should do', ph: '什麼狀況、目前怎麼處理、隊友要注意或協助什麼', phEn: 'What it is, how you are handling it, what teammates should watch for or help with', req: true },
+  s9: { col: '需要的照應（選填）', en: 'Help you would like (optional)', ph: '例：需要多休息、請幫忙分擔重量、我有帶止痛藥', phEn: 'e.g. more rest stops, help with weight, I carry painkillers', req: false },
+  s6: { col: '過敏：隊友該怎麼做', en: 'Allergy: what teammates should do', ph: '對什麼過敏、發作時的樣子、藥放在哪裡、隊友該怎麼做（例：腎上腺素筆打大腿外側）', phEn: 'What you react to, what it looks like, where your medication is, what teammates should do (e.g. EpiPen into the outer thigh)', req: true },
+  s8: { col: '病史：隊友該怎麼做', en: 'Medical history: what teammates should do', ph: '隊友需要知道的狀況、藥放在哪裡、發作時隊友該怎麼做', phEn: 'What teammates need to know, where your medication is, what they should do if it flares up', req: true }
 };
 const NOTE_MAX = 300;
 const PLAN_ITEMS = [
@@ -652,7 +656,9 @@ const axAnch = a => L(AXES[a].anchors, AXES[a].anchorsEn);
 const tplName = k => L(TEMPLATES[k].name, TEMPLATES[k].en);
 const condName = k => L(CONDS[k].name, CONDS[k].en);
 const flagName = k => L(FLAGS[k], FLAGS_EN[k]);
-const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => m.flags && m.flags[k] && !String((m.notes && m.notes[k]) || '').trim());
+const noteMissing = m => Object.keys(FLAG_NOTE).filter(k => FLAG_NOTE[k].req && m.flags && m.flags[k] && !String((m.notes && m.notes[k]) || '').trim());
+/* 計分的狀態數：今日狀態＋高山路線的高山症史＋分享連結帶來的匿名件數 fc */
+const scoredFlags = (m, tpl) => TODAY_FLAGS.filter(k => m.flags && m.flags[k]).length + (m.flags && m.flags.s7 && TEMPLATES[tpl] && TEMPLATES[tpl].high ? 1 : 0) + (m.fc || 0);
 const noteTexts = m => Object.keys(FLAG_NOTE).filter(k => m.flags && m.flags[k] && String((m.notes && m.notes[k]) || '').trim()).map(k => flagName(k) + L('：', ': ') + m.notes[k].trim());
 const itemText = i => L(i.text, i.en);
 const lvName = x => L(x.name, x.en), lvDesc = x => L(x.desc, x.descEn), lvPre = x => L(x.prereqText, x.prereqEn), lvPair = x => L(x.pairText, x.pairEn);
@@ -669,11 +675,8 @@ const fmtSigned = v => (v == null ? '無資料' : (v > 0 ? '+' : v < 0 ? '−' :
 const isScore = v => typeof v === 'number' && v >= 1 && v <= 5 && Math.abs(v * 2 - Math.round(v * 2)) < 1e-9;
 
 function effScore(m, a) {
-  const s = m.self[a], l = m.lead[a];
-  if (s != null && l != null) return Math.min(s, l);
-  if (s != null) return s;
-  if (l != null) return l;
-  return null;
+  const l = m.lead[a];      // 領隊填入或修正的分數優先，否則用本人自評
+  return l != null ? l : m.self[a];
 }
 
 function anchorLines(a, v) {
@@ -686,7 +689,7 @@ function anchorLines(a, v) {
   return lines;
 }
 
-/* 領隊是 members[0]，leader:true；只有領隊評分、不能刪除 */
+/* 領隊是 members[0]，leader:true，不能刪除；lead 是領隊填入或修正的分數，self 是本人自評 */
 function blankMember(name, role) {
   const id = 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   const m = { id, name: name || L('新隊員', 'New member'), role: role || '', self: {}, lead: {}, flags: {}, notes: {} };
@@ -707,7 +710,7 @@ function ensureLeader(st) {
 }
 
 function blankState() {
-  const st = { v: 2, example: false, trip: { name: '', date: '', code: '' }, template: 'T3', conds: {}, gap: 1,
+  const st = { v: 2, example: false, trip: { name: '', date: '', end: '', code: '' }, template: 'T3', conds: {}, gap: 1,
     dAdj: {}, plan: {}, kit: {}, levers: {}, members: [blankLeader()], premortem: '' };
   Object.keys(CONDS).forEach(k => { st.conds[k] = false; });
   ALL.forEach(a => { st.dAdj[a] = 0; });
@@ -720,7 +723,7 @@ function blankState() {
 function exampleState() {
   const st = blankState();
   st.example = true;
-  st.trip = { name: L('範例｜高山長日攻頂', 'Example | long high-mountain summit day'), date: '', code: '' };
+  st.trip = { name: L('範例｜高山長日攻頂', 'Example | long high-mountain summit day'), date: '', end: '', code: '' };
   st.template = 'T4';
   st.conds.c1 = true; st.conds.c2 = true; st.conds.c3 = true;
   ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'].forEach(k => { st.plan[k] = true; });
@@ -753,7 +756,7 @@ function sanitizeState(raw) {
   const st = blankState();
   if (!raw || typeof raw !== 'object') return st;
   st.example = !!raw.example;
-  if (raw.trip) { st.trip.name = String(raw.trip.name || '').slice(0, 80); st.trip.date = String(raw.trip.date || '').slice(0, 20); st.trip.code = /^[A-Z0-9]{4,10}$/.test(raw.trip.code || '') ? raw.trip.code : ''; }
+  if (raw.trip) { st.trip.name = String(raw.trip.name || '').slice(0, 80); st.trip.date = String(raw.trip.date || '').slice(0, 20); st.trip.end = /^\d{4}-\d{2}-\d{2}$/.test(raw.trip.end || '') ? raw.trip.end : ''; st.trip.code = /^[A-Z0-9]{4,10}$/.test(raw.trip.code || '') ? raw.trip.code : ''; }
   if (TEMPLATES[raw.template]) st.template = raw.template;
   if ([0.5, 1, 1.5].includes(raw.gap)) st.gap = raw.gap;
   Object.keys(CONDS).forEach(k => { st.conds[k] = !!(raw.conds && raw.conds[k]); });
@@ -773,6 +776,8 @@ function sanitizeState(raw) {
     });
     Object.keys(FLAGS).forEach(k => { if (rm.flags && rm.flags[k]) m.flags[k] = true; });
     Object.keys(FLAG_NOTE).forEach(k => { const t = rm.notes && rm.notes[k]; if (t) m.notes[k] = String(t).slice(0, NOTE_MAX); });
+    if (Number.isInteger(rm.fc) && rm.fc > 0 && rm.fc <= 5) m.fc = rm.fc;
+    if (rm.minor) { m.minor = true; m.guardian = String(rm.guardian || '').slice(0, 30); m.guardianRel = String(rm.guardianRel || '').slice(0, 20); }
     if (raw.v !== 2 && rm.flags && rm.flags.s4) m.flags.s1 = true;  // 舊版「近期累積疲勞」併入睡眠/疲勞
     if (raw.v !== 2 && rm.flags) delete m.flags.s4;
     if (rm.hide) m.hide = true;
@@ -843,7 +848,7 @@ function compute(st) {
   IND.forEach(a => { indStatus[a] = members.length ? 'ok' : 'nodata'; indMargin[a] = null; });
 
   const memberRes = members.map(m => {
-    const nFlags = Object.keys(FLAGS).filter(k => m.flags && m.flags[k]).length;
+    const nFlags = scoredFlags(m, st.template);
     const mod = Math.min(1, 0.5 * nFlags);
     const axes = {};
     let reds = 0, margs = 0, nodata = 0;
@@ -859,16 +864,11 @@ function compute(st) {
       axes[a] = { e, D, R: Rr, status, margin: e == null ? null : e - D };
       if (rank[status] > rank[indStatus[a]]) indStatus[a] = status;
     });
-    const disc = [];
-    SCORED.forEach(a => {
-      const s = m.self[a], l = m.lead[a];
-      if (s != null && l != null && Math.abs(s - l) >= 1) disc.push({ a, s, l });
-    });
-    const selfOnly = SCORED.filter(a => m.self[a] != null && m.lead[a] == null).length;
+    const fixed = SCORED.filter(a => m.lead[a] != null && m.self[a] != null && m.lead[a] !== m.self[a]).length;
     let color = 'green';
     if (reds > 0 || nodata > 0 || margs >= 2) color = 'red';
-    else if (margs === 1 || nFlags > 0 || disc.length > 0) color = 'amber';
-    return { m, axes, reds, margs, nodata, nFlags, mod, disc, selfOnly, color };
+    else if (margs === 1 || nFlags > 0) color = 'amber';
+    return { m, axes, reds, margs, nodata, nFlags, mod, fixed, color };
   });
 
   IND.forEach(a => {
@@ -909,7 +909,6 @@ function compute(st) {
     }
     if (r.nFlags) push('amber', nm + L(' 今日狀態 ', ': today\'s status, ') + r.nFlags + L(' 項，體能、技術、自我照護紅線上移 ', ' item(s); fitness, technical, self-care minimums up ') + fmt(r.mod), L('出發前再確認；未改善就降低任務', 'Recheck before leaving; lighten the task if no better'), to);
     noteMissing(r.m).forEach(k => push('red', nm + L(' 勾了「' + flagName(k) + '」但沒寫說明', ': ticked "' + flagName(k) + '" with no details'), L('請本人重填表單，或在隊員卡片補上說明', 'Ask them to send the form again, or fill in the details on the member card'), to));
-    r.disc.forEach(d => push('amber', nm + q(axS(d.a)) + L('本人 ', 'self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l), L('行前對話校準；計分取低分', 'Talk it through before the trip; the lower score counts'), to));
   });
   TEAM.forEach(a => {
     const t = teamRes[a], nm = L('團隊「' + axS(a) + '」', 'Team "' + axS(a) + '" ');
@@ -986,7 +985,6 @@ function buildSummary(st, res) {
         else if (x.status === 'marg') notes.push(axS(a) + L(' 邊際（差 ', ' marginal (short ') + fmt(x.D - x.e) + L('）', ')'));
       });
       if (r.nFlags) notes.push(L('今日狀態 ', 'today\'s status: ') + r.nFlags + L(' 項', ''));
-      r.disc.forEach(d => notes.push(axS(d.a) + L(' 本人 ', ' self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l)));
       const role = r.m.leader ? L('領隊', 'leader') : (r.m.role && r.m.role !== r.m.name ? r.m.role : '');
       out.push('・' + r.m.name + (role && role.toLowerCase() !== r.m.name.toLowerCase() ? '・' + role : '') + ' ' + COLOR_LONG(r.color) + (notes.length ? L('：', ': ') + notes.join(L('；', '; ')) : ''));
     });
@@ -1011,8 +1009,18 @@ function bytesFromB64url(s) {
   while (s.length % 4) s += '=';
   return Uint8Array.from(atob(s), c => c.charCodeAt(0));
 }
+/* 分享與儲存連結不放健康資料：狀態只留計分件數 fc，說明、病史、法定代理人一律拿掉 */
+function shareCopy(st) {
+  const c = JSON.parse(JSON.stringify(st));
+  c.members.forEach(m => {
+    const n = scoredFlags(m, st.template);
+    m.flags = {}; m.notes = {}; delete m.minor; delete m.guardian; delete m.guardianRel;
+    if (n) m.fc = Math.min(5, n); else delete m.fc;
+  });
+  return c;
+}
 async function packState(st) {
-  const raw = new TextEncoder().encode(JSON.stringify(st));
+  const raw = new TextEncoder().encode(JSON.stringify(shareCopy(st)));
   if (typeof CompressionStream === 'undefined') return 'j' + b64urlFromBytes(raw);
   const buf = await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer();
   return 'z' + b64urlFromBytes(new Uint8Array(buf));
@@ -1118,13 +1126,15 @@ function mergeReplies(st, replies) {
     Object.keys(FLAGS).forEach(k => { if (fl.indexOf(k) >= 0) m.flags[k] = true; });
     m.notes = {};
     Object.keys(FLAG_NOTE).forEach(k => { const t = String((r.notes && r.notes[k]) || '').trim(); if (t) m.notes[k] = t.slice(0, NOTE_MAX); });
+    delete m.minor; delete m.guardian; delete m.guardianRel; delete m.fc;
+    if (r.minor) { m.minor = true; m.guardian = String(r.guardian || '').slice(0, 30); m.guardianRel = String(r.guardianRel || '').slice(0, 20); }
   });
   return { added, updated, n };
 }
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { AXES, IND, TEAM, TEAM_SKILL, SCORED, ALL, TEMPLATES, CONDS, FLAGS, FLAG_NOTE, PLAN_ITEMS, KIT_ITEMS, LEVERS,
-    compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, packState, unpackState, mergeReplies,
+    compute, buildSummary, exampleState, blankState, blankMember, sanitizeState, packState, unpackState, mergeReplies, shareCopy, scoredFlags,
     effScore, anchorLines, fmt, fmtSigned, setLang: x => { LANG = x; } };
 }
 
@@ -1174,7 +1184,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
   let st = loadState() || exampleState();
   let res = compute(st);
-  const ui = { rater: {}, open: {}, delAsk: null, ovOpen: false, formMsg: '', pop: '', pendingLoad: null, sumOpen: false };
+  const ui = { open: {}, delAsk: null, ovOpen: false, formMsg: '', pop: '', pendingLoad: null, sumOpen: false };
   if (st.example) ui.open.ex4 = true;
 
   /* ---------- 語言 ---------- */
@@ -1324,6 +1334,7 @@ if (typeof module !== 'undefined' && module.exports) {
   function renderDemandStatic() {
     $('#trip-name').value = st.trip.name;
     $('#trip-date').value = st.trip.date;
+    $('#trip-end').value = st.trip.end || '';
     $('#tpl').innerHTML = Object.keys(TEMPLATES).map(k => '<option value="' + k + '"' + (k === st.template ? ' selected' : '') + '>' + esc(tplName(k)) + '</option>').join('');
     $('#gap').value = String(st.gap);
     $('#conds').innerHTML = Object.keys(CONDS).map(k => {
@@ -1353,60 +1364,51 @@ if (typeof module !== 'undefined' && module.exports) {
   }
 
   /* ---------- ② 隊員評分 ---------- */
-  /* 領隊卡只有領隊評分；隊員卡的領隊評分未單獨設定時跟著本人評分（m.lead[a] 為 null 即連動） */
-  const raterOf = m => (m.leader ? 'lead' : (ui.rater[m.id] || 'self'));
-  function shownVal(m, a, rater) {
-    if (rater === 'self') return { v: m.self[a], linked: false };
-    if (m.lead[a] != null) return { v: m.lead[a], linked: false };
-    return { v: m.leader ? null : m.self[a], linked: !m.leader && m.self[a] != null };
-  }
-  function sliderRow(m, a, rater) {
-    const sv = shownVal(m, a, rater), v = sv.v;
+  /* 一條滑桿：顯示 lead ?? self；拉動即寫入 lead（領隊填入或修正），可改回本人 */
+  function sliderRow(m, a) {
+    const s0 = m.self[a], l0 = m.lead[a], v = l0 != null ? l0 : s0;
     const id = 'sl-' + m.id + '-' + a;
-    let other = '';
-    if (!m.leader) {
-      const ov = rater === 'self' ? m.lead[a] : m.self[a];
-      other = '<span class="sother">' + (rater === 'self' ? (m.lead[a] == null ? L('領隊 同本人', 'leader follows self') : L('領隊 ', 'leader ') + fmt(ov)) : L('本人 ', 'self ') + (ov == null ? L('未評', 'none') : fmt(ov))) + '</span>';
-    }
-    const clr = (rater === 'lead' && !m.leader) ? (m.lead[a] != null ? L('改回同本人', 'Follow self again') : '') : (v != null ? L('清除', 'Clear') : '');
+    let tag = '', clr = '';
+    if (m.leader) clr = v != null ? L('清除', 'Clear') : '';
+    else if (l0 != null && s0 != null) { tag = l0 !== s0 ? '<span class="linked fixtag">' + L('領隊修正（本人 ', 'leader-corrected (self ') + fmt(s0) + L('）', ')') + '</span>' : ''; clr = L('改回本人', 'Back to self'); }
+    else if (l0 != null) { tag = '<span class="linked fixtag">' + L('領隊填入', 'filled in by leader') + '</span>'; clr = L('清除', 'Clear'); }
     return '<div class="srow' + (v == null ? ' unset' : '') + '" id="row-' + m.id + '-' + a + '">' +
-      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + (sv.linked ? '<span class="linked">' + L('同本人', '= self') + '</span>' : '') + '</span></div>' +
+      '<div class="shead"><label class="sname" for="' + id + '">' + esc(axF(a)) + '</label><span class="sval" id="val-' + m.id + '-' + a + '">' + (v == null ? L('未評', 'Not rated') : fmt(v)) + tag + '</span></div>' +
       '<input type="range" id="' + id + '" min="1" max="5" step="0.5" value="' + (v == null ? 3 : v) + '" data-m="' + m.id + '" data-a="' + a + '">' +
       '<div class="ticks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>' +
-      '<div class="smeta"><span class="sreq" id="req-' + m.id + '-' + a + '"></span>' + other +
+      '<div class="smeta"><span class="sreq" id="req-' + m.id + '-' + a + '"></span>' +
       (clr ? '<button type="button" class="linkbtn" id="clr-' + m.id + '-' + a + '" data-act="clear" data-m="' + m.id + '" data-a="' + a + '">' + clr + '</button>' : '') + '</div>' +
       '<div class="sanchor" id="anc-' + m.id + '-' + a + '">' + anchorLines(a, v).map(esc).join('<br>') + '</div></div>';
   }
+  const flagBox = (m, k) => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>';
   function delCtl(m) {
     if (m.leader) return '';
     if (ui.delAsk === m.id) return '<span class="mdel-ask">' + L('刪除？', 'Delete?') + '<button type="button" class="btn danger" id="dy-' + m.id + '" data-act="del-yes" data-m="' + m.id + '">' + L('確認刪除', 'Delete') + '</button><button type="button" class="btn ghost" id="dn-' + m.id + '" data-act="del-no">' + L('取消', 'Cancel') + '</button></span>';
     return '<button type="button" class="mdel" id="da-' + m.id + '" data-act="del-ask" data-m="' + m.id + '">' + L('刪除隊員', 'Delete') + '</button>';
   }
   function memberCard(m) {
-    const rater = raterOf(m);
     let h = '<details class="member" id="card-' + m.id + '" data-m="' + m.id + '"' + (ui.open[m.id] ? ' open' : '') + '>' +
       '<summary><span class="lamp" id="lamp-' + m.id + '"></span><span class="mname" id="mname-' + m.id + '">' + esc(m.name) + '</span>' +
       (m.leader ? '<span class="leadtag">' + L('領隊', 'Leader') + '</span>' : '<span class="mrole" id="mrole-' + m.id + '">' + esc(m.role) + '</span>') +
+      (m.minor ? '<span class="leadtag">' + L('未成年', 'Minor') + '</span>' : '') +
       delCtl(m) + '<span class="chev" aria-hidden="true">›</span>' +
       '<span class="mhint" id="mhint-' + m.id + '"></span></summary><div class="mbody">' +
       '<div class="fields"><label class="f" for="nm-' + m.id + '">' + L('名稱', 'Name') + '<input type="text" id="nm-' + m.id + '" data-m="' + m.id + '" data-field="name" value="' + esc(m.name) + '" maxlength="30"></label>' +
       (m.leader ? '' : '<label class="f" for="rl-' + m.id + '">' + L('角色', 'Role') + '<input type="text" id="rl-' + m.id + '" data-m="' + m.id + '" data-field="role" value="' + esc(m.role) + '" maxlength="30"></label>') + '</div>';
-    if (m.leader) h += '<p class="hint">' + L('領隊本人只有領隊評分。', 'The leader only has leader ratings.') + '</p>';
-    else h += '<div class="raterbar"><span class="seg" role="group" aria-label="' + L('評分者', 'Rater') + '">' +
-      '<button type="button" id="rt-' + m.id + '-self" data-act="rater" data-m="' + m.id + '" data-r="self" aria-pressed="' + (rater === 'self') + '">' + L('本人評分', 'Self') + '</button>' +
-      '<button type="button" id="rt-' + m.id + '-lead" data-act="rater" data-m="' + m.id + '" data-r="lead" aria-pressed="' + (rater === 'lead') + '">' + L('領隊評分', 'Leader') + '</button></span>' +
-      '<span class="hint">' + L('領隊評分預設同本人，單獨改過就不連動；兩者不同時取低分，差 1 分以上會標出來。本人評分可以留空。', 'Leader rating follows self until you change it; when they differ the lower counts, and a gap of 1+ is flagged. Self rating may stay empty.') + '</span></div>';
-    h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Individual readiness | everyone must clear the hard minimum') + '</p>' + IND.map(a => sliderRow(m, a, rater)).join('') +
-      '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a, rater)).join('') +
+    if (m.minor) h += '<p class="hint">' + L('未滿 18 歲；法定代理人：', 'Under 18; guardian: ') + esc(m.guardian || '—') + L('（', ' (') + esc(m.guardianRel || '—') + L('）已同意', ') consented') + '</p>';
+    h += '<p class="gtitle">' + L('個人底盤｜每人都要過紅線', 'Individual readiness | everyone must clear the hard minimum') + '</p>' + IND.map(a => sliderRow(m, a)).join('') +
+      '<p class="gtitle">' + L('團隊能力｜可以借，要成雙', 'Team skills | can be shared, need a pair') + '</p>' + TEAM_SKILL.map(a => sliderRow(m, a)).join('') +
       '<p class="gtitle">' + L('今日狀態｜每勾一項，體能、技術、自我照護的需求與紅線上移 0.5（最多 1.0）', 'Today\'s status | each tick raises fitness, technical and self-care need and hard minimum by 0.5 (max 1.0)') + '</p><div class="checks">' +
-      Object.keys(FLAGS).map(k => '<label class="ck" for="fl-' + m.id + '-' + k + '"><input type="checkbox" id="fl-' + m.id + '-' + k + '" data-m="' + m.id + '" data-flag="' + k + '"' + (m.flags[k] ? ' checked' : '') + '><span>' + esc(flagName(k)) + '</span></label>').join('') +
-      '</div>' + Object.keys(FLAG_NOTE).filter(k => m.flags[k]).map(k => noteBox(m, k)).join('');
+      TODAY_FLAGS.map(k => flagBox(m, k)).join('') + '</div>' + TODAY_FLAGS.filter(k => FLAG_NOTE[k] && m.flags[k]).map(k => noteBox(m, k)).join('') +
+      '<p class="gtitle">' + L('病史｜不計分；高山症史只在高山路線計分', 'History | not scored; altitude sickness counts on high routes only') + '</p><div class="checks">' +
+      HIST_FLAGS.map(k => flagBox(m, k)).join('') + '</div>' + HIST_FLAGS.filter(k => FLAG_NOTE[k] && m.flags[k]).map(k => noteBox(m, k)).join('') +
+      (m.fc ? '<p class="hint">' + L('分享連結帶來 ' + m.fc + ' 項計分狀態（內容不隨連結傳送）', m.fc + ' scored status item(s) came with the shared link (details are not shared)') + '</p>' : '');
     h += '<button type="button" class="foldend sm" data-act="fold-up" data-t="card-' + m.id + '"><span class="chev up" aria-hidden="true"></span><span>' + L('收合這位隊員', 'Collapse this member') + '</span></button>';
     return h + '</div></details>';
   }
   function noteBox(m, k) {
-    const t = (m.notes && m.notes[k]) || '', bad = !t.trim(), id = 'fn-' + m.id + '-' + k;
-    return '<label class="f fnote' + (bad ? ' bad' : '') + '" for="' + id + '" id="fnl-' + m.id + '-' + k + '">' + esc(L(FLAG_NOTE[k].col, FLAG_NOTE[k].en)) + L('（必填）', ' (required)') +
+    const t = (m.notes && m.notes[k]) || '', req = FLAG_NOTE[k].req, bad = req && !t.trim(), id = 'fn-' + m.id + '-' + k;
+    return '<label class="f fnote' + (bad ? ' bad' : '') + '" for="' + id + '" id="fnl-' + m.id + '-' + k + '">' + esc(L(FLAG_NOTE[k].col, FLAG_NOTE[k].en)) + (req ? L('（必填）', ' (required)') : '') +
       '<textarea id="' + id + '" rows="2" maxlength="' + NOTE_MAX + '" data-m="' + m.id + '" data-fnote="' + k + '" placeholder="' + esc(L(FLAG_NOTE[k].ph, FLAG_NOTE[k].phEn)) + '">' + esc(t) + '</textarea>' +
       '<span class="ferr">' + L('勾了這項就要寫說明', 'Details are required when this is ticked') + '</span></label>';
   }
@@ -1424,7 +1426,7 @@ if (typeof module !== 'undefined' && module.exports) {
       else if (x.status === 'marg') notes.push(axS(a) + L('邊際', ' marginal'));
     });
     if (r.nFlags) notes.push(L('今日狀態 ' + r.nFlags + ' 項', 'condition: ' + r.nFlags));
-    if (r.disc.length) notes.push(L('認知落差 ' + r.disc.length + ' 軸', 'rating gap on ' + r.disc.length));
+    if (r.fixed) notes.push(L('領隊修正 ' + r.fixed + ' 軸', 'leader-corrected on ' + r.fixed));
     return notes.length ? notes.join(L('・', ' · ')) : L('個人軸全部達標', 'All personal axes meet the need');
   }
   const STATUS = s => L({ ok: '達標', marg: '邊際', red: '低於紅線', nodata: '無資料' }[s], { ok: 'meets need', marg: 'marginal', red: 'below hard minimum', nodata: 'no data' }[s]);
@@ -1490,30 +1492,41 @@ if (typeof module !== 'undefined' && module.exports) {
   function renderIntake() {
     if (!st.trip.code) { st.trip.code = newTripCode(); saveState(); }
     $('#intake').innerHTML = '<div class="subhead"><h3>' + L('隊員表單', 'Member form') + '</h3><button type="button" class="linkbtn" data-act="newcode">' + L('換一條新連結', 'Make a new link') + '</button></div>' +
-      '<p class="note">' + L('把連結傳給隊員（LINE、訊息都可以）。隊員送出後，頁面開啟時會自動抓取，也可以按「抓取表單回覆」；依姓名彙整成隊員卡，只寫入本人評分與今日狀態。', 'Send the link to members (LINE or any chat). Replies are pulled when the page opens, or tap "Pull replies". They become member cards by name, filling self ratings and condition only.') + '</p>' +
+      '<p class="note">' + L('先在 ① 填「結束日期」，連結才會生效。把連結傳給隊員（LINE、訊息都可以）；隊員勾同意聲明後送出，送出的人可以在同一頁看到全隊的照應清單。回覆依姓名彙整成隊員卡；資料在結束日後第 3 天自動刪除。臨時加入、沒填表的人，請列印同意書現場簽名。', 'Fill in the end date in ① first; the link only works after that. Send the link to members (LINE or any chat). Members tick the consent and send; anyone who has sent can see the whole team\'s care list on the same page. Replies become member cards by name, and are deleted 3 days after the end date. For late joiners who did not fill in the form, print the waiver and have them sign on site.') + '</p>' +
       '<div class="row-btns"><button type="button" class="btn" data-act="form-share">' + L('分享表單連結', 'Share form link') + '</button><button type="button" class="btn ghost" data-act="form-copy">' + L('複製連結', 'Copy link') + '</button>' +
-      '<button type="button" class="btn ghost" data-act="form-pull">' + L('抓取表單回覆', 'Pull replies') + '</button><span class="msg" id="form-msg" role="status">' + esc(ui.formMsg || '') + '</span></div>';
+      '<button type="button" class="btn ghost" data-act="form-pull">' + L('抓取表單回覆', 'Pull replies') + '</button>' +
+      '<button type="button" class="btn ghost" data-act="waiver">' + L('列印臨時加入同意書', 'Print late-joiner waiver') + '</button><span class="msg" id="form-msg" role="status">' + esc(ui.formMsg || '') + '</span></div>';
   }
   /* 領隊金鑰只存在這台裝置（localStorage），不放進分享連結 */
   const KEY_LS = 'chouma-leader-keys';
   function keyFor(code) { try { return (JSON.parse(localStorage.getItem(KEY_LS) || '{}') || {})[code] || ''; } catch (e) { return ''; } }
   function keySet(code, k) { try { const o = JSON.parse(localStorage.getItem(KEY_LS) || '{}') || {}; o[code] = k; localStorage.setItem(KEY_LS, JSON.stringify(o)); } catch (e) { /* 無法儲存：本次仍可用 */ } }
-  /* 登記行程代碼：回傳金鑰；代碼已被別人登記時回傳空字串 */
+  let regSig = '';
+  const tripSig = () => [st.trip.code, st.trip.name, st.trip.date, st.trip.end].join('|');
+  /* 登記或更新行程（名稱、日期）：回傳金鑰；沒有結束日期回傳 null；代碼已被別人登記回傳空字串 */
   async function ensureTrip(code, force) {
+    if (!st.trip.end) return null;
     let k = keyFor(code);
-    if (k && !force) return k;
-    if (!k) { k = skRid(24); }
-    const r = await apiPost({ a: 'create', code, keyHash: await sha256hex(k) });
-    if (r.ok) { keySet(code, k); return k; }
+    const sig = tripSig();
+    if (k && !force && regSig === sig) return k;
+    if (!k) k = skRid(24);
+    const r = await apiPost({ a: 'create', code, keyHash: await sha256hex(k), name: st.trip.name, start: st.trip.date || '', end: st.trip.end });
+    if (r.ok) { keySet(code, k); regSig = sig; return k; }
     if (r.err === 'taken') return '';
     throw new Error(r.err || 'create');
   }
+  const FORM_ERR = () => ({
+    'bad-date': L('結束日期要在今天或之後，且在一年內', 'The end date must be today or later, within a year'),
+    expired: L('這趟已過結束日後 3 天，隊員資料已刪除', 'This trip is past 3 days after its end date; member data has been deleted'),
+    busy: L('伺服器忙碌，請稍後再試', 'Server busy; try again later')
+  });
   async function pullForm(silent) {
     const msg = () => { const el = $('#form-msg'); if (el) el.textContent = ui.formMsg; };
     const say = t => { ui.formMsg = t; msg(); };
     if (!API_ON) { if (!silent) say(L('回覆後端尚未設定', 'Reply backend not set')); return; }
     const code = st.trip.code;
     if (!code) return;
+    if (!st.trip.end) { say(L('先在 ① 填「結束日期」，隊員連結才會生效', 'Fill in the end date in ① first; the member link works after that')); return; }
     if (!silent) say(L('抓取中…', 'Pulling…'));
     try {
       let k = await ensureTrip(code);
@@ -1525,7 +1538,56 @@ if (typeof module !== 'undefined' && module.exports) {
       const m = mergeReplies(st, r.replies);
       if (m.n) { st.example = false; say(L('已彙整 ' + m.n + ' 位（新增 ' + m.added + '、更新 ' + m.updated + '）', 'Merged ' + m.n + ' (' + m.added + ' new, ' + m.updated + ' updated)')); refresh({ members: true }); }
       else if (!silent) say(L('這條連結還沒有回覆', 'No replies on this link yet'));
-    } catch (e) { if (!silent) say(L('抓取失敗，請稍後再試', 'Pull failed; try again later')); }
+      else if (ui.formMsg && /結束日期|end date/.test(ui.formMsg)) say('');
+    } catch (e) { const t = FORM_ERR()[e.message]; if (t) say(t); else if (!silent) say(L('抓取失敗，請稍後再試', 'Pull failed; try again later')); }
+  }
+  let regTimer = 0;
+  function regSoon() { clearTimeout(regTimer); regTimer = setTimeout(() => pullForm(true), 900); }
+
+  /* 臨時加入者自負責任同意書：A4 列印，一式兩份，現場親筆簽名 */
+  function printWaiver() {
+    const ld = st.members.find(m => m.leader), ldName = ld && !/^(領隊|leader)$/i.test(ld.name.trim()) ? ld.name : '';
+    const dates = [st.trip.date, st.trip.end].filter(Boolean).join(' – ');
+    const blank = (v, w) => v ? '<b>' + esc(v) + '</b>' : '<span class="ln" style="width:' + w + 'em"></span>';
+    const items = LANG === 'en' ? [
+      'I have not completed the pre-trip self-rating; the leader cannot assess my fitness, skills, gear or health in advance.',
+      'The leader has explained this trip\'s route, length, altitude and main risks, and I understand them.',
+      'I confirm I have the fitness and gear to complete this trip. Insurance: ☐ mountaineering insurance ☐ other ________ ☐ none',
+      'I will follow the leader\'s instructions on pace, retreat and safety. If my condition affects the team\'s safety, the leader may have me descend or end the trip.',
+      'Risks and losses arising from conditions I did not disclose, or disclosed falsely, are my own responsibility.',
+      'This waiver does not release the leader from liability for intent or gross negligence.',
+      'Care information — emergency contact: ________ phone: ________; allergies or medical history: ________________; what teammates should do: ________________. Used for this trip only; the leader destroys it on the 3rd day after the trip ends.',
+      'Confidentiality: I will not forward or disclose other members\' information. Anyone who does is responsible for it.'
+    ] : [
+      '本人未完成行前自評，領隊無法事前評估本人的體能、技術、裝備與健康狀況。',
+      '領隊已說明本行程的路線、天數、海拔與主要風險，本人已了解。',
+      '本人確認具備完成本行程的體能與裝備。保險：☐ 登山綜合險　☐ 其他＿＿＿＿　☐ 無',
+      '本人同意遵從領隊的行進、撤退與安全指示。本人狀況影響全隊安全時，領隊得要求本人下撤或終止行程。',
+      '因本人未揭露或不實揭露自身狀況所生的風險與損害，由本人自行承擔。',
+      '本同意書不免除領隊的故意或重大過失責任。',
+      '照應資訊——緊急聯絡人：＿＿＿＿　電話：＿＿＿＿＿＿；過敏或病史：＿＿＿＿＿＿＿＿；隊友該怎麼做：＿＿＿＿＿＿＿＿。以上資訊只供本趟照應使用，由領隊在行程結束後第 3 天銷毀。',
+      '保密承諾：本人不轉傳、不揭露其他隊員的資料。違反者自行負責。'
+    ];
+    const one = '<section class="pg"><h1>' + L('臨時加入者｜自負責任同意書', 'Late joiner | Assumption of risk') + '</h1>' +
+      '<p class="meta">' + L('行程名稱：', 'Trip: ') + blank(st.trip.name, 14) + '　' + L('日期：', 'Dates: ') + blank(dates, 10) + '</p>' +
+      '<p class="meta">' + L('路線：', 'Route: ') + blank('', 16) + '　' + L('領隊：', 'Leader: ') + blank(ldName, 8) + '</p>' +
+      '<p>' + L('本人', 'I, ') + '<span class="ln" style="width:9em"></span>' + L('自願臨時加入本趟行程，聲明如下：', ', join this trip at short notice of my own free will and declare:') + '</p>' +
+      '<ol>' + items.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
+      '<p class="sig">' + L('本人簽名：', 'Signature: ') + '<span class="ln" style="width:11em"></span>　' + L('日期：', 'Date: ') + '<span class="ln" style="width:7em"></span></p>' +
+      '<p class="sig">' + L('未滿 18 歲者——法定代理人簽名：', 'If under 18 — guardian signature: ') + '<span class="ln" style="width:9em"></span>　' + L('關係：', 'Relation: ') + '<span class="ln" style="width:4em"></span>　' + L('電話：', 'Phone: ') + '<span class="ln" style="width:7em"></span></p>' +
+      '<p class="foot">' + L('一式兩份，本人與領隊各執一份。', 'Two copies: one for the signer, one for the leader.') + '</p></section>';
+    const doc = '<!doctype html><html lang="' + (LANG === 'en' ? 'en' : 'zh-Hant') + '"><head><meta charset="utf-8"><title>' + L('臨時加入者自負責任同意書', 'Late joiner waiver') + '</title><style>' +
+      '@page{size:A4;margin:16mm}body{font:12.5pt/1.75 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:#000;margin:0}' +
+      '.pg{page-break-after:always}.pg:last-child{page-break-after:auto}h1{font-size:17pt;text-align:center;margin:0 0 10px}' +
+      '.meta{margin:4px 0}ol{padding-left:1.4em;margin:8px 0}li{margin:5px 0}.ln{display:inline-block;border-bottom:1px solid #000;height:1.2em;vertical-align:bottom}' +
+      '.sig{margin:18px 0 0}.foot{margin-top:14px;font-size:10.5pt;color:#333}</style></head><body>' + one + one + '</body></html>';
+    const w = window.open('', '_blank');
+    if (w) { w.document.open(); w.document.write(doc); w.document.close(); w.focus(); setTimeout(() => w.print(), 300); return; }
+    const f = document.createElement('iframe');
+    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+    document.body.appendChild(f);
+    f.contentDocument.open(); f.contentDocument.write(doc); f.contentDocument.close();
+    setTimeout(() => { f.contentWindow.focus(); f.contentWindow.print(); setTimeout(() => f.remove(), 2000); }, 300);
   }
 
   /* ---------- ⑤ 評估脆弱點、⑥ 分享 ---------- */
@@ -1697,8 +1759,7 @@ if (typeof module !== 'undefined' && module.exports) {
       let g = head(L('隊員重點', 'Member notes')), y = HEAD + 80;
       res.memberRes.forEach(r => {
         const m = r.m, fl = Object.keys(FLAGS).filter(k => m.flags && m.flags[k]).map(flagName);
-        const disc = r.disc.map(d => axS(d.a) + L(' 本人 ', ' self ') + fmt(d.s) + L('／領隊 ', ' / leader ') + fmt(d.l));
-        const txt = memberNotes(r) + (fl.length ? L('｜今日：', ' | today: ') + fl.join(L('、', ', ')) : '') + (disc.length ? L('｜落差：', ' | gaps: ') + disc.join(L('、', ', ')) : '');
+        const txt = memberNotes(r) + (fl.length ? L('｜狀態：', ' | status: ') + fl.join(L('、', ', ')) : '');
         g += dot(14, y - 13, COL[r.color], 11) + T(40, y, clip(m.name || L('未命名', 'Unnamed'), 34, 360), 34, C.ink, ' font-weight="700"');
         wrap(txt, 32, FW - 420).forEach(l => { g += T(420, y, l, 32, r.color === 'green' ? C.muted : C.ink); y += 48; });
         y += 12;
@@ -1711,7 +1772,7 @@ if (typeof module !== 'undefined' && module.exports) {
       if (!list.length) return null;
       let out = null;
       [[32, 48], [28, 41], [25, 36], [23, 33]].some(([fs, lh]) => {
-        let g = head(L('健康說明', 'Health details'), L('勾選項目的本人說明', 'what each person wrote')), y = HEAD + 80;
+        let g = head(L('健康說明', 'Health details'), L('僅供本隊，行程結束後請刪除這張圖', 'team only; delete this image after the trip')), y = HEAD + 80;
         list.forEach(x => {
           g += T(0, y, clip(x.m.name || L('未命名', 'Unnamed'), fs + 2, 380), fs + 2, C.ink, ' font-weight="700"');
           x.nt.forEach(t => wrap(t, fs, width - 420).forEach(l => { g += T(420, y, l, fs, C.ink); y += lh; }));
@@ -1724,8 +1785,8 @@ if (typeof module !== 'undefined' && module.exports) {
     }
     function secHow() {
       let g = head(L('怎麼讀', 'How to read')), y = HEAD + 76;
-      [L('分數 1–5，每 0.5 一級；本人與領隊都有評分時取較低者。', 'Scores run 1–5 in steps of 0.5; when self and leader both rate, the lower counts.'),
-        L('需求＝路線範本＋條件－成立的槓桿；紅線＝需求－紅線距離。今日狀態每項讓體能、技術、自我照護上移 0.5。', 'Need = template + conditions − working mitigations; hard minimum = need − gap. Each today item raises fitness, technical and self-care by 0.5.'),
+      [L('分數 1–5，每 0.5 一級；以本人自評為準，領隊填入或修正過的以領隊為準。', 'Scores run 1–5 in steps of 0.5; self ratings count unless the leader filled in or corrected them.'),
+        L('需求＝路線範本＋條件－成立的槓桿；紅線＝需求－紅線距離。今日狀態每項（高山路線含高山症史）讓體能、技術、自我照護上移 0.5，最多 1。', 'Need = template + conditions − working mitigations; hard minimum = need − gap. Each today item (plus altitude sickness history on high routes) raises fitness, technical and self-care by 0.5, max 1.'),
         L('綠＝達需求，黃＝在需求與紅線之間（邊際），紅＝低於紅線或未評。兩項以上邊際也算紅。', 'Green = meets need, amber = between need and hard minimum, red = below it or not rated. Two or more marginal counts as red.'),
         L('團隊軸只要有人夠強即可（P），但第二人（B）也要過紅線，才不會一人倒下就失守。', 'Team axes need one strong person (P), and a backup (B) above the hard minimum so one person going down is not fatal.')]
         .forEach(t => wrap(t, 32, FW - 40).forEach((l, k) => { if (!k) g += dot(10, y - 11, C.muted, 7); g += T(34, y, l, 32, C.muted); y += 48; }));
@@ -2019,9 +2080,8 @@ if (typeof module !== 'undefined' && module.exports) {
   function setScore(inp) {
     const m = findM(inp.dataset.m), a = inp.dataset.a;
     if (!m) return;
-    const rater = raterOf(m);
     const v = parseFloat(inp.value);
-    (rater === 'self' ? m.self : m.lead)[a] = v;
+    m.lead[a] = v;
     const row = document.getElementById('row-' + m.id + '-' + a);
     row.classList.remove('unset');
     document.getElementById('val-' + m.id + '-' + a).textContent = fmt(v);
@@ -2032,8 +2092,9 @@ if (typeof module !== 'undefined' && module.exports) {
   document.addEventListener('input', e => {
     const t = e.target;
     if (t.matches('input[type="range"][data-m]')) { setScore(t); return; }
-    if (t.id === 'trip-name') { st.trip.name = t.value.slice(0, 80); refresh(); return; }
-    if (t.id === 'trip-date') { st.trip.date = t.value; refresh(); return; }
+    if (t.id === 'trip-name') { st.trip.name = t.value.slice(0, 80); refresh(); regSoon(); return; }
+    if (t.id === 'trip-date') { st.trip.date = t.value; refresh(); regSoon(); return; }
+    if (t.id === 'trip-end') { st.trip.end = t.value; refresh(); regSoon(); return; }
     if (t.id === 'premortem') { st.premortem = t.value.slice(0, 600); refresh(); return; }
     if (t.dataset.fnote) {
       const m = findM(t.dataset.m);
@@ -2117,12 +2178,9 @@ if (typeof module !== 'undefined' && module.exports) {
       if (want < 1 || want > 5) return;
       st.dAdj[a] = round5(want - base);
       refresh();
-    } else if (act === 'rater') {
-      ui.rater[id] = b.dataset.r;
-      refresh({ members: true });
     } else if (act === 'clear') {
       const m = findM(id); if (!m) return;
-      ((raterOf(m) === 'self') ? m.self : m.lead)[b.dataset.a] = null;
+      m.lead[b.dataset.a] = null;
       refresh({ members: true });
     } else if (act === 'add') {
       const m = blankMember(L('隊員 ', 'Member ') + (others().length + 1), '');
@@ -2140,9 +2198,13 @@ if (typeof module !== 'undefined' && module.exports) {
       ui.delAsk = null; refresh({ members: true });
     } else if (act === 'newcode') {
       st.trip.code = newTripCode(); ui.formMsg = L('已換新連結，舊連結的回覆不再彙整', 'New link made; replies to the old link are no longer pulled'); saveState(); renderIntake(); pullForm(true);
+    } else if (act === 'waiver') {
+      printWaiver();
     } else if (act === 'form-copy' || act === 'form-share') {
       const link = formLink(st.trip.code), el = $('#form-msg');
       const done = t => { ui.formMsg = t; if (el) el.textContent = t; };
+      if (!st.trip.end) { done(L('先在 ① 填「結束日期」，隊員連結才會生效', 'Fill in the end date in ① first; the member link works after that')); return; }
+      if (regSig !== tripSig()) { done(L('連結登記中，請幾秒後再按一次', 'Registering the link; tap again in a few seconds')); pullForm(true); return; }
       const copy = () => copyText(link, () => done(L('已複製連結', 'Link copied')), () => done(L('無法複製，請改用分享', 'Could not copy; use Share')));
       if (act === 'form-share' && navigator.share) navigator.share({ title: L('上山籌碼評估｜隊員自評', 'Trip leverage self-rating') + (st.trip.name ? '｜' + st.trip.name : ''), text: L('請填寫行前自評', 'Please fill in your pre-trip self-rating'), url: link }).catch(() => {});
       else copy();

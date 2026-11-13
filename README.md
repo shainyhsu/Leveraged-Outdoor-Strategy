@@ -10,13 +10,15 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 - **Red lines are non-negotiable:** minimum thresholds; leverage only reduces demand, never the red line
 - **Strength covers weakness:** each leverage item can lower demand on a given axis (capped per axis)
 - **Leverage must come in pairs:** backup person or redundant gear
-- Self-rating plus leader rating; two or more “marginal” axes → strongly consider not going
+- Self-ratings, which the leader can fill in or correct; two or more “marginal” axes → strongly consider not going
+- Members tick a consent statement before sending; everyone who has sent sees the team's care list (scores, today's status, medical history and what teammates should do) on the same page; data is deleted on the 3rd day after the trip's end date
+- Today's status (sleep/fatigue, ill/injured, digestion, period discomfort) is scored; medical history is not, except altitude sickness history on high-mountain routes
 
 ## Workflow
 
 1. Leader sets trip demand (pick a template, then fine-tune)
 2. The leader shares the member form link; each member rates themselves there, and the page pulls the replies in by a trip code the link fills in (or the leader enters members by hand)
-3. The leader rates themselves (leader rating only) and reviews each member; a member's leader rating follows their self rating until the leader changes it. Then check plan/team gear and leverage items
+3. The leader rates themselves and reviews each member, filling in blanks or correcting scores (shown as leader-corrected). Late joiners who skipped the form sign a printed assumption-of-risk waiver on site. Then check plan/team gear and leverage items
 4. The program sets the green, amber or red verdict; note the trip's weak points, then share an A4 JPG summary or copy the text summary
 
 ## Layout and display
@@ -35,12 +37,13 @@ Draws on the Adventure Experience Paradigm, FEMA THIRA/SPR, performance profilin
 
 ## Tech
 
-Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-ratings go through a Google Apps Script backend (apps-script/Code.gs) into a private sheet. Only the device that made the trip link holds the leader key that reads them back; replies are deleted after 120 days. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
+Single HTML page on GitHub Pages (interface in Traditional Chinese or English). Ratings stay in the browser; member self-ratings go through a Google Apps Script backend (apps-script/Code.gs) into a private sheet. Only the device that made the trip link holds the leader key that reads all replies back; members who have sent see the team's care list; everything is deleted on the 3rd day after the trip's end date. Save and share links carry no health details. The page includes a search description, canonical URL, Open Graph tags and JSON-LD structured data for search engines and link previews.
 
 ## Version history
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V27 | 2026-11-13 23:12 | Member form opens with a consent statement (guardian consent for minors) and, once sent, shows the team's care list; period discomfort added to today's status, medical history no longer scored except altitude sickness on high-mountain routes; leader ratings replaced by leader fill-in or correction; trip end date with deletion on the 3rd day after; save and share links carry no health details; printable late-joiner waiver
 - V26 | 2026-11-13 22:08 | Member self-ratings now go through an Apps Script backend into a private sheet instead of a publicly readable Google Form sheet; only the device that made the trip link can read the replies back, and replies are deleted after 120 days
 - V25 | 2026-11-13 16:58 | Bigger, brighter open/close arrows: a solid blue round button on every section and member card. Trip needs, Ratings and each member card get a Collapse button at the bottom, so you do not have to scroll back up after filling them in. Blocks inside an open section are spaced apart again.
 - V24 | 2026-11-13 15:48 | Only the two radar charts start open; every other section starts collapsed and the page remembers what you open. A collapsed section shows its own icon, a status stripe on the left and solid red or amber badges, so it can be told apart at a glance. The verdict link and the jump bar open what they jump to; Collapse all keeps the radar charts open.
