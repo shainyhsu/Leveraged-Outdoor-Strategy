@@ -41,6 +41,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V18 | 2026-11-13 09:36 | Added a classic favicon.ico tab icon for older browsers and search tools.
 - V17 | 2026-11-13 09:20 | Added a tab icon and an "All tools" link in the footer; the verdict area has a heading for screen readers and the file box has a label.
 - V16 | 2026-11-11 11:45 | Pasting a save link into a tab that already has the page open now loads it too (before, only a fresh open did)
 - V15 | 2026-11-11 11:40 | Save links are now short (about 90 characters): the assessment is encrypted in your browser, only the scrambled copy is stored online, and the key stays in the link, so whoever has the link can open it without signing in; the full link is used if the short one can't be made. The four save buttons sit in one row
