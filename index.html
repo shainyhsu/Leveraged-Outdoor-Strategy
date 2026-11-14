@@ -1121,10 +1121,18 @@ async function sha256hex(t) {
   const b = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)));
   return Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
 }
+/* 行程代碼：10 碼，crypto 亂數；首字一定是英文字母，避免試算表把代碼當數字。32 種字元整除 256，沒有取模偏差 */
 function newTripCode() {
-  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = '';
-  c += A[Math.floor(Math.random() * 24)];  // 首字一定是英文字母，避免試算表把代碼當數字
-  for (let i = 1; i < 6; i++) c += A[Math.floor(Math.random() * A.length)];
+  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', LETTERS = 24, LEN = 10;
+  const r = new Uint8Array(LEN * 2);
+  let c = '';
+  while (!c) {   // 首字：只收 0–239（24 的倍數），超過就重抽
+    crypto.getRandomValues(r);
+    const x = Array.from(r).find(v => v < 240);
+    if (x != null) c = A[x % LETTERS];
+  }
+  crypto.getRandomValues(r);
+  for (let i = 0; i < LEN - 1; i++) c += A[r[i] % A.length];
   return c;
 }
 function formLink(code) { return 'https://shainyhsu.github.io/Leveraged-Outdoor-Strategy/member.html?c=' + encodeURIComponent(code) + (LANG === 'en' ? '&lang=en' : ''); }
