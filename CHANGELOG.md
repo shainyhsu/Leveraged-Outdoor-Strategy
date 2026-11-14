@@ -2,6 +2,7 @@
 
 Newest first. Each update of the page is one version. Times are Taiwan time (UTC+8).
 
+- V34 | 2026-11-14 08:17 | Trip codes are now 10 characters from crypto.getRandomValues instead of 6 from Math.random; existing 6-character links still work
 - V33 | 2026-11-14 08:06 | Member consent statement now says who sees what: the leader and members who have sent see name, role, self-ratings, ticked statuses and history, and every note; guardian details are leader-only
 - V32 | 2026-11-14 07:43 | Wide screens: the intro line under the title uses the full page width instead of wrapping early
 - V31 | 2026-11-14 07:40 | Wide screens (1000 px and up) use two columns: steps on the left, verdict, radars and checklists pinned on the right and scrolling on their own
