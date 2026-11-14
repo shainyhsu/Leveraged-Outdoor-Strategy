@@ -189,8 +189,8 @@ function tripLine() {
 function consentCard() {
   const bad = st.tried && !st.consent, gbad = st.tried && st.minor && (!st.guardian.trim() || !st.guardianRel.trim());
   const items = LANG === 'en' ? [
-    'Purpose: this form collects your self-ratings, today\'s status, medical history and "what teammates should do". It is used only for this trip, so the leader and all members can look out for each other.',
-    'Who can see it: this trip\'s leader, and members of this trip who have sent this form. It is not made public.',
+    'Purpose: this form collects your self-ratings, today\'s status, medical history, "what teammates should do" and "anything else teammates should know". It is used only for this trip, so the leader and all members can look out for each other.',
+    'Who sees what: this trip\'s leader and the members of this trip who have sent this form all see your name, role, self-ratings, the statuses and history you tick, and everything you write. Only the leader sees guardian details. It is not made public.',
     'Storage and deletion: data is kept in a private sheet managed by the leader and deleted automatically on the 3rd day after the trip\'s end date.',
     'Filling in: if you tick allergy or medical history, "what teammates should do" is required. Period discomfort and other details are optional.',
     'Truthfulness: what I fill in is true. Risks from hiding something or filling it in falsely are my own responsibility.',
@@ -198,8 +198,8 @@ function consentCard() {
     'Deletion request: before the trip ends I may ask the leader to delete my data at any time. After deletion, the leader may decide whether I join, based on what care is needed.',
     'Minors: if under 18, a parent or legal guardian must read and tick their consent.'
   ] : [
-    '目的：本表蒐集你的能力自評、今日狀態、病史，以及「隊友該怎麼做」。這些資料只用於本趟行程，讓領隊與全體隊員互相照應。',
-    '誰看得到：本趟領隊，以及已送出本表的本趟隊員。不對外公開。',
+    '目的：本表蒐集你的能力自評、今日狀態、病史、「隊友該怎麼做」與「其他想讓隊友知道的事」。這些資料只用於本趟行程，讓領隊與全體隊員互相照應。',
+    '誰看得到什麼：本趟領隊和已送出本表的本趟隊員，都看得到你的姓名、角色、自評分數、勾選的狀態與病史，以及你寫的所有說明。法定代理人資料只有領隊看得到。不對外公開。',
     '保存與刪除：資料存放在領隊管理、不公開的試算表，行程結束日後第 3 天自動刪除。',
     '填寫方式：勾選過敏史或特殊病史時，「隊友該怎麼做」必填。「生理期不適」與其他說明可以不填。',
     '真實性：我填寫的內容真實。因隱瞞或不實填寫造成的風險，由我本人負責。',
