@@ -29,7 +29,7 @@ Pre-trip assessment for hiking and mountaineering groups: match **capability (le
 - Only the two radar charts start open; every other section starts collapsed and remembers what you opened. A collapsed section shows its icon, a status stripe on the left and its key facts as badges (solid red needs fixing, solid amber is a heads-up, green is fine, grey is information). Collapse all keeps the two radar charts open. The open/close arrow is a solid blue round button; Trip needs, Ratings and each member card also have a Collapse button at the bottom.
 - **Light/dark toggle** in the top-right corner. Dark is the default; your choice is remembered in the browser.
 
-Time estimates pair well with the [Hiking Time Estimator](https://shainyhsu.github.io/class-hiking-calculator/).
+Time estimates pair well with the [Hike Time Estimator & Walk Record Analysis](https://shainyhsu.github.io/class-hiking-calculator/) (步程試算 與 實走紀錄分析).
 
 ## Method notes (summary)
 
@@ -43,6 +43,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
+- V35 | 2026-11-17 00:56 | The link to the hiking tool uses its new name, Hike Time Estimator & Walk Record Analysis (步程試算 與 實走紀錄分析), and the English sentence no longer has a space before its full stop
 - V34 | 2026-11-14 08:17 | Trip codes are now 10 characters from crypto.getRandomValues instead of 6 from Math.random; existing 6-character links still work
 - V33 | 2026-11-14 08:06 | Member consent statement now says who sees what: the leader and members who have sent see name, role, self-ratings, ticked statuses and history, and every note; guardian details are leader-only
 - V32 | 2026-11-14 07:43 | Wide screens: the intro line under the title uses the full page width instead of wrapping early
