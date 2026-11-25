@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-Hant">
-<head><script>(function(){var t="dark";try{t=localStorage.getItem("theme")||"dark"}catch(e){}document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")})()</script>
+<head><meta name="color-scheme" content="dark"><script>(function(){var t="dark";try{t=localStorage.getItem("theme")||"dark"}catch(e){}t=t==="light"?"light":"dark";document.documentElement.setAttribute("data-theme",t);var m=document.querySelector('meta[name="color-scheme"]');if(m)m.content=t})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>上山籌碼評估｜登山隊伍能力與路線風險評估表（領隊用）</title>
@@ -2315,6 +2315,6 @@ if (typeof module !== 'undefined' && module.exports) {
 })();
 
 </script>
-<script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle");if(!b)return;var SUN='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',MOON='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>';function sync(){var d=r.getAttribute("data-theme")!=="light";b.innerHTML=d?SUN:MOON;var l=d?"切換為淺色模式 / Light mode":"切換為深色模式 / Dark mode";b.title=l;b.setAttribute("aria-label",l)}b.addEventListener("click",function(){var n=r.getAttribute("data-theme")==="light"?"dark":"light";r.setAttribute("data-theme",n);try{localStorage.setItem("theme",n)}catch(e){}sync();try{window.dispatchEvent(new CustomEvent("themechange",{detail:n}))}catch(e){}});sync()})()</script>
+<script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle");if(!b)return;var SUN='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',MOON='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>';function sync(){var d=r.getAttribute("data-theme")!=="light",m=document.querySelector('meta[name="color-scheme"]');if(m)m.content=d?"dark":"light";b.innerHTML=d?SUN:MOON;var l=d?"切換為淺色模式 / Light mode":"切換為深色模式 / Dark mode";b.title=l;b.setAttribute("aria-label",l)}b.addEventListener("click",function(){var n=r.getAttribute("data-theme")==="light"?"dark":"light";r.setAttribute("data-theme",n);try{localStorage.setItem("theme",n)}catch(e){}sync();try{window.dispatchEvent(new CustomEvent("themechange",{detail:n}))}catch(e){}});sync()})()</script>
 </body>
 </html>
