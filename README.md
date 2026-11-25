@@ -43,7 +43,7 @@ Single HTML page on GitHub Pages (interface in Traditional Chinese or English). 
 
 Newest first. Times are Taiwan time (UTC+8). Also kept in [CHANGELOG.md](CHANGELOG.md).
 
-- V37 | 2026-11-25 09:09 | The light/dark switch now also keeps <meta name="color-scheme"> in step with the theme, as Modern Web Guidance asks; colors and layout unchanged.
+- V37 | 2026-11-25 09:35 | The light/dark switch now also keeps <meta name="color-scheme"> in step with the theme, as Modern Web Guidance asks; colors and layout unchanged.
 - V36 | 2026-11-25 09:01 | Modern Web Guidance cleanup, layout unchanged: the screen-reader-only text is hidden with clip-path instead of the deprecated clip, and the printout breaks pages with break-after instead of page-break-after.
 - V35 | 2026-11-17 00:56 | The link to the hiking tool uses its new name, Hike Time Estimator & Walk Record Analysis (步程試算 與 實走紀錄分析), and the English sentence no longer has a space before its full stop
 - V34 | 2026-11-14 08:17 | Trip codes are now 10 characters from crypto.getRandomValues instead of 6 from Math.random; existing 6-character links still work
