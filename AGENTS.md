@@ -20,7 +20,7 @@ If you cannot fetch them, ask Shainy to paste them. Don't change code before you
 2. Read selectively. Find a function with `grep -n`, then read at most 150 lines or 6,000 characters at a time. Never load the whole of index.html (about 2,320 lines).
 3. Keep facts and ideas apart. Nothing in 01 section 3 is implemented. Mark any new algorithm or structure [Unverified] until Shainy has tested it.
 4. Check the dead ends in 02 before proposing anything.
-5. Modern Web Guidance 1.0. This project's Baseline target is "Baseline Widely available". Prefer native APIs (`<dialog>`, Popover API, CSS Grid/Subgrid, IndexedDB/OPFS) over polyfills and libraries.
+5. Modern Web Guidance 1.0. This project's Baseline target is "Baseline Widely available". Prefer native APIs (`<dialog>`, CSS Grid/Subgrid, IndexedDB/OPFS) over polyfills and libraries. The Popover API is only Baseline Newly available (since 2025-01-27, Widely available from 2027-07-27): use it only with the fallback its guide gives.
 6. End every reply with this status brief, 180 characters or fewer, instead of a recap:
 
 ```
